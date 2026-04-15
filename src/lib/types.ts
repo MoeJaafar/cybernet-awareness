@@ -1,0 +1,99 @@
+/**
+ * Core types for the scenario engine.
+ *
+ * A Scenario is a small directed graph of Scenes. The player starts at
+ * `startSceneId` and walks the graph; each Scene either presents
+ * narrative text and advances automatically (`stimulus`, `outcome`),
+ * branches on the player's choice (`decision`), or ends the scenario
+ * with a teaching moment (`debrief`).
+ *
+ * For v1 the narrator text is hard-coded into Scene definitions. A
+ * later commit will replace selected `narration` strings with calls to
+ * an LLM that generates context-aware narration based on the player's
+ * choice history.
+ */
+
+export type ScenarioId = string;
+export type SceneId = string;
+
+export interface Scenario {
+    id: ScenarioId;
+    title: string;
+    /** One-paragraph framing shown before the scenario starts. */
+    setup: string;
+    /** The Scene the scenario opens on. */
+    startSceneId: SceneId;
+    /** All scenes keyed by their id. */
+    scenes: Record<SceneId, Scene>;
+    /**
+     * Underlying cybersecurity concept the scenario teaches. Surfaced in
+     * the debrief and (later) in the post-test mapping.
+     */
+    concept: string;
+}
+
+export type Scene =
+    | StimulusScene
+    | DecisionScene
+    | OutcomeScene
+    | DebriefScene;
+
+export interface StimulusScene {
+    type: "stimulus";
+    id: SceneId;
+    /** Markdown-friendly text (rendered as paragraphs for now). */
+    content: string;
+    /** Optional inline mock-up (e.g. an email card). */
+    mock?: EmailMock;
+    nextId: SceneId;
+}
+
+export interface DecisionScene {
+    type: "decision";
+    id: SceneId;
+    prompt: string;
+    /** Optional inline mock-up shown above the prompt (e.g. an email card). */
+    mock?: EmailMock;
+    /** 2–4 options. Order matters for rendering. */
+    choices: Choice[];
+}
+
+export interface OutcomeScene {
+    type: "outcome";
+    id: SceneId;
+    /** What happened, narrated. Static for v1, LLM-driven later. */
+    narration: string;
+    /** Did this choice succeed for the attacker (true) or the defender (false)? */
+    attackerWon: boolean;
+    nextId: SceneId;
+}
+
+export interface DebriefScene {
+    type: "debrief";
+    id: SceneId;
+    /** The lesson. Always shown at the end. */
+    lesson: string;
+    /**
+     * The cybersecurity concept name, repeated for emphasis (e.g. "Spear
+     * phishing relies on personalised lures"). Distinct from `lesson`,
+     * which is the narrative-flavoured retelling.
+     */
+    takeaway: string;
+}
+
+export interface Choice {
+    /** Button label shown to the player. */
+    label: string;
+    /** Scene to advance to when this choice is picked. */
+    nextId: SceneId;
+}
+
+/** Stylised email shown alongside a stimulus or decision scene. */
+export interface EmailMock {
+    from: string;
+    to: string;
+    subject: string;
+    body: string;
+    /** Optional sender display name; if omitted, `from` is shown raw. */
+    fromName?: string;
+}
