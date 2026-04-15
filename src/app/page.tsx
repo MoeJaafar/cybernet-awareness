@@ -1,130 +1,156 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { listScenarios } from "@/lib/scenarios";
-import { StatusBar } from "@/components/StatusBar";
+import { BootSequence } from "@/components/BootSequence";
 
 export default function Home() {
     const scenarios = listScenarios();
+    const [booted, setBooted] = useState(false);
+
+    if (!booted) {
+        return <BootSequence onDone={() => setBooted(true)} />;
+    }
+
+    return <Queue scenarios={scenarios} />;
+}
+
+function Queue({
+    scenarios,
+}: {
+    scenarios: ReturnType<typeof listScenarios>;
+}) {
+    const first = scenarios[0];
+    const rest = scenarios.slice(1);
 
     return (
-        <>
-            <StatusBar score={100} completed={0} total={scenarios.length} />
-
-            <main className="max-w-6xl mx-auto px-6 sm:px-10">
-                {/* HERO — asymmetric, editorial. Eyebrow, drop, display type. */}
-                <section className="pt-20 sm:pt-32 pb-16 sm:pb-28 grid grid-cols-12 gap-6 items-end">
-                    <div className="col-span-12 sm:col-span-8 flex flex-col gap-8">
-                        <div className="flex items-center gap-3">
-                            <span className="h-px w-10 bg-[color:var(--color-amber)]"></span>
-                            <span className="type-mono text-[color:var(--color-amber)]">
-                                Case File · Series 01
-                            </span>
-                        </div>
-                        <h1 className="type-display text-[68px] sm:text-[112px] lg:text-[136px] text-[color:var(--color-bone)] leading-[0.92]">
-                            Could you
-                            <br />
-                            spot the{" "}
-                            <span className="type-display-italic text-[color:var(--color-amber)] amber-flicker">
-                                attack
-                            </span>
-                            ?
-                        </h1>
-                    </div>
-
-                    <div className="col-span-12 sm:col-span-4 flex flex-col gap-4 sm:pb-4">
-                        <p className="type-body text-[color:var(--color-bone-dim)] text-base sm:text-[17px] leading-[1.65]">
-                            Your first week at Riverside University&apos;s SOC.
-                            A phishing email arrives at 09:12. A USB stick
-                            waits outside the elevator. A friendly caller
-                            claims to be from IT. Five cases. An AI narrator
-                            tells you how close you came.
-                        </p>
-                    </div>
-                </section>
-
-                {/* Chapter divider. */}
-                <div className="flex items-center gap-6 border-t border-[color:var(--color-edge-subtle)] pt-6 mb-10">
-                    <span className="type-mono">
-                        The Queue
+        <main className="min-h-screen px-6 sm:px-12 lg:px-20 pt-12 pb-24">
+            {/* Shift header — slim, mono. */}
+            <motion.div
+                className="flex items-baseline justify-between border-b border-[color:var(--color-edge-subtle)] pb-4 mb-16"
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+            >
+                <div className="flex items-center gap-3">
+                    <span className="relative inline-flex">
+                        <span className="h-2 w-2 rounded-full bg-[color:var(--color-amber)] dot-live"></span>
+                        <span className="absolute inset-0 h-2 w-2 rounded-full bg-[color:var(--color-amber)] blur-[3px] opacity-80"></span>
                     </span>
-                    <span className="h-px flex-1 bg-[color:var(--color-edge-subtle)]"></span>
-                    <span className="type-mono text-[color:var(--color-bone-ghost)]">
-                        {scenarios.length.toString().padStart(2, "0")} waiting
+                    <span className="type-mono text-[color:var(--color-amber)]">
+                        on duty · shift 01
+                    </span>
+                </div>
+                <span className="type-mono text-[color:var(--color-bone-ghost)]">
+                    09:12 · riverside.edu
+                </span>
+            </motion.div>
+
+            {/* LIVE CASE — takes the full width, pulses. */}
+            <motion.section
+                className="mb-16"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: [0.2, 0.7, 0.2, 1] }}
+            >
+                <div className="flex items-center gap-3 mb-4">
+                    <span className="h-px w-6 bg-[color:var(--color-signal-red)]"></span>
+                    <span className="type-mono text-[color:var(--color-signal-red)]">
+                        incoming · priority
                     </span>
                 </div>
 
-                {/* SCENARIO QUEUE — case-file cards. */}
-                <section className="mb-24">
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[color:var(--color-edge-subtle)] border border-[color:var(--color-edge-subtle)]">
-                        {scenarios.map((s, i) => (
-                            <li key={s.id} className="bg-[color:var(--color-ink-base)]">
-                                <Link
-                                    href={`/scenario/${s.id}`}
-                                    className="group block h-full p-7 sm:p-9 hover:bg-[color:var(--color-ink-raised)] transition-colors duration-300 relative"
-                                >
-                                    {/* Amber corner-mark — appears on hover. */}
-                                    <span
-                                        aria-hidden
-                                        className="absolute top-0 right-0 w-[3px] h-0 bg-[color:var(--color-amber)] group-hover:h-full transition-[height] duration-500 ease-out"
-                                    />
+                <Link
+                    href={`/scenario/${first.id}`}
+                    className="group block border-l-2 border-[color:var(--color-signal-red)] pl-8 sm:pl-12 py-4 hover:pl-10 sm:hover:pl-14 transition-[padding] duration-500 ease-out"
+                >
+                    <div className="flex items-baseline gap-5 mb-5">
+                        <span className="type-mono text-[color:var(--color-signal-red)]">
+                            case · 001
+                        </span>
+                        <span className="h-px flex-1 bg-[color:var(--color-edge-subtle)] max-w-[160px]"></span>
+                        <span className="type-mono text-[color:var(--color-signal-red)] amber-flicker">
+                            unread
+                        </span>
+                    </div>
 
-                                    <div className="flex items-baseline justify-between gap-6 mb-6">
-                                        <span className="type-mono text-[color:var(--color-amber)]">
-                                            Case · {String(i + 1).padStart(3, "0")}
-                                        </span>
-                                        <span className="type-mono text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-bone-muted)] transition-colors">
-                                            unopened
-                                        </span>
-                                    </div>
+                    <h2 className="type-display text-[44px] sm:text-[68px] lg:text-[88px] leading-[0.98] text-[color:var(--color-bone)] group-hover:text-[color:var(--color-amber)] transition-colors duration-300 max-w-4xl">
+                        {first.title}
+                    </h2>
 
-                                    <h3 className="type-display text-[28px] sm:text-[34px] leading-[1.05] text-[color:var(--color-bone)] mb-5 group-hover:text-[color:var(--color-amber-soft)] transition-colors">
-                                        {s.title}
-                                    </h3>
+                    <p className="type-body text-base sm:text-lg text-[color:var(--color-bone-dim)] mt-5 max-w-2xl leading-relaxed">
+                        {first.concept}
+                    </p>
 
-                                    <p className="type-body text-[15px] text-[color:var(--color-bone-dim)] leading-relaxed">
-                                        {s.concept}
-                                    </p>
+                    <div className="mt-8 flex items-center gap-3 text-[color:var(--color-bone-muted)] group-hover:text-[color:var(--color-amber)] transition-colors">
+                        <span className="type-mono">open case file</span>
+                        <span
+                            aria-hidden
+                            className="h-px w-10 bg-current group-hover:w-24 transition-[width] duration-500 ease-out"
+                        ></span>
+                    </div>
+                </Link>
+            </motion.section>
 
-                                    <div className="mt-8 flex items-center gap-2 text-[color:var(--color-bone-muted)] group-hover:text-[color:var(--color-amber)] transition-colors">
-                                        <span className="type-mono">
-                                            Open case
-                                        </span>
-                                        <span aria-hidden className="h-px w-6 bg-current group-hover:w-16 transition-[width] duration-500 ease-out"></span>
-                                    </div>
-                                </Link>
-                            </li>
-                        ))}
+            {/* REST OF QUEUE — sealed / locked. */}
+            {rest.length > 0 && (
+                <motion.section
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                    <div className="flex items-center gap-4 mb-6">
+                        <span className="type-mono">in the queue</span>
+                        <span className="h-px flex-1 bg-[color:var(--color-edge-subtle)]"></span>
+                        <span className="type-mono text-[color:var(--color-bone-ghost)]">
+                            {rest.length.toString().padStart(2, "0")} sealed
+                        </span>
+                    </div>
 
-                        {/* Placeholder "coming soon" tiles to fill the grid symmetrically. */}
-                        {Array.from({ length: Math.max(0, (scenarios.length % 2 === 0 ? 0 : 1)) }).map((_, i) => (
-                            <li
-                                key={`empty-${i}`}
-                                className="bg-[color:var(--color-ink-base)]/60 p-7 sm:p-9 flex flex-col justify-between min-h-[240px]"
+                    <ul>
+                        {rest.map((s, i) => (
+                            <motion.li
+                                key={s.id}
+                                className="border-t border-[color:var(--color-edge-subtle)] last:border-b"
+                                initial={{ opacity: 0, x: -4 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.75 + i * 0.08,
+                                }}
                             >
-                                <div className="flex items-baseline justify-between">
-                                    <span className="type-mono text-[color:var(--color-bone-ghost)]">
-                                        Case · {String(scenarios.length + 1).padStart(3, "0")}
+                                <div className="py-5 grid grid-cols-[auto_1fr_auto] items-center gap-6 opacity-55">
+                                    <span className="type-mono text-[color:var(--color-bone-ghost)] w-16">
+                                        · {String(i + 2).padStart(3, "0")}
+                                    </span>
+                                    <span className="type-display-italic text-[color:var(--color-bone-muted)] text-lg sm:text-xl">
+                                        to be briefed
                                     </span>
                                     <span className="type-mono text-[color:var(--color-bone-ghost)]">
                                         sealed
                                     </span>
                                 </div>
-                                <h3 className="type-display-italic text-[26px] text-[color:var(--color-bone-ghost)] leading-snug">
-                                    to be briefed
-                                </h3>
-                            </li>
+                            </motion.li>
                         ))}
                     </ul>
-                </section>
+                </motion.section>
+            )}
 
-                <footer className="border-t border-[color:var(--color-edge-subtle)] py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <p className="type-mono">
-                        Master&apos;s thesis prototype · 2026
-                    </p>
-                    <p className="type-body text-sm text-[color:var(--color-bone-ghost)] italic">
-                        <span className="type-display-italic">&ldquo;The human is always the last firewall.&rdquo;</span>
-                    </p>
-                </footer>
-            </main>
-        </>
+            <motion.footer
+                className="mt-24 pt-8 border-t border-[color:var(--color-edge-subtle)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 1.1 }}
+            >
+                <span className="type-mono text-[color:var(--color-bone-ghost)]">
+                    master&apos;s thesis prototype · 2026
+                </span>
+                <span className="type-display-italic text-sm text-[color:var(--color-bone-ghost)]">
+                    &ldquo;the human is always the last firewall.&rdquo;
+                </span>
+            </motion.footer>
+        </main>
     );
 }
