@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
+/*
+ * SOC dashboard palette.
+ *
+ *   bg-base       deep navy background, like a darkened terminal
+ *   bg-panel      slightly raised panels and cards
+ *   bg-panel-2    secondary panel (email mock interior, etc.)
+ *   border-soft   thin separator
+ *   border-hard   stronger separator at panel edges
+ *   text-primary  body copy
+ *   text-muted    captions, secondary labels
+ *   text-dim      timestamps, labels
+ *   accent        cyan signal — interactive, focused, active
+ *   warn          amber alert — caution
+ *   bad           red — attacker won, breach
+ *   good          emerald — defender won, contained
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --bg-base:      #060814;
+    --bg-panel:     #0d1124;
+    --bg-panel-2:   #131830;
+    --border-soft:  #1f2547;
+    --border-hard:  #2a3360;
+    --text-primary: #e6ecff;
+    --text-muted:   #9aa3c7;
+    --text-dim:     #5e6691;
+    --accent:       #46e3ff;
+    --accent-glow:  rgba(70, 227, 255, 0.18);
+    --warn:         #ffb547;
+    --bad:          #ff5470;
+    --bad-glow:     rgba(255, 84, 112, 0.18);
+    --good:         #4ade80;
+    --good-glow:    rgba(74, 222, 128, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-bg-base: var(--bg-base);
+    --color-bg-panel: var(--bg-panel);
+    --color-bg-panel-2: var(--bg-panel-2);
+    --color-border-soft: var(--border-soft);
+    --color-border-hard: var(--border-hard);
+    --color-text-primary: var(--text-primary);
+    --color-text-muted: var(--text-muted);
+    --color-text-dim: var(--text-dim);
+    --color-accent: var(--accent);
+    --color-accent-glow: var(--accent-glow);
+    --color-warn: var(--warn);
+    --color-bad: var(--bad);
+    --color-bad-glow: var(--bad-glow);
+    --color-good: var(--good);
+    --color-good-glow: var(--good-glow);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    /* Subtle scanline / circuit pattern in the page background. */
+    background-image:
+        radial-gradient(ellipse at top, rgba(70, 227, 255, 0.06), transparent 60%),
+        radial-gradient(ellipse at bottom right, rgba(74, 222, 128, 0.04), transparent 50%);
+    background-attachment: fixed;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Monospace tag style — used for "system text" labels. */
+.mono-tag {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+/* Glow ring for the active/focused element. */
+.ring-accent {
+    box-shadow: 0 0 0 1px var(--border-hard), 0 0 24px var(--accent-glow);
+}
+
+/* Smooth fade-in for scene transitions. */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.scene-enter {
+    animation: fadeInUp 280ms ease-out both;
+}
+
+/* Pulsing dot indicator for "live attack" feel. */
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.35; }
+}
+.dot-pulse {
+    animation: pulse-dot 1.6s ease-in-out infinite;
 }

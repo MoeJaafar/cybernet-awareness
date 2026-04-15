@@ -1,45 +1,58 @@
 import Link from "next/link";
 import { listScenarios } from "@/lib/scenarios";
+import { StatusBar } from "@/components/StatusBar";
 
 export default function Home() {
     const scenarios = listScenarios();
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-6 py-12">
-            <main className="max-w-2xl w-full text-left flex flex-col gap-10">
-                <header className="flex flex-col gap-3">
-                    <p className="text-sm uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                        CyberNet · Awareness Edition
-                    </p>
-                    <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-                        Could you spot the attack?
+        <>
+            <StatusBar score={100} completed={0} total={scenarios.length} />
+            <main className="max-w-5xl mx-auto px-5 sm:px-8 py-12 sm:py-20">
+                <section className="flex flex-col gap-6 mb-14">
+                    <p className="mono-tag">incident readiness drill · day 1</p>
+                    <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[color:var(--color-text-primary)] leading-[1.05] max-w-3xl">
+                        Could you spot{" "}
+                        <span className="text-[color:var(--color-accent)]">
+                            the attack
+                        </span>
+                        ?
                     </h1>
-                </header>
-
-                <p className="text-lg leading-relaxed text-zinc-700 dark:text-zinc-300">
-                    You play a member of staff at a small university. Over the
-                    next few minutes, you&apos;ll face a series of realistic
-                    cyberattacks — a phishing email, a USB stick on the floor,
-                    a help-desk call asking for your password. Each decision
-                    plays out, an AI narrator explains what just happened, and
-                    you find out how an attacker would have used your slip.
-                </p>
+                    <p className="text-lg text-[color:var(--color-text-muted)] max-w-2xl leading-relaxed">
+                        You&apos;ve just joined Riverside University&apos;s SOC.
+                        Over the next few minutes, real-world attacks will land
+                        in your inbox, on your phone, on the floor outside the
+                        elevator. Each choice plays out. An AI narrator
+                        explains how an attacker would have used your slip.
+                    </p>
+                </section>
 
                 <section className="flex flex-col gap-4">
-                    <h2 className="text-xs uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                        Scenarios
-                    </h2>
-                    <ul className="flex flex-col gap-3">
-                        {scenarios.map((s) => (
+                    <div className="flex items-baseline justify-between">
+                        <p className="mono-tag">scenario queue</p>
+                        <p className="mono-tag text-[color:var(--color-text-dim)]">
+                            {scenarios.length} ready
+                        </p>
+                    </div>
+                    <ul className="grid sm:grid-cols-2 gap-4">
+                        {scenarios.map((s, i) => (
                             <li key={s.id}>
                                 <Link
                                     href={`/scenario/${s.id}`}
-                                    className="block rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-900 dark:hover:border-zinc-100 hover:bg-white dark:hover:bg-zinc-900 px-5 py-4 transition-colors"
+                                    className="group block h-full rounded-xl border border-[color:var(--color-border-soft)] bg-[color:var(--color-bg-panel)] hover:border-[color:var(--color-accent)] hover:bg-[color:var(--color-bg-panel-2)] transition-all duration-150 p-5"
                                 >
-                                    <p className="text-base font-medium text-zinc-900 dark:text-zinc-100">
+                                    <div className="flex items-baseline justify-between mb-3">
+                                        <span className="mono-tag text-[color:var(--color-accent)]">
+                                            CASE-{String(i + 1).padStart(3, "0")}
+                                        </span>
+                                        <span className="mono-tag text-[color:var(--color-text-dim)] group-hover:text-[color:var(--color-text-muted)]">
+                                            unread
+                                        </span>
+                                    </div>
+                                    <p className="text-base font-semibold text-[color:var(--color-text-primary)] mb-1.5 leading-snug">
                                         {s.title}
                                     </p>
-                                    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                                    <p className="text-sm text-[color:var(--color-text-muted)] leading-relaxed">
                                         {s.concept}
                                     </p>
                                 </Link>
@@ -48,10 +61,12 @@ export default function Home() {
                     </ul>
                 </section>
 
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Master&apos;s thesis prototype. More scenarios coming.
-                </p>
+                <footer className="mt-20 pt-8 border-t border-[color:var(--color-border-soft)]">
+                    <p className="mono-tag">
+                        master&apos;s thesis prototype · 2026
+                    </p>
+                </footer>
             </main>
-        </div>
+        </>
     );
 }
