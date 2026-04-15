@@ -52,7 +52,7 @@ function Queue({
                     </span>
                 </div>
                 <span className="type-mono text-base text-[color:var(--color-bone-ghost)]">
-                    09:12 · riverside.edu
+                    09:12 · at your desk
                 </span>
             </motion.div>
 

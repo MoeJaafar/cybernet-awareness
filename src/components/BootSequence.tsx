@@ -25,7 +25,7 @@ type StoryLine = {
 };
 
 const SCRIPT: StoryLine[] = [
-    { text: "Tuesday morning. Riverside University.", speed: 52, hold: 900 },
+    { text: "Tuesday morning. Just another workday.", speed: 52, hold: 900 },
     { text: "Coffee in one hand. Laptop open. Five emails waiting.", speed: 42, hold: 900 },
     { text: "One of them is not what it seems.", speed: 58, hold: 1400, emphasis: true },
 ];

@@ -21,7 +21,7 @@ export const phishing: Scenario = {
     title: "Urgent: account verification required",
     concept: "Spear phishing — recognising urgency, mismatched senders, and look-alike domains.",
     setup:
-        "You're at your desk in the faculty office. Five emails are waiting for you this morning. Three are meeting invites, one is payroll, and one is asking you to act fast.",
+        "You're at your desk. Five emails are waiting this morning. Three are meeting invites, one is payroll, and one is asking you to act fast.",
     startSceneId: "open-inbox",
     scenes: {
         "open-inbox": {
@@ -42,12 +42,12 @@ export const phishing: Scenario = {
             speaker: "your move",
             prompt: "What do you do?",
             mock: {
-                fromName: "ICT Helpdesk",
-                from: "helpdesk@uni-portal-secure.com",
-                to: "you@university.edu",
+                fromName: "IT Helpdesk",
+                from: "helpdesk@portal-secure-verify.com",
+                to: "you@work.com",
                 subject: "URGENT: account verification required within 24 hours",
                 body:
-                    "Dear staff member,\n\nOur records indicate your account has not been verified in line with the new Microsoft 365 security policy. Failure to verify within 24 hours will result in your account being suspended and all unsaved work being lost.\n\nPlease verify here: https://uni-portal-secure.com/verify\n\nKind regards,\nICT Helpdesk Team\nUniversity of [your institution]",
+                    "Dear staff member,\n\nOur records indicate your account has not been verified in line with the new Microsoft 365 security policy. Failure to verify within 24 hours will result in your account being suspended and all unsaved work being lost.\n\nPlease verify here: https://portal-secure-verify.com/verify\n\nKind regards,\nIT Helpdesk Team",
             },
             choices: [
                 { label: "Click the verification link", nextId: "outcome-clicked" },
@@ -63,7 +63,7 @@ export const phishing: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You click. A login page that looks exactly like your university's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real university homepage — so you assume everything worked. It didn't. The attacker now has your credentials and is already logging into your mailbox from a residential IP in another country. Within an hour they'll forward themselves your latest contracts and try the same password against the VPN.",
+                "You click. A login page that looks exactly like your company's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real company homepage — so you assume everything worked. It didn't. The attacker now has your credentials and is already logging into your mailbox from a residential IP in another country. Within an hour they'll forward themselves your latest contracts and try the same password against the VPN.",
             nextId: "debrief",
         },
         "outcome-reported": {
@@ -74,7 +74,7 @@ export const phishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You forward the email to IT as a phishing report. Within an hour ICT confirms that uni-portal-secure.com is a typosquat domain registered last week, blocks it at the gateway, and emails the rest of the faculty a warning. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
+                "You forward the email to IT as a phishing report. Within an hour they confirm that portal-secure-verify.com is a typosquat domain registered last week, block it at the gateway, and warn everyone else. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
             nextId: "debrief",
         },
         "outcome-deleted": {
@@ -96,7 +96,7 @@ export const phishing: Scenario = {
             takeaway:
                 "Spear phishing relies on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:
-                "Three signals were in plain sight: the sender domain (uni-portal-secure.com, not your university's actual domain), the artificial 24-hour deadline, and a request that ICT would never make (re-verifying an account via a one-off link). When two of those three signals are present, treat the email as malicious by default. Reporting matters too: deleting protects only you, but reporting protects everyone the campaign also targeted.",
+                "Three signals were in plain sight: the sender domain (portal-secure-verify.com, not your company's real IT domain), the artificial 24-hour deadline, and a request IT would never make (re-verifying an account via a one-off link). When two of those three signals are present, treat the email as malicious by default. Reporting matters too: deleting protects only you, but reporting protects everyone the campaign also targeted.",
         },
     },
 };

@@ -40,7 +40,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
     title: "CyberNet — Could you spot the attack?",
     description:
-        "A web-based cybersecurity awareness game. Work through scripted attacks — phishing, USB drops, vishing — as a new SOC analyst at Riverside University.",
+        "A web-based cybersecurity awareness game. Short scenarios where you face everyday attacks — phishing, USB drops, vishing, password pressure — and see what would have happened next.",
 };
 
 export default function RootLayout({

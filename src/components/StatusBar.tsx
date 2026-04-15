@@ -28,7 +28,7 @@ export function StatusBar({
                             Cyber<span className="type-display-italic text-[color:var(--color-amber)]">Net</span>
                         </span>
                         <span className="type-mono hidden sm:inline">
-                            awareness · riverside
+                            awareness edition
                         </span>
                     </div>
                 </Link>
