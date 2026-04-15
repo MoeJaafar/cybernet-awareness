@@ -1,120 +1,122 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 /**
- * Boot-up typewriter. Plays a sequence of terminal-like lines, then
- * hands off to the caller via onDone. The caller reveals the rest of
- * the page once the boot completes.
+ * Opening story beat. Types out one line of prose at a time, fades
+ * to the next. When every line has played the intro hands off to the
+ * caller via onDone.
+ *
+ * Each line can later carry an audio track — the shape reserves an
+ * `audio` field so the user can drop AI-generated narration in.
  */
 
-type Line = {
+type StoryLine = {
     text: string;
-    /** milliseconds between characters during this line. */
+    /** ms per character — default 42. */
     speed?: number;
-    /** milliseconds to wait AFTER this line finishes before starting next. */
-    pauseAfter?: number;
-    /** visual tone for this line. */
-    tone?: "muted" | "primary" | "ok" | "warn";
+    /** ms to hold the finished line before fading out. */
+    hold?: number;
+    /** future hook for AI-generated narration audio. */
+    audio?: string;
+    /** soft emphasis for short lines. */
+    emphasis?: boolean;
 };
 
-const SCRIPT: Line[] = [
-    { text: "> riverside university", tone: "muted", speed: 22 },
-    { text: "> tuesday, 09:12", tone: "muted", speed: 22, pauseAfter: 220 },
-    { text: "", speed: 0, pauseAfter: 160 },
-    { text: "> coffee. laptop open. five emails waiting.", tone: "primary", speed: 28, pauseAfter: 320 },
-    { text: "> one of them is not what it seems.", tone: "warn", speed: 34 },
+const SCRIPT: StoryLine[] = [
+    { text: "Tuesday morning. Riverside University.", speed: 52, hold: 900 },
+    { text: "Coffee in one hand. Laptop open. Five emails waiting.", speed: 42, hold: 900 },
+    { text: "One of them is not what it seems.", speed: 58, hold: 1400, emphasis: true },
 ];
 
 export function BootSequence({ onDone }: { onDone: () => void }) {
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
-    const [done, setDone] = useState(false);
+    const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
 
     useEffect(() => {
-        if (done) return;
-        if (lineIndex >= SCRIPT.length) {
-            setDone(true);
-            const t = window.setTimeout(onDone, 500);
+        if (phase === "done") {
+            const t = window.setTimeout(onDone, 400);
             return () => window.clearTimeout(t);
         }
+        if (lineIndex >= SCRIPT.length) {
+            setPhase("done");
+            return;
+        }
         const line = SCRIPT[lineIndex];
-        if (line.speed === 0 || charIndex >= line.text.length) {
-            const pause = line.pauseAfter ?? 60;
+        if (phase === "type") {
+            if (charIndex >= line.text.length) {
+                setPhase("hold");
+                return;
+            }
+            const prev = line.text[charIndex - 1] ?? "";
+            const delay =
+                prev === "."
+                    ? 380
+                    : prev === ","
+                      ? 180
+                      : prev === "—"
+                        ? 220
+                        : line.speed ?? 42;
+            const t = window.setTimeout(() => setCharIndex((c) => c + 1), delay);
+            return () => window.clearTimeout(t);
+        }
+        if (phase === "hold") {
             const t = window.setTimeout(() => {
                 setLineIndex((i) => i + 1);
                 setCharIndex(0);
-            }, pause);
+                setPhase("type");
+            }, line.hold ?? 900);
             return () => window.clearTimeout(t);
         }
-        const t = window.setTimeout(
-            () => setCharIndex((c) => c + 1),
-            line.speed ?? 22,
-        );
-        return () => window.clearTimeout(t);
-    }, [lineIndex, charIndex, onDone, done]);
+    }, [lineIndex, charIndex, phase, onDone]);
+
+    const current = SCRIPT[lineIndex];
+    const visible = current?.text.slice(0, charIndex) ?? "";
+    const isTyping = phase === "type" && charIndex < (current?.text.length ?? 0);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
-            <div className="max-w-4xl w-full text-center">
-                {SCRIPT.slice(0, lineIndex).map((line, i) => (
-                    <Row key={i} line={line} text={line.text} />
-                ))}
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
+            <AnimatePresence mode="wait">
                 {lineIndex < SCRIPT.length && (
-                    <Row
-                        line={SCRIPT[lineIndex]}
-                        text={SCRIPT[lineIndex].text.slice(0, charIndex)}
-                        caret
-                    />
+                    <motion.p
+                        key={lineIndex}
+                        className={`type-body text-center leading-[1.3] max-w-4xl ${
+                            current.emphasis
+                                ? "type-display-italic text-[color:var(--color-amber)] text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
+                                : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[60px]"
+                        }`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                        {visible}
+                        {isTyping && (
+                            <span
+                                aria-hidden
+                                className={`inline-block ml-1 w-[0.12em] h-[0.8em] align-[-0.1em] ${
+                                    current.emphasis
+                                        ? "bg-[color:var(--color-amber)]"
+                                        : "bg-[color:var(--color-bone)]"
+                                }`}
+                                style={{ animation: "pulse-dot 0.9s ease-in-out infinite" }}
+                            />
+                        )}
+                    </motion.p>
                 )}
-            </div>
+            </AnimatePresence>
 
             {/* Skip affordance. */}
-            {!done && (
+            {phase !== "done" && (
                 <button
                     type="button"
-                    onClick={() => {
-                        setDone(true);
-                        onDone();
-                    }}
+                    onClick={() => setPhase("done")}
                     className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 type-mono text-[color:var(--color-bone-ghost)] hover:text-[color:var(--color-amber)] transition-colors"
                 >
                     skip →
                 </button>
-            )}
-        </div>
-    );
-}
-
-function Row({
-    line,
-    text,
-    caret,
-}: {
-    line: Line;
-    text: string;
-    caret?: boolean;
-}) {
-    const colour =
-        line.tone === "primary"
-            ? "text-[color:var(--color-bone)]"
-            : line.tone === "ok"
-              ? "text-[color:var(--color-signal-green)]"
-              : line.tone === "warn"
-                ? "text-[color:var(--color-amber)]"
-                : "text-[color:var(--color-bone-muted)]";
-    return (
-        <div
-            className={`font-mono text-lg sm:text-2xl lg:text-3xl leading-[1.6] tracking-wide ${colour}`}
-            style={{ minHeight: "1.6em" }}
-        >
-            {text}
-            {caret && (
-                <span
-                    aria-hidden
-                    className="inline-block ml-1 w-[0.55em] h-[1em] translate-y-[2px] bg-[color:var(--color-amber)]"
-                    style={{ animation: "pulse-dot 0.9s ease-in-out infinite" }}
-                />
             )}
         </div>
     );
