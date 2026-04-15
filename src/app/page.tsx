@@ -5,15 +5,21 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { listScenarios } from "@/lib/scenarios";
 import { BootSequence } from "@/components/BootSequence";
+import { TitleScreen } from "@/components/TitleScreen";
 // (StatusBar deliberately omitted from the landing — the page IS the
 //  day, so a header bar would just be duplicate chrome.)
 
+type Stage = "title" | "boot" | "queue";
+
 export default function Home() {
     const scenarios = listScenarios();
-    const [booted, setBooted] = useState(false);
+    const [stage, setStage] = useState<Stage>("title");
 
-    if (!booted) {
-        return <BootSequence onDone={() => setBooted(true)} />;
+    if (stage === "title") {
+        return <TitleScreen onBegin={() => setStage("boot")} />;
+    }
+    if (stage === "boot") {
+        return <BootSequence onDone={() => setStage("queue")} />;
     }
 
     return <Queue scenarios={scenarios} />;
