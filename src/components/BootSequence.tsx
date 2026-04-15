@@ -57,8 +57,8 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     }, [lineIndex, charIndex, onDone, done]);
 
     return (
-        <div className="min-h-screen flex flex-col justify-center px-8 sm:px-16 lg:px-24">
-            <div className="max-w-3xl">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6">
+            <div className="max-w-4xl w-full text-center">
                 {SCRIPT.slice(0, lineIndex).map((line, i) => (
                     <Row key={i} line={line} text={line.text} />
                 ))}
@@ -107,7 +107,7 @@ function Row({
                 : "text-[color:var(--color-bone-muted)]";
     return (
         <div
-            className={`font-mono text-sm sm:text-base leading-relaxed ${colour}`}
+            className={`font-mono text-lg sm:text-2xl lg:text-3xl leading-[1.6] tracking-wide ${colour}`}
             style={{ minHeight: "1.6em" }}
         >
             {text}
