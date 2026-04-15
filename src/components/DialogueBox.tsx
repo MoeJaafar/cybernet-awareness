@@ -1,71 +1,126 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 
 /**
- * Bottom-screen dialogue box styled like a SOC console readout.
- * Typewriter effect reveals the text one character at a time, with
- * a prominent skip/continue affordance. The text lives on the
- * Stage's dialogue slot; choices and primary buttons are children.
+ * Dialogue dock. Glass surface with an amber left accent, editorial
+ * serif body type, speaker label in monospaced micro-caps. The
+ * typewriter slows on periods/commas to give the text breathing room.
  */
 export function DialogueBox({
     speaker,
     text,
     instant = false,
+    tone = "default",
     children,
 }: {
     speaker?: string;
     text: string;
-    /** Skip the typewriter and show the text in full. */
     instant?: boolean;
-    /** Buttons / choices / continue CTA rendered below the body text. */
+    tone?: "default" | "breach" | "contained";
     children?: ReactNode;
 }) {
-    const revealed = useTypewriter(text, instant ? 0 : 18);
+    const revealed = useTypewriter(text, instant);
+    const complete = revealed.length >= text.length;
+
+    const accentClass =
+        tone === "breach"
+            ? "border-l-[color:var(--color-signal-red)] before:bg-[color:var(--color-signal-red)]"
+            : tone === "contained"
+              ? "border-l-[color:var(--color-signal-green)] before:bg-[color:var(--color-signal-green)]"
+              : "border-l-[color:var(--color-amber)] before:bg-[color:var(--color-amber)]";
+
+    const speakerColour =
+        tone === "breach"
+            ? "text-[color:var(--color-signal-red)]"
+            : tone === "contained"
+              ? "text-[color:var(--color-signal-green)]"
+              : "text-[color:var(--color-amber)]";
 
     return (
         <motion.section
-            className="rounded-xl border border-[color:var(--color-border-hard)] bg-[color:var(--color-bg-panel)]/92 backdrop-blur-md shadow-[0_12px_48px_-16px_rgba(0,0,0,0.75)] px-5 sm:px-7 py-5 sm:py-6"
+            className={`relative border-l-2 ${accentClass} bg-[color:var(--color-ink-deep)]/82 backdrop-blur-xl pl-7 sm:pl-10 pr-6 sm:pr-10 py-7 sm:py-9 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.9)]`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
         >
+            {/* Amber serif drop-cap marker — the "chapter quill". */}
+            <span
+                aria-hidden
+                className={`absolute top-7 -left-[5px] h-6 w-2.5 ${speakerColour.replace("text", "bg")}`}
+            />
+
             {speaker && (
-                <p className="mono-tag text-[color:var(--color-accent)] mb-2">
+                <p className={`type-mono mb-4 ${speakerColour}`}>
                     {speaker}
                 </p>
             )}
+
             <div
-                className="text-base sm:text-lg leading-relaxed text-[color:var(--color-text-primary)] min-h-[3.5em]"
-                // Bold-text support — authored content uses **bold** as in Markdown.
+                className="type-body text-[17px] sm:text-[19px] leading-[1.6] text-[color:var(--color-bone)] min-h-[3.5em]"
                 dangerouslySetInnerHTML={{
                     __html: revealed.replace(
                         /\*\*(.+?)\*\*/g,
-                        '<strong class="text-[color:var(--color-accent)]">$1</strong>',
+                        '<em class="type-display-italic text-[color:var(--color-amber)] not-italic">$1</em>',
                     ),
                 }}
             />
+
+            {/* Continue caret — blinking when the line is finished. */}
+            {complete && !children && (
+                <span
+                    aria-hidden
+                    className="inline-block ml-1 w-[0.4em] h-[0.9em] align-middle bg-[color:var(--color-amber)]"
+                    style={{ animation: "pulse-dot 1.1s ease-in-out infinite" }}
+                />
+            )}
+
             {children && (
-                <div className="mt-5 flex flex-col gap-3">{children}</div>
+                <div className="mt-7 flex flex-col gap-3">{children}</div>
             )}
         </motion.section>
     );
 }
 
 /**
- * Reveals `text` one character at a time. Returns the growing
- * substring. `speedMs = 0` returns the full string immediately.
+ * Typewriter that slows at sentence boundaries. Returns a prefix of
+ * `text` growing over time.
+ *
+ * Timings per-character:
+ *   default    18 ms
+ *   after ','  120 ms
+ *   after '.'  260 ms
+ *   after '—'  180 ms
  */
-function useTypewriter(text: string, speedMs: number): string {
-    const [n, setN] = useState(speedMs === 0 ? text.length : 0);
+function useTypewriter(text: string, instant: boolean): string {
+    const [n, setN] = useState(instant ? text.length : 0);
+    const lastTextRef = useRef(text);
+
     useEffect(() => {
-        setN(speedMs === 0 ? text.length : 0);
-    }, [text, speedMs]);
+        if (lastTextRef.current !== text) {
+            lastTextRef.current = text;
+            setN(instant ? text.length : 0);
+        }
+    }, [text, instant]);
+
     useEffect(() => {
-        if (speedMs === 0) return;
+        if (instant) return;
         if (n >= text.length) return;
-        const id = window.setTimeout(() => setN((k) => k + 1), speedMs);
+        const prev = text[n - 1] ?? "";
+        const delay =
+            prev === "."
+                ? 260
+                : prev === ","
+                  ? 120
+                  : prev === "—"
+                    ? 180
+                    : prev === "\n"
+                      ? 260
+                      : 18;
+        const id = window.setTimeout(() => setN((k) => k + 1), delay);
         return () => window.clearTimeout(id);
-    }, [n, text, speedMs]);
+    }, [n, text, instant]);
+
     return text.slice(0, n);
 }

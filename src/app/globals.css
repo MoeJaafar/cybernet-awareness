@@ -1,99 +1,259 @@
 @import "tailwindcss";
 
 /*
- * SOC dashboard palette.
+ * CYBERNET — Investigative-Noir design tokens.
  *
- *   bg-base       deep navy background, like a darkened terminal
- *   bg-panel      slightly raised panels and cards
- *   bg-panel-2    secondary panel (email mock interior, etc.)
- *   border-soft   thin separator
- *   border-hard   stronger separator at panel edges
- *   text-primary  body copy
- *   text-muted    captions, secondary labels
- *   text-dim      timestamps, labels
- *   accent        cyan signal — interactive, focused, active
- *   warn          amber alert — caution
- *   bad           red — attacker won, breach
- *   good          emerald — defender won, contained
+ * Aesthetic: moody prestige-TV cybersecurity thriller.
+ * - Warm ink base (not cool blue) — feels like a lamp on a late-
+ *   night desk, not a datacenter.
+ * - Bone-cream text for warmth and readability on ink.
+ * - CRT-phosphor AMBER as the primary interactive signal. Generic
+ *   cyber-cyan is avoided.
+ * - Signal colours (red / green) stay DESATURATED until a pivotal
+ *   moment (outcome reveal) where they full-saturate briefly.
+ * - Editorial serif display + body, monospace only for system labels.
  */
 
 :root {
-    --bg-base:      #060814;
-    --bg-panel:     #0d1124;
-    --bg-panel-2:   #131830;
-    --border-soft:  #1f2547;
-    --border-hard:  #2a3360;
-    --text-primary: #e6ecff;
-    --text-muted:   #9aa3c7;
-    --text-dim:     #5e6691;
-    --accent:       #46e3ff;
-    --accent-glow:  rgba(70, 227, 255, 0.18);
-    --warn:         #ffb547;
-    --bad:          #ff5470;
-    --bad-glow:     rgba(255, 84, 112, 0.18);
-    --good:         #4ade80;
-    --good-glow:    rgba(74, 222, 128, 0.18);
+    /* Ink surface hierarchy. */
+    --ink-deeper:        #040302;
+    --ink-deep:          #0a0806;
+    --ink-base:          #121010;
+    --ink-raised:        #1a1716;
+    --ink-higher:        #221e1c;
+
+    /* Text hierarchy — warm, not cool. */
+    --bone:              #ede4d3;
+    --bone-dim:          #b8ab96;
+    --bone-muted:        #726857;
+    --bone-ghost:        #3d362c;
+
+    /* Signal palette. */
+    --amber:             #ff9933;
+    --amber-soft:        #f2b26d;
+    --amber-glow:        rgba(255, 153, 51, 0.22);
+    --amber-wash:        rgba(255, 153, 51, 0.06);
+
+    --signal-red:        #d64545;
+    --signal-red-glow:   rgba(214, 69, 69, 0.28);
+
+    --signal-green:      #7a9464;
+    --signal-green-glow: rgba(122, 148, 100, 0.22);
+
+    --signal-ice:        #6990a8;
+
+    /* Borders. */
+    --edge-subtle:       #2a2623;
+    --edge-prominent:    #403a32;
+
+    /* Fonts — plumbed by next/font in layout.tsx. */
+    --font-display: var(--font-instrument-serif), Georgia, serif;
+    --font-body:    var(--font-newsreader), Georgia, serif;
+    --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 @theme inline {
-    --color-bg-base: var(--bg-base);
-    --color-bg-panel: var(--bg-panel);
-    --color-bg-panel-2: var(--bg-panel-2);
-    --color-border-soft: var(--border-soft);
-    --color-border-hard: var(--border-hard);
-    --color-text-primary: var(--text-primary);
-    --color-text-muted: var(--text-muted);
-    --color-text-dim: var(--text-dim);
-    --color-accent: var(--accent);
-    --color-accent-glow: var(--accent-glow);
-    --color-warn: var(--warn);
-    --color-bad: var(--bad);
-    --color-bad-glow: var(--bad-glow);
-    --color-good: var(--good);
-    --color-good-glow: var(--good-glow);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+    --color-ink-deeper: var(--ink-deeper);
+    --color-ink-deep: var(--ink-deep);
+    --color-ink-base: var(--ink-base);
+    --color-ink-raised: var(--ink-raised);
+    --color-ink-higher: var(--ink-higher);
+    --color-bone: var(--bone);
+    --color-bone-dim: var(--bone-dim);
+    --color-bone-muted: var(--bone-muted);
+    --color-bone-ghost: var(--bone-ghost);
+    --color-amber: var(--amber);
+    --color-amber-soft: var(--amber-soft);
+    --color-signal-red: var(--signal-red);
+    --color-signal-green: var(--signal-green);
+    --color-signal-ice: var(--signal-ice);
+    --color-edge-subtle: var(--edge-subtle);
+    --color-edge-prominent: var(--edge-prominent);
+    --font-display: var(--font-display);
+    --font-body: var(--font-body);
+    --font-mono: var(--font-mono);
+}
+
+html {
+    background: var(--ink-deeper);
 }
 
 html, body {
-    background: var(--bg-base);
-    color: var(--text-primary);
-    font-family: var(--font-geist-sans), system-ui, sans-serif;
-    /* Subtle scanline / circuit pattern in the page background. */
+    color: var(--bone);
+    font-family: var(--font-body);
+    font-feature-settings: "kern", "liga", "calt", "zero";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+}
+
+body {
+    background: var(--ink-base);
+    /* Ambient atmosphere — warm under-glow from bottom + cooler hint top. */
     background-image:
-        radial-gradient(ellipse at top, rgba(70, 227, 255, 0.06), transparent 60%),
-        radial-gradient(ellipse at bottom right, rgba(74, 222, 128, 0.04), transparent 50%);
+        radial-gradient(ellipse 100% 80% at 50% 110%, rgba(255, 153, 51, 0.06), transparent 60%),
+        radial-gradient(ellipse 80% 60% at 20% -20%, rgba(105, 144, 168, 0.05), transparent 70%);
     background-attachment: fixed;
+    min-height: 100vh;
 }
 
-/* Monospace tag style — used for "system text" labels. */
-.mono-tag {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
+/* ==============================
+ *  ATMOSPHERIC OVERLAYS
+ *  Applied as fixed-position layers in the layout.
+ * ============================== */
+
+/* Subtle film grain, SVG-based so it's crisp at any DPR. */
+.atmos-grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    opacity: 0.09;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.89 0 0 0 0 0.82 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint vertical scanlines — CRT reference, not heavy. */
+.atmos-scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 58;
+    opacity: 0.4;
+    background-image: repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 2px,
+        rgba(255, 255, 255, 0.014) 2px,
+        rgba(255, 255, 255, 0.014) 3px
+    );
+}
+
+/* Edge vignette, sharp at the corners. */
+.atmos-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 59;
+    background:
+        radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* ==============================
+ *  TYPOGRAPHY PRIMITIVES
+ * ============================== */
+
+.type-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+}
+
+.type-display-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+.type-body {
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 1.55;
+}
+
+.type-mono {
+    font-family: var(--font-mono);
+    font-feature-settings: "zero", "ss01";
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: var(--bone-muted);
 }
 
-/* Glow ring for the active/focused element. */
-.ring-accent {
-    box-shadow: 0 0 0 1px var(--border-hard), 0 0 24px var(--accent-glow);
+.type-mono-live {
+    composes: type-mono;
 }
 
-/* Smooth fade-in for scene transitions. */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(6px); }
+/* Animated underline that sweeps on hover from the left. */
+.hover-sweep {
+    position: relative;
+    display: inline-block;
+}
+.hover-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hover-sweep:hover::after,
+.hover-sweep:focus-visible::after {
+    transform: scaleX(1);
+}
+
+/* Focus ring — amber glow, never the default blue halo. */
+*:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 1px var(--ink-deeper),
+        0 0 0 2.5px var(--amber),
+        0 0 32px var(--amber-glow);
+    border-radius: 4px;
+}
+
+/* ==============================
+ *  KEYFRAMES
+ * ============================== */
+
+@keyframes slow-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(-3px, -2px); }
+}
+.atmos-grain { animation: slow-drift 14s ease-in-out infinite; }
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.35; transform: scale(0.85); }
+}
+.dot-live {
+    animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+@keyframes amber-flicker {
+    0%, 4%, 100% { opacity: 1; }
+    5%, 7%       { opacity: 0.82; }
+    8%           { opacity: 1; }
+}
+.amber-flicker { animation: amber-flicker 7s infinite; }
+
+@keyframes scene-rise {
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-.scene-enter {
-    animation: fadeInUp 280ms ease-out both;
+
+/* Outcome full-screen glow pulse. */
+@keyframes breach-pulse {
+    0%   { box-shadow: inset 0 0 0 0 var(--signal-red-glow); opacity: 0; }
+    30%  { box-shadow: inset 0 0 200px 40px var(--signal-red-glow); opacity: 1; }
+    100% { box-shadow: inset 0 0 120px 10px var(--signal-red-glow); opacity: 1; }
+}
+@keyframes contained-pulse {
+    0%   { box-shadow: inset 0 0 0 0 var(--signal-green-glow); opacity: 0; }
+    30%  { box-shadow: inset 0 0 200px 40px var(--signal-green-glow); opacity: 1; }
+    100% { box-shadow: inset 0 0 120px 10px var(--signal-green-glow); opacity: 1; }
 }
 
-/* Pulsing dot indicator for "live attack" feel. */
-@keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.35; }
-}
-.dot-pulse {
-    animation: pulse-dot 1.6s ease-in-out infinite;
+/* Custom selection styling. */
+::selection {
+    background: var(--amber);
+    color: var(--ink-deep);
 }

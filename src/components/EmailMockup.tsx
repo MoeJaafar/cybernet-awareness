@@ -1,78 +1,59 @@
 import type { EmailMock } from "@/lib/types";
 
 /**
- * Stylised email card that reads like a real email-client preview pane.
- * Sender avatar is generated from the first letter of the display name
- * for a quick visual anchor.
+ * Email preview card — reads like evidence-in-a-file, not like a
+ * polished Gmail clone. Mono header, serif body, amber divider.
  */
 export function EmailMockup({ email }: { email: EmailMock }) {
     const senderName = email.fromName ?? email.from;
     const initial = senderName.charAt(0).toUpperCase();
-    const senderHash = simpleHash(email.from);
-    const avatarHue = senderHash % 360;
 
     return (
-        <article className="rounded-xl border border-[color:var(--color-border-hard)] bg-[color:var(--color-bg-panel-2)] overflow-hidden shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]">
-            {/* Window chrome — three dots like a desktop app. */}
-            <div className="px-4 py-2.5 flex items-center gap-2 border-b border-[color:var(--color-border-soft)] bg-[color:var(--color-bg-panel)]">
-                <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--color-bad)]/60"></span>
-                <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--color-warn)]/60"></span>
-                <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--color-good)]/60"></span>
-                <span className="ml-3 mono-tag text-[color:var(--color-text-dim)]">
-                    inbox · unread
+        <article className="border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-deeper)]/90 backdrop-blur-md">
+            {/* Header strip — evidence-tag style. */}
+            <div className="px-4 py-2 flex items-center justify-between border-b border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-deep)]">
+                <span className="type-mono text-[color:var(--color-amber)]">
+                    EVIDENCE · inbox.eml
+                </span>
+                <span className="type-mono text-[color:var(--color-bone-ghost)]">
+                    09:12 · today
                 </span>
             </div>
 
-            {/* Header: sender, recipient, subject. */}
-            <header className="px-5 py-4 border-b border-[color:var(--color-border-soft)] flex gap-4 items-start">
+            {/* Meta block. */}
+            <header className="px-5 py-4 flex items-start gap-4 border-b border-[color:var(--color-edge-subtle)]">
                 <div
-                    className="h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold text-white shrink-0"
-                    style={{
-                        backgroundImage: `linear-gradient(135deg, hsl(${avatarHue} 70% 45%), hsl(${(avatarHue + 40) % 360} 65% 35%))`,
-                    }}
                     aria-hidden
+                    className="h-10 w-10 flex items-center justify-center type-display text-xl text-[color:var(--color-ink-deep)] bg-[color:var(--color-bone-dim)] shrink-0"
                 >
                     {initial}
                 </div>
-                <div className="min-w-0 flex-1 flex flex-col gap-0.5">
-                    <div className="flex items-baseline justify-between gap-3">
-                        <span className="text-sm font-semibold text-[color:var(--color-text-primary)] truncate">
+                <div className="min-w-0 flex-1 flex flex-col gap-1">
+                    <div className="flex items-baseline flex-wrap gap-x-3 gap-y-0.5">
+                        <span className="type-display text-[17px] text-[color:var(--color-bone)] truncate">
                             {email.fromName ?? email.from}
                         </span>
-                        <span className="mono-tag shrink-0">just now</span>
+                        {email.fromName && (
+                            <span className="type-mono text-[color:var(--color-bone-ghost)]">
+                                &lt;{email.from}&gt;
+                            </span>
+                        )}
                     </div>
-                    {email.fromName && (
-                        <span className="text-xs text-[color:var(--color-text-dim)] font-mono truncate">
-                            &lt;{email.from}&gt;
-                        </span>
-                    )}
-                    <span className="text-xs text-[color:var(--color-text-muted)]">
-                        to{" "}
-                        <span className="text-[color:var(--color-text-primary)]">
-                            {email.to}
-                        </span>
+                    <span className="type-mono text-[color:var(--color-bone-muted)]">
+                        to {email.to}
                     </span>
                 </div>
             </header>
 
-            {/* Subject and body. */}
+            {/* Subject + body. */}
             <div className="px-5 py-5 flex flex-col gap-4">
-                <h3 className="text-base font-semibold text-[color:var(--color-text-primary)] leading-snug">
+                <h3 className="type-display text-[color:var(--color-bone)] text-xl leading-snug">
                     {email.subject}
                 </h3>
-                <div className="text-sm leading-relaxed text-[color:var(--color-text-primary)]/90 whitespace-pre-line">
+                <div className="type-body text-[15px] leading-[1.7] text-[color:var(--color-bone-dim)] whitespace-pre-line">
                     {email.body}
                 </div>
             </div>
         </article>
     );
-}
-
-/** Stable hash for picking an avatar colour from sender address. */
-function simpleHash(s: string): number {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) {
-        h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    }
-    return h;
 }
