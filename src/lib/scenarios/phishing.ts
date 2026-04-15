@@ -21,7 +21,7 @@ export const phishing: Scenario = {
     title: "Urgent: account verification required",
     concept: "Spear phishing — recognising urgency, mismatched senders, and look-alike domains.",
     setup:
-        "It's a Tuesday morning at the university. You're a Faculty of Engineering staff member with five emails waiting. The third one looks important.",
+        "You're at your desk in the faculty office. Five emails are waiting for you this morning. Three are meeting invites, one is payroll, and one is asking you to act fast.",
     startSceneId: "open-inbox",
     scenes: {
         "open-inbox": {
@@ -29,7 +29,7 @@ export const phishing: Scenario = {
             id: "open-inbox",
             background: "/art/backgrounds/office-desk.svg",
             portrait: { role: "player", expression: "neutral" },
-            speaker: "NARRATOR",
+            speaker: "the morning",
             content:
                 "An email from ICT Helpdesk is at the top of your inbox. The subject line says **URGENT: account verification required within 24 hours**. You hover over the message.",
             nextId: "show-email",
@@ -39,7 +39,7 @@ export const phishing: Scenario = {
             id: "show-email",
             background: "/art/backgrounds/inbox-closeup.svg",
             portrait: { role: "player", expression: "alarmed" },
-            speaker: "DECISION",
+            speaker: "your move",
             prompt: "What do you do?",
             mock: {
                 fromName: "ICT Helpdesk",
@@ -60,7 +60,7 @@ export const phishing: Scenario = {
             id: "outcome-clicked",
             background: "/art/backgrounds/office-desk.svg",
             portrait: { role: "attacker", expression: "smug" },
-            speaker: "BREACH",
+            speaker: "what happened next",
             attackerWon: true,
             narration:
                 "You click. A login page that looks exactly like your university's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real university homepage — so you assume everything worked. It didn't. The attacker now has your credentials and is already logging into your mailbox from a residential IP in another country. Within an hour they'll forward themselves your latest contracts and try the same password against the VPN.",
@@ -71,7 +71,7 @@ export const phishing: Scenario = {
             id: "outcome-reported",
             background: "/art/backgrounds/office-desk.svg",
             portrait: { role: "player", expression: "neutral" },
-            speaker: "CONTAINED",
+            speaker: "what happened next",
             attackerWon: false,
             narration:
                 "You forward the email to IT as a phishing report. Within an hour ICT confirms that uni-portal-secure.com is a typosquat domain registered last week, blocks it at the gateway, and emails the rest of the faculty a warning. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
@@ -82,7 +82,7 @@ export const phishing: Scenario = {
             id: "outcome-deleted",
             background: "/art/backgrounds/office-desk.svg",
             portrait: { role: "player", expression: "neutral" },
-            speaker: "CONTAINED · PARTIAL",
+            speaker: "what happened next",
             attackerWon: false,
             narration:
                 "You delete the email. Your account is safe — for now. But you didn't tell IT, so the same campaign continues to land in colleagues' inboxes, and one of them is less cautious than you. Three days later, a payroll spreadsheet leaves the building.",
@@ -92,7 +92,7 @@ export const phishing: Scenario = {
             type: "debrief",
             id: "debrief",
             background: "/art/backgrounds/office-desk.svg",
-            speaker: "DEBRIEF",
+            speaker: "the takeaway",
             takeaway:
                 "Spear phishing relies on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:

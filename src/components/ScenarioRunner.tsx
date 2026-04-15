@@ -32,7 +32,7 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
     if (!started) {
         return (
             <>
-                <StatusBar score={trust} completed={0} total={1} />
+                <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
                 <SetupScreen
                     scenario={scenario}
                     onStart={() => setStarted(true)}
@@ -44,7 +44,7 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
     if (!scene) {
         return (
             <>
-                <StatusBar score={trust} completed={0} total={1} />
+                <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
                 <div className="max-w-xl mx-auto p-8 mt-10 border-l-2 border-[color:var(--color-signal-red)] bg-[color:var(--color-ink-raised)]">
                     <p className="type-mono text-[color:var(--color-signal-red)] mb-2">error</p>
                     <p className="type-body">Scene &quot;{sceneId}&quot; not found.</p>
@@ -71,7 +71,7 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
 
     return (
         <>
-            <StatusBar score={trust} completed={0} total={1} />
+            <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
             <AnimatePresence mode="wait">
                 <motion.div
                     key={scene.id}
@@ -132,7 +132,7 @@ function SetupScreen({
                 >
                     <span className="h-px w-10 bg-[color:var(--color-amber)]"></span>
                     <span className="type-mono text-[color:var(--color-amber)]">
-                        Case · 001 · Briefing
+                        setting the scene
                     </span>
                 </motion.div>
 
@@ -171,7 +171,7 @@ function SetupScreen({
                         onClick={onStart}
                         className="group inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-7 py-4 type-display text-xl sm:text-2xl hover:brightness-110 transition-all shadow-[0_0_48px_var(--amber-glow)]"
                     >
-                        Begin shift
+                        I&apos;m ready
                         <span
                             aria-hidden
                             className="transition-transform group-hover:translate-x-1 text-2xl"

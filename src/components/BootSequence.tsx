@@ -19,13 +19,11 @@ type Line = {
 };
 
 const SCRIPT: Line[] = [
-    { text: "> riverside.edu :: SOC console", tone: "muted", speed: 22 },
-    { text: "> authenticating analyst.........  OK", tone: "ok", speed: 14, pauseAfter: 180 },
-    { text: "> loading case files.............  OK", tone: "ok", speed: 14, pauseAfter: 180 },
-    { text: "> incident monitor...............  ONLINE", tone: "ok", speed: 14, pauseAfter: 300 },
-    { text: "", speed: 0, pauseAfter: 120 },
-    { text: "> shift 01 · 09:12 · good morning.", tone: "primary", speed: 30, pauseAfter: 280 },
-    { text: "> one case is already live.", tone: "warn", speed: 32 },
+    { text: "> riverside university", tone: "muted", speed: 22 },
+    { text: "> tuesday, 09:12", tone: "muted", speed: 22, pauseAfter: 220 },
+    { text: "", speed: 0, pauseAfter: 160 },
+    { text: "> coffee. laptop open. five emails waiting.", tone: "primary", speed: 28, pauseAfter: 320 },
+    { text: "> one of them is not what it seems.", tone: "warn", speed: 34 },
 ];
 
 export function BootSequence({ onDone }: { onDone: () => void }) {

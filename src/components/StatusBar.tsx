@@ -1,19 +1,19 @@
 import Link from "next/link";
 
 /**
- * Top chapter bar — reads like the header strip of a prestige-TV
- * intro. Brand left, shift clock centre, trust + case count right.
- * Deliberately thin, deliberately monospaced, so it recedes once the
- * scene takes the stage.
+ * Top bar. The "you" indicator sits here — player is an ordinary
+ * university employee, not an analyst, so the metrics reflect
+ * *attacks survived* and *close calls*, not analyst-flavoured
+ * things like "trust score."
  */
 export function StatusBar({
-    score = 100,
-    completed = 0,
+    survived = 0,
     total = 1,
+    closeCalls = 0,
 }: {
-    score?: number;
-    completed?: number;
+    survived?: number;
     total?: number;
+    closeCalls?: number;
 }) {
     return (
         <header className="sticky top-0 z-40 border-b border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-deeper)]/85 backdrop-blur-md">
@@ -28,14 +28,24 @@ export function StatusBar({
                             Cyber<span className="type-display-italic text-[color:var(--color-amber)]">Net</span>
                         </span>
                         <span className="type-mono hidden sm:inline">
-                            Riverside · SOC
+                            awareness · riverside
                         </span>
                     </div>
                 </Link>
 
                 <div className="flex items-center gap-6 sm:gap-10">
-                    <Metric label="trust" value={`${score}`} suffix="/100" tone={score >= 80 ? "good" : score >= 50 ? "warn" : "bad"} />
-                    <Metric label="case" value={String(completed).padStart(2, "0")} suffix={`/${String(total).padStart(2, "0")}`} />
+                    <Metric
+                        label="attacks survived"
+                        value={String(survived).padStart(2, "0")}
+                        suffix={`/${String(total).padStart(2, "0")}`}
+                    />
+                    {closeCalls > 0 && (
+                        <Metric
+                            label="close calls"
+                            value={String(closeCalls).padStart(2, "0")}
+                            tone="warn"
+                        />
+                    )}
                 </div>
             </div>
         </header>
