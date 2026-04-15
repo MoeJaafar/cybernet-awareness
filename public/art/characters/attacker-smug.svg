@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="240" height="320">
+  <title>Attacker — smug expression (placeholder)</title>
+  <desc>Hooded silhouette with a glowing cyan visor. Face not visible. Phase-1 placeholder.</desc>
+  <!-- Hood silhouette -->
+  <path d="M120 30 Q50 40 40 150 L40 320 L200 320 L200 150 Q190 40 120 30 Z"
+        fill="#060814" stroke="#46e3ff" stroke-width="1" opacity="0.95"/>
+  <!-- Inner hood shadow (where face would be) -->
+  <ellipse cx="120" cy="100" rx="52" ry="60" fill="#030410"/>
+  <!-- Glowing visor / mask -->
+  <rect x="82" y="90" width="76" height="10" fill="#46e3ff" opacity="0.95"/>
+  <rect x="82" y="90" width="76" height="10" fill="#46e3ff" opacity="0.3" filter="blur(4px)"/>
+  <!-- Visor scanline (smug = single slit, slightly upturned at one end) -->
+  <line x1="90" y1="96" x2="150" y2="93" stroke="#060814" stroke-width="2"/>
+  <!-- Hooded shoulders -->
+  <path d="M50 250 L50 320 L190 320 L190 250 Q150 245 120 245 Q90 245 50 250 Z"
+        fill="#0d1124"/>
+  <!-- Circuit-trace accents on the hood -->
+  <path d="M80 200 L80 230 L110 230" fill="none" stroke="#46e3ff" stroke-width="1" opacity="0.4"/>
+  <path d="M160 200 L160 230 L130 230" fill="none" stroke="#46e3ff" stroke-width="1" opacity="0.4"/>
+</svg>

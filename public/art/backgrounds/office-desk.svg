@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <title>Office desk — first-person POV (placeholder)</title>
+  <desc>A SOC analyst desk at night. Monitor dominates the view. Phase-1 placeholder.</desc>
+  <!-- Background wall + ambient gradient -->
+  <defs>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0f24"/>
+      <stop offset="100%" stop-color="#050710"/>
+    </linearGradient>
+    <radialGradient id="monitorGlow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0%" stop-color="#46e3ff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#46e3ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="transparent"/>
+      <line x1="0" y1="2" x2="4" y2="2" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#wallGrad)"/>
+  <!-- Ambient glow from monitor -->
+  <ellipse cx="800" cy="360" rx="720" ry="420" fill="url(#monitorGlow)"/>
+  <!-- Desk surface (plane receding) -->
+  <path d="M0 720 L1600 720 L1600 900 L0 900 Z" fill="#0d1124"/>
+  <path d="M0 720 L1600 720 L1600 730 L0 730 Z" fill="#1f2547"/>
+  <!-- Monitor (big, centered) -->
+  <rect x="430" y="140" width="740" height="460" rx="12" fill="#1f2547" stroke="#46e3ff" stroke-width="2"/>
+  <rect x="445" y="155" width="710" height="430" rx="6" fill="#0d1124"/>
+  <!-- Email client on the monitor -->
+  <rect x="470" y="180" width="660" height="44" rx="4" fill="#131830"/>
+  <text x="490" y="210" font-family="monospace" font-size="16" fill="#9aa3c7">Inbox — 5 unread</text>
+  <circle cx="1105" cy="202" r="8" fill="#46e3ff"/>
+  <!-- Email rows -->
+  <g font-family="sans-serif" font-size="14" fill="#e6ecff">
+    <rect x="470" y="240" width="660" height="56" rx="4" fill="#1f2547"/>
+    <text x="490" y="266">IT Helpdesk</text>
+    <text x="490" y="284" fill="#9aa3c7">URGENT: account verification required</text>
+    <rect x="470" y="306" width="660" height="56" rx="4" fill="#131830"/>
+    <text x="490" y="332">Dean's Office</text>
+    <text x="490" y="350" fill="#9aa3c7">Faculty meeting Thursday 3pm</text>
+    <rect x="470" y="372" width="660" height="56" rx="4" fill="#131830"/>
+    <text x="490" y="398">Maya (colleague)</text>
+    <text x="490" y="416" fill="#9aa3c7">coffee?</text>
+    <rect x="470" y="438" width="660" height="56" rx="4" fill="#131830"/>
+    <text x="490" y="464">Payroll</text>
+    <text x="490" y="482" fill="#9aa3c7">March payslip available</text>
+    <rect x="470" y="504" width="660" height="56" rx="4" fill="#131830"/>
+    <text x="490" y="530">LinkedIn</text>
+    <text x="490" y="548" fill="#9aa3c7">4 new people viewed your profile</text>
+  </g>
+  <!-- Monitor stand -->
+  <rect x="780" y="600" width="40" height="50" fill="#1f2547"/>
+  <rect x="730" y="650" width="140" height="20" rx="4" fill="#1f2547"/>
+  <!-- Keyboard -->
+  <rect x="540" y="740" width="520" height="80" rx="8" fill="#1f2547"/>
+  <g fill="#2a3360">
+    <rect x="560" y="760" width="40" height="15" rx="2"/>
+    <rect x="610" y="760" width="40" height="15" rx="2"/>
+    <rect x="660" y="760" width="40" height="15" rx="2"/>
+    <rect x="710" y="760" width="40" height="15" rx="2"/>
+    <rect x="760" y="760" width="40" height="15" rx="2"/>
+    <rect x="810" y="760" width="40" height="15" rx="2"/>
+    <rect x="860" y="760" width="40" height="15" rx="2"/>
+    <rect x="910" y="760" width="40" height="15" rx="2"/>
+    <rect x="960" y="760" width="40" height="15" rx="2"/>
+    <rect x="1010" y="760" width="30" height="15" rx="2"/>
+  </g>
+  <!-- Coffee mug, right side -->
+  <ellipse cx="1250" cy="720" rx="50" ry="12" fill="#0d1124"/>
+  <rect x="1200" y="650" width="100" height="70" rx="4" fill="#ff5470"/>
+  <rect x="1305" y="670" width="20" height="30" rx="4" fill="none" stroke="#ff5470" stroke-width="4"/>
+  <!-- Sticky note, left side -->
+  <rect x="280" y="660" width="90" height="90" fill="#ffb547" transform="rotate(-6 325 705)"/>
+  <text x="295" y="695" font-family="sans-serif" font-size="11" fill="#060814" transform="rotate(-6 325 705)">vpn pw:</text>
+  <text x="295" y="715" font-family="monospace" font-size="13" fill="#060814" transform="rotate(-6 325 705)">Summer25!</text>
+  <!-- Scanline overlay -->
+  <rect width="1600" height="900" fill="url(#scanlines)"/>
+</svg>

@@ -38,7 +38,25 @@ export type Scene =
     | OutcomeScene
     | DebriefScene;
 
-export interface StimulusScene {
+/** Common visual-layer fields shared across scene types. */
+export interface SceneVisuals {
+    /** Path under /public, e.g. "/art/backgrounds/office-desk.svg". */
+    background?: string;
+    /** Which character portrait (if any) is on-stage this scene. */
+    portrait?: {
+        role: "player" | "attacker" | "maya" | "priya" | "tom";
+        expression?:
+            | "neutral"
+            | "alarmed"
+            | "pleased"
+            | "concerned"
+            | "smug";
+    };
+    /** Optional speaker label shown at the top of the dialogue box. */
+    speaker?: string;
+}
+
+export interface StimulusScene extends SceneVisuals {
     type: "stimulus";
     id: SceneId;
     /** Markdown-friendly text (rendered as paragraphs for now). */
@@ -48,7 +66,7 @@ export interface StimulusScene {
     nextId: SceneId;
 }
 
-export interface DecisionScene {
+export interface DecisionScene extends SceneVisuals {
     type: "decision";
     id: SceneId;
     prompt: string;
@@ -58,7 +76,7 @@ export interface DecisionScene {
     choices: Choice[];
 }
 
-export interface OutcomeScene {
+export interface OutcomeScene extends SceneVisuals {
     type: "outcome";
     id: SceneId;
     /** What happened, narrated. Static for v1, LLM-driven later. */
@@ -68,7 +86,7 @@ export interface OutcomeScene {
     nextId: SceneId;
 }
 
-export interface DebriefScene {
+export interface DebriefScene extends SceneVisuals {
     type: "debrief";
     id: SceneId;
     /** The lesson. Always shown at the end. */

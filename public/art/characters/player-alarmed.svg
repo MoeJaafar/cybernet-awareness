@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="240" height="320">
+  <title>Player — alarmed expression (placeholder)</title>
+  <desc>Same character, wider eyes and open mouth. Phase-1 placeholder.</desc>
+  <path d="M120 60 Q60 60 50 160 L50 320 L190 320 L190 160 Q180 60 120 60 Z"
+        fill="#131830" stroke="#2a3360" stroke-width="2"/>
+  <path d="M70 200 Q120 210 170 200 L175 260 L65 260 Z"
+        fill="#0d1124" opacity="0.7"/>
+  <rect x="102" y="130" width="36" height="30" fill="#4a5580"/>
+  <ellipse cx="120" cy="110" rx="42" ry="48" fill="#d9a179"/>
+  <path d="M82 95 Q90 65 120 62 Q150 65 158 95 L158 80 Q145 55 120 55 Q95 55 82 80 Z"
+        fill="#1f2547"/>
+  <!-- Wider, rounder eyes -->
+  <circle cx="106" cy="110" r="5" fill="#131830"/>
+  <circle cx="134" cy="110" r="5" fill="#131830"/>
+  <circle cx="107" cy="108" r="1.5" fill="#fff"/>
+  <circle cx="135" cy="108" r="1.5" fill="#fff"/>
+  <!-- Open mouth, slight O shape -->
+  <ellipse cx="120" cy="137" rx="5" ry="6" fill="#4a2f20"/>
+  <!-- Sweat drop on temple -->
+  <path d="M85 95 Q82 102 85 106 Q88 102 85 95 Z" fill="#46e3ff" opacity="0.85"/>
+  <rect x="105" y="195" width="30" height="12" rx="2" fill="#46e3ff" opacity="0.8"/>
+  <text x="120" y="204" text-anchor="middle" font-family="monospace" font-size="7" fill="#060814" font-weight="bold">SOC</text>
+</svg>
