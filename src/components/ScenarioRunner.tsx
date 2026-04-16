@@ -15,6 +15,8 @@ import { PasswordForm } from "./PasswordForm";
 import { PasswordBuilder, evaluatePassword } from "./PasswordBuilder";
 import { PhoneCall } from "./PhoneCall";
 import { vishingCallConfig } from "@/lib/scenarios/vishing";
+import { UsbStick } from "./UsbStick";
+import { usbStickConfig } from "@/lib/scenarios/usb-drop";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -83,10 +85,12 @@ export function ScenarioRunner({
     // a mock or passwordForm — the custom component IS the surface.
     const isBuilderScene = scene.type === "decision" && scene.id === "build";
     const isPhoneScene = scene.type === "decision" && scene.id === "phone-ring";
+    const isUsbScene = scene.type === "decision" && scene.id === "found-usb";
     const usesWorkspace =
         ((scene.type === "decision" || scene.type === "stimulus") && hasMock) ||
         isBuilderScene ||
-        isPhoneScene;
+        isPhoneScene ||
+        isUsbScene;
     const usesNarrative =
         !usesWorkspace &&
         (scene.type === "stimulus" ||
@@ -387,6 +391,19 @@ function WorkspaceScene({
                         callerNumber={vishingCallConfig.callerNumber}
                         lines={vishingCallConfig.lines}
                         choices={vishingCallConfig.choices}
+                        onChoice={(nextId) => onAdvance(nextId)}
+                    />
+                </Workspace>
+            );
+        }
+        // USB-drop scene.
+        if (scene.id === "found-usb") {
+            return (
+                <Workspace narrator={scene.speaker} prompt={scene.prompt}>
+                    <UsbStick
+                        label={usbStickConfig.label}
+                        context={usbStickConfig.context}
+                        choices={usbStickConfig.choices}
                         onChoice={(nextId) => onAdvance(nextId)}
                     />
                 </Workspace>
