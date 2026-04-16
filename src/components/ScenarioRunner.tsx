@@ -201,7 +201,7 @@ function SceneDialogue({
                 <DialogueBox speaker={scene.speaker ?? "narrator"} text={scene.content}>
                     {scene.mock && (
                         <div className="max-h-[40vh] overflow-hidden">
-                            <EmailMockup email={scene.mock} />
+                            <EmailMockup email={scene.mock} onTrap={onAdvance} />
                         </div>
                     )}
                     <PrimaryButton label="Continue" onClick={() => onAdvance(scene.nextId)} />
@@ -213,7 +213,7 @@ function SceneDialogue({
                 <div className="flex flex-col gap-4">
                     {scene.mock && (
                         <div className="max-h-[44vh] overflow-hidden border-l-2 border-[color:var(--color-bone-ghost)]">
-                            <EmailMockup email={scene.mock} />
+                            <EmailMockup email={scene.mock} onTrap={onAdvance} />
                         </div>
                     )}
                     <DialogueBox
@@ -271,7 +271,96 @@ function SceneDialogue({
                     </div>
                 </DialogueBox>
             );
+
+        case "quiz":
+            return (
+                <QuizPanel scene={scene} onAdvance={() => onAdvance(scene.nextId)} />
+            );
     }
+}
+
+function QuizPanel({
+    scene,
+    onAdvance,
+}: {
+    scene: import("@/lib/types").QuizScene;
+    onAdvance: () => void;
+}) {
+    const [pickedIdx, setPickedIdx] = useState<number | null>(null);
+    const picked = pickedIdx === null ? null : scene.options[pickedIdx];
+
+    return (
+        <DialogueBox
+            speaker={scene.speaker ?? "check your instincts"}
+            text={scene.prompt}
+            instant={true}
+        >
+            <div className="flex flex-col gap-2">
+                {scene.options.map((opt, i) => {
+                    const isPicked = pickedIdx === i;
+                    const correctnessColour = !isPicked
+                        ? "border-[color:var(--color-edge-subtle)]"
+                        : opt.correct
+                          ? "border-[color:var(--color-signal-green)]"
+                          : "border-[color:var(--color-signal-red)]";
+                    return (
+                        <button
+                            key={opt.label}
+                            type="button"
+                            onClick={() => setPickedIdx(i)}
+                            disabled={picked?.correct}
+                            className={`group text-left border ${correctnessColour} bg-[color:var(--color-ink-deep)] hover:bg-[color:var(--color-ink-raised)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
+                        >
+                            <div className="flex items-start gap-4">
+                                <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
+                                    {String.fromCharCode(65 + i)}
+                                </span>
+                                <span className="type-body text-[16px] text-[color:var(--color-bone)] flex-1">
+                                    {opt.label}
+                                </span>
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+            {picked && (
+                <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`mt-2 border-l-2 pl-4 py-1 ${
+                        picked.correct
+                            ? "border-[color:var(--color-signal-green)]"
+                            : "border-[color:var(--color-signal-red)]"
+                    }`}
+                >
+                    <p
+                        className={`type-mono mb-1 ${
+                            picked.correct
+                                ? "text-[color:var(--color-signal-green)]"
+                                : "text-[color:var(--color-signal-red)]"
+                        }`}
+                    >
+                        {picked.correct ? "right" : "not quite — try again"}
+                    </p>
+                    <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
+                        {picked.feedback}
+                    </p>
+                </motion.div>
+            )}
+            {picked?.correct && (
+                <div className="pt-3">
+                    <button
+                        type="button"
+                        onClick={onAdvance}
+                        className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                    >
+                        continue
+                        <span aria-hidden className="text-xl">→</span>
+                    </button>
+                </div>
+            )}
+        </DialogueBox>
+    );
 }
 
 /**

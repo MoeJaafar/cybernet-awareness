@@ -36,7 +36,8 @@ export type Scene =
     | StimulusScene
     | DecisionScene
     | OutcomeScene
-    | DebriefScene;
+    | DebriefScene
+    | QuizScene;
 
 /** Common visual-layer fields shared across scene types. */
 export interface SceneVisuals {
@@ -106,6 +107,34 @@ export interface Choice {
     nextId: SceneId;
 }
 
+/**
+ * Quiz scene — single multi-choice question with try-again on wrong
+ * answers. Used at the end of a debrief to test the takeaway.
+ */
+export interface QuizScene extends SceneVisuals {
+    type: "quiz";
+    id: SceneId;
+    prompt: string;
+    options: QuizOption[];
+    nextId: SceneId;
+}
+
+export interface QuizOption {
+    label: string;
+    correct: boolean;
+    /** Shown after selection; lands or nudges back to retry. */
+    feedback: string;
+}
+
+/**
+ * Inspectable hotspot attached to an email mock. When the player
+ * clicks the target element, the caption surfaces inline.
+ */
+export interface EmailHotspot {
+    target: "from" | "subject" | "link";
+    caption: string;
+}
+
 /** Stylised email shown alongside a stimulus or decision scene. */
 export interface EmailMock {
     from: string;
@@ -114,4 +143,12 @@ export interface EmailMock {
     body: string;
     /** Optional sender display name; if omitted, `from` is shown raw. */
     fromName?: string;
+    /** Extracted link preview shown as a chip in the body. If
+     *  `trapsTo` is set, clicking the link advances directly to that
+     *  scene — usually an outcome scene. The link becomes a real
+     *  in-world trap instead of just a decoration. */
+    link?: { label: string; url: string; trapsTo?: SceneId };
+    /** Inspectable red-flag hotspots. When present, the mock renders
+     *  clickable targets whose captions surface inline. */
+    hotspots?: EmailHotspot[];
 }

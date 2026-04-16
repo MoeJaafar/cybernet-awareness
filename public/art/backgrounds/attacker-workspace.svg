@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <title>Attacker workspace — dim room, multiple glowing monitors (placeholder)</title>
+  <desc>POV cutaway showing where the attacker is working from. Phase-1 placeholder; real art later.</desc>
+  <defs>
+    <linearGradient id="wallDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0806"/>
+      <stop offset="100%" stop-color="#040302"/>
+    </linearGradient>
+    <radialGradient id="deskGlow" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0%" stop-color="#d64545" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#d64545" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="scanDark" width="3" height="3" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="1.5" x2="3" y2="1.5" stroke="#ffffff" stroke-width="0.3" opacity="0.04"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#wallDark)"/>
+  <ellipse cx="800" cy="450" rx="800" ry="500" fill="url(#deskGlow)"/>
+
+  <!-- Left monitor -->
+  <rect x="120" y="220" width="420" height="280" rx="6" fill="#060504" stroke="#2a2623" stroke-width="2"/>
+  <rect x="136" y="236" width="388" height="248" rx="2" fill="#0a0806"/>
+  <g font-family="ui-monospace, monospace" font-size="11" fill="#7a9464" opacity="0.85">
+    <text x="148" y="260">$ hydra -L users.txt -P rockyou.txt smb://10.0.0.0/24</text>
+    <text x="148" y="278">[22][smb] host:10.0.0.14 login:admin  pw:Summer2024!</text>
+    <text x="148" y="296">[22][smb] host:10.0.0.14 login:guest  pw:guest</text>
+    <text x="148" y="314">cracking 124/500...</text>
+    <text x="148" y="334" fill="#d64545">HIT: you@work.com / Summer25!</text>
+    <text x="148" y="352">forwarding latest 50 emails tagged contract...</text>
+    <text x="148" y="370">vpn attempt: accepted</text>
+  </g>
+
+  <!-- Right monitor -->
+  <rect x="600" y="180" width="500" height="320" rx="6" fill="#060504" stroke="#2a2623" stroke-width="2"/>
+  <rect x="616" y="196" width="468" height="288" rx="2" fill="#0a0806"/>
+  <!-- A fake inbox with forwarded-to-attacker entries -->
+  <g font-family="sans-serif" font-size="13" fill="#ede4d3">
+    <text x="630" y="222" fill="#ff9933">inbox — attacker@throwaway.im</text>
+    <g fill="#b8ab96">
+      <text x="630" y="252">Fwd: Q4 contract draft</text>
+      <text x="630" y="276">Fwd: payroll march — sensitive</text>
+      <text x="630" y="300">Fwd: board minutes 2026-04</text>
+      <text x="630" y="324">Fwd: vpn credentials (self test)</text>
+      <text x="630" y="348">Fwd: client list updated</text>
+      <text x="630" y="372">Fwd: Re: access request</text>
+    </g>
+  </g>
+
+  <!-- Third monitor, smaller -->
+  <rect x="1160" y="260" width="320" height="220" rx="6" fill="#060504" stroke="#2a2623" stroke-width="2"/>
+  <rect x="1176" y="276" width="288" height="188" rx="2" fill="#0a0806"/>
+  <g fill="#d64545" opacity="0.7">
+    <text x="1190" y="310" font-family="ui-monospace, monospace" font-size="14">TARGETS LIVE</text>
+    <text x="1190" y="336" font-family="ui-monospace, monospace" font-size="10">company-a.com.....47</text>
+    <text x="1190" y="352" font-family="ui-monospace, monospace" font-size="10">company-b.edu.....112</text>
+    <text x="1190" y="368" font-family="ui-monospace, monospace" font-size="10">company-c.gov.....8</text>
+    <text x="1190" y="384" font-family="ui-monospace, monospace" font-size="10">others............223</text>
+  </g>
+
+  <!-- Desk surface -->
+  <rect x="0" y="620" width="1600" height="280" fill="#050403"/>
+  <rect x="0" y="615" width="1600" height="10" fill="#1a1716"/>
+
+  <!-- Keyboard -->
+  <rect x="620" y="700" width="460" height="70" rx="6" fill="#0a0806" stroke="#1a1716"/>
+
+  <!-- Coffee -->
+  <rect x="140" y="650" width="80" height="80" rx="2" fill="#1a1716"/>
+  <rect x="226" y="670" width="20" height="40" rx="6" fill="none" stroke="#1a1716" stroke-width="4"/>
+
+  <!-- Hoodie silhouette in the foreground (attacker back) -->
+  <path d="M1100 900 L1500 900 L1500 720 Q1400 680 1300 700 Q1200 680 1100 720 Z"
+        fill="#030201" opacity="0.95"/>
+  <!-- Faint hood outline -->
+  <path d="M1180 720 Q1250 640 1320 720" fill="none" stroke="#1a1716" stroke-width="2"/>
+
+  <!-- Red accent pulse dot on one monitor -->
+  <circle cx="1440" cy="290" r="5" fill="#d64545">
+    <animate attributeName="opacity" values="1;0.25;1" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Scanline overlay -->
+  <rect width="1600" height="900" fill="url(#scanDark)"/>
+</svg>
