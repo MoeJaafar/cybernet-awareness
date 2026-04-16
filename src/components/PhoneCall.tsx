@@ -173,66 +173,63 @@ export function PhoneCall({
                 </div>
             </div>
 
-            {/* ========== SUBTITLES + CHOICES (below phone) ========== */}
-            {(phase === "connected" || phase === "deciding") && (
-                <div className="w-full max-w-xl flex flex-col gap-6">
-                    {/* Subtitle. */}
-                    {phase === "connected" && currentLine && (
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={lineIndex}
-                                className="relative w-full"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                {/* Ghost for height. */}
-                                <p className="type-body text-xl sm:text-2xl leading-relaxed text-left invisible">
-                                    {currentLine.text}
-                                </p>
-                                <p className="type-body text-xl sm:text-2xl leading-relaxed text-left absolute inset-0 text-[color:var(--color-bone)]">
-                                    {subtitle}
-                                </p>
-                            </motion.div>
-                        </AnimatePresence>
-                    )}
-
-                    {/* Choices. */}
-                    {phase === "deciding" && (
+            {/* ========== SUBTITLES + CHOICES (below phone, always takes space) ========== */}
+            <div className="w-full max-w-xl min-h-[200px] flex flex-col gap-6">
+                {/* Subtitle. */}
+                {phase === "connected" && currentLine && (
+                    <AnimatePresence mode="wait">
                         <motion.div
-                            className="flex flex-col gap-2"
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
+                            key={lineIndex}
+                            className="relative w-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
                         >
-                            <div className="flex items-center gap-3 mb-2">
-                                <span className="h-px w-6 bg-[color:var(--color-amber)]"></span>
-                                <span className="type-mono text-[color:var(--color-amber)]">
-                                    what do you say?
-                                </span>
-                            </div>
-                            {choices.map((c, i) => (
-                                <button
-                                    key={c.label}
-                                    type="button"
-                                    onClick={() => onChoice(c.nextId)}
-                                    className="group text-left border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-colors"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
-                                            {String.fromCharCode(65 + i)}
-                                        </span>
-                                        <span className="type-body text-base sm:text-lg text-[color:var(--color-bone)] leading-snug flex-1">
-                                            {c.label}
-                                        </span>
-                                    </div>
-                                </button>
-                            ))}
+                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-left invisible">
+                                {currentLine.text}
+                            </p>
+                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-left absolute inset-0 text-[color:var(--color-bone)]">
+                                {subtitle}
+                            </p>
                         </motion.div>
-                    )}
-                </div>
-            )}
+                    </AnimatePresence>
+                )}
+
+                {/* Choices. */}
+                {phase === "deciding" && (
+                    <motion.div
+                        className="flex flex-col gap-2"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.2 }}
+                    >
+                        <div className="flex items-center gap-3 mb-2">
+                            <span className="h-px w-6 bg-[color:var(--color-amber)]"></span>
+                            <span className="type-mono text-[color:var(--color-amber)]">
+                                what do you say?
+                            </span>
+                        </div>
+                        {choices.map((c, i) => (
+                            <button
+                                key={c.label}
+                                type="button"
+                                onClick={() => onChoice(c.nextId)}
+                                className="group text-left border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-colors"
+                            >
+                                <div className="flex items-start gap-4">
+                                    <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
+                                        {String.fromCharCode(65 + i)}
+                                    </span>
+                                    <span className="type-body text-base sm:text-lg text-[color:var(--color-bone)] leading-snug flex-1">
+                                        {c.label}
+                                    </span>
+                                </div>
+                            </button>
+                        ))}
+                    </motion.div>
+                )}
+            </div>
         </div>
     );
 }

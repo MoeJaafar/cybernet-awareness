@@ -136,7 +136,7 @@ export function TypedNarrative({
 
     return (
         <div
-            className={`min-h-screen w-full ${toneBg} flex flex-col items-center justify-center px-6 py-12 relative ${
+            className={`min-h-screen w-full ${toneBg} flex flex-col px-6 relative ${
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
@@ -156,7 +156,8 @@ export function TypedNarrative({
                 style={{ background: toneWash }}
             />
 
-            <div className="relative max-w-3xl w-full flex flex-col items-start gap-10">
+            {/* Top section: speaker label. Fixed position at top. */}
+            <div className="relative pt-12 pb-4 max-w-3xl w-full mx-auto">
                 {speaker && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -175,6 +176,10 @@ export function TypedNarrative({
                         ></span>
                     </motion.div>
                 )}
+            </div>
+
+            {/* Middle section: typed text. Takes remaining space, centered vertically. */}
+            <div className="relative flex-1 flex items-center max-w-3xl w-full mx-auto">
 
                 <AnimatePresence mode="wait">
                     {lineIndex < lines.length && (
@@ -232,8 +237,14 @@ export function TypedNarrative({
                         </motion.div>
                     )}
                 </AnimatePresence>
+            </div>
 
-                {/* Continue hint during 'wait' — click anywhere to advance. */}
+            {/* Bottom dock: continue hint / CTA / quiz options.
+             *  Always takes space (min-h) so nothing shifts above. */}
+            <div
+                className="relative max-w-3xl w-full mx-auto pb-12 pt-6 min-h-[140px] flex flex-col justify-end"
+                onClick={(e) => e.stopPropagation()}
+            >
                 {phase === "wait" && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -244,8 +255,7 @@ export function TypedNarrative({
                         <span
                             className="type-mono text-[color:var(--color-bone-muted)]"
                             style={{
-                                animation:
-                                    "pulse-dot 1.6s ease-in-out infinite",
+                                animation: "pulse-dot 1.6s ease-in-out infinite",
                             }}
                         >
                             click to continue
@@ -263,15 +273,12 @@ export function TypedNarrative({
                     </motion.div>
                 )}
 
-                {/* Final CTA block — stops clicks from the outer surface
-                 *  so buttons inside (continue, quiz options) work. */}
                 {phase === "done" && children && (
                     <motion.div
-                        className="flex flex-col items-start gap-4 pt-4 w-full"
+                        className="flex flex-col items-start gap-4 w-full"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        onClick={(e) => e.stopPropagation()}
                     >
                         {children}
                     </motion.div>
