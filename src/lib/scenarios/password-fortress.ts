@@ -43,25 +43,25 @@ export const passwordFortress: Scenario = {
                 options: [
                     {
                         value: "Password1!",
-                        label: "short, common, meets the bare minimum",
+                        label: "",
                         strength: 1,
                         nextId: "outcome-cracked-instantly",
                     },
                     {
                         value: "Summer25!",
-                        label: "easy to remember — a tiny variation on what you used before",
+                        label: "",
                         strength: 2,
                         nextId: "outcome-cracked-minutes",
                     },
                     {
                         value: "horseraincamerathursday",
-                        label: "four random words, easy to remember, harder to guess",
+                        label: "",
                         strength: 5,
                         nextId: "outcome-strong-memorable",
                     },
                     {
                         value: "xK9#mQ2$pL!7",
-                        label: "completely random — strong, but who remembers this?",
+                        label: "",
                         strength: 5,
                         nextId: "outcome-strong-unmemorable",
                     },
@@ -75,7 +75,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "Three weeks later a breach dumps your company's password list onto a forum. An attacker runs the top ten thousand passwords against the dump. Yours is on line four. They log into your mailbox in under a minute.",
+                "You chose Password1! — one of the top ten most commonly used passwords in the world. Three weeks later a breach dumps your company's password database onto a forum. An attacker runs a list of common passwords against the dump. Yours falls on the first pass. They're in your mailbox within a minute. A better choice would have been horseraincamerathursday — four random words, twenty-three characters long, easy to remember but almost impossible to guess.",
             nextId: "debrief",
         },
         "outcome-cracked-minutes": {
@@ -84,7 +84,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "Cracking tools start with common patterns: SeasonYear, Capitalised letters, one special character at the end. Your choice fits that pattern. An offline cracker tries eight million variants in an hour. Yours falls in three minutes.",
+                "You chose Summer25! — a season, a year, and an exclamation mark. Cracking tools try this pattern first: capitalised word, two digits, one symbol. Eight million variations in an hour. Yours falls in three minutes. It felt different from your last password but followed the exact same shape. A passphrase like horseraincamerathursday would have been just as easy to remember and dramatically harder to crack.",
             nextId: "debrief",
         },
         "outcome-strong-memorable": {
@@ -93,7 +93,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "Twenty-three characters of lowercase English words. A brute-force attacker would need a few decades of GPU time to crack this offline. A dictionary attacker would need to try combinations of common words — that's an absurd search space. Your password holds.",
+                "You chose horseraincamerathursday — twenty-three characters of lowercase English words. A brute-force attacker would need decades of GPU time to crack this. A dictionary attacker would need to try every four-word combination in the language — that's an absurd search space. And you can still remember it by picturing a horse in the rain photographing a calendar. This is the right answer. Length and memorability, not symbols and tricks.",
             nextId: "debrief",
         },
         "outcome-strong-unmemorable": {
@@ -102,7 +102,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "Mathematically this is stronger than the word passphrase. But a week later you forget it. You write it on a sticky note. Two months later you reuse it on a shopping site that gets breached. The attacker tries the leaked password on your work account. Your strong password is now a weak one.",
+                "You chose xK9#mQ2$pL!7 — mathematically very strong. But a week later you can't remember it. You write it on a sticky note under your keyboard. Two months later you reuse it on a shopping site that gets breached. The attacker tries the leaked password on your work account. What started strong ended weak because you couldn't live with it. A passphrase like horseraincamerathursday would have given you the same strength without the sticky note.",
             nextId: "debrief",
         },
 

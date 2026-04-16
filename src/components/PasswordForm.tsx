@@ -68,13 +68,19 @@ export function PasswordForm({
                 </div>
 
                 <p className="text-[11px] text-[color:var(--gmail-text-dim)] italic">
-                    Tip: hover an option to see the password in full.
+                    Hover an option to see the actual password.
                 </p>
             </div>
         </div>
     );
 }
 
+/**
+ * Single option row. Deliberately hides strength/trade-off cues — the
+ * player should evaluate the password as they see it, not be told
+ * which one is strong. Feedback comes after the pick, in the outcome
+ * narrative.
+ */
 function OptionRow({
     index,
     option,
@@ -89,68 +95,21 @@ function OptionRow({
         <button
             type="button"
             onClick={onPick}
-            className="group text-left border border-[color:var(--gmail-border)] hover:border-[color:var(--color-amber)] bg-[color:var(--gmail-panel)] hover:bg-[color:var(--gmail-hover)] transition-colors px-4 py-3.5 flex flex-col gap-2"
+            className="group text-left border border-[color:var(--gmail-border)] hover:border-[color:var(--color-amber)] bg-[color:var(--gmail-panel)] hover:bg-[color:var(--gmail-hover)] transition-colors px-4 py-4 flex items-center gap-4"
             style={{ fontFamily: "var(--font-gmail)" }}
         >
-            <div className="flex items-baseline justify-between gap-4">
-                <div className="flex items-baseline gap-3 min-w-0">
-                    <span className="text-xs text-[color:var(--gmail-text-dim)] group-hover:text-[color:var(--color-amber)] transition-colors">
-                        {String.fromCharCode(65 + index)}
-                    </span>
-                    <span className="font-mono text-[15px] text-[color:var(--gmail-text)] truncate">
-                        <span className="group-hover:hidden">{masked}</span>
-                        <span className="hidden group-hover:inline">
-                            {option.value}
-                        </span>
-                    </span>
-                </div>
-                <StrengthBar strength={option.strength} />
-            </div>
-            <p className="text-xs text-[color:var(--gmail-text-dim)] pl-6">
-                {option.label}
-            </p>
-        </button>
-    );
-}
-
-function StrengthBar({ strength }: { strength: 1 | 2 | 3 | 4 | 5 }) {
-    const segments = [1, 2, 3, 4, 5];
-    const colour =
-        strength <= 2
-            ? "bg-[color:var(--color-signal-red)]"
-            : strength === 3
-              ? "bg-[color:var(--color-amber)]"
-              : "bg-[color:var(--color-signal-green)]";
-    const label =
-        strength === 1
-            ? "very weak"
-            : strength === 2
-              ? "weak"
-              : strength === 3
-                ? "ok"
-                : strength === 4
-                  ? "strong"
-                  : "very strong";
-    return (
-        <div className="flex items-center gap-2 shrink-0">
-            <div className="flex gap-0.5">
-                {segments.map((s) => (
-                    <span
-                        key={s}
-                        className={`h-1.5 w-3 rounded-sm ${
-                            s <= strength
-                                ? colour
-                                : "bg-[color:var(--gmail-border)]"
-                        }`}
-                    />
-                ))}
-            </div>
-            <span
-                className="text-[10px] uppercase tracking-widest text-[color:var(--gmail-text-dim)] w-[64px]"
-                style={{ fontFamily: "var(--font-gmail)" }}
-            >
-                {label}
+            <span className="text-sm text-[color:var(--gmail-text-dim)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 shrink-0">
+                {String.fromCharCode(65 + index)}
             </span>
-        </div>
+            <span className="font-mono text-[15px] text-[color:var(--gmail-text)] truncate flex-1">
+                <span className="group-hover:hidden">{masked}</span>
+                <span className="hidden group-hover:inline">
+                    {option.value}
+                </span>
+            </span>
+            <span className="text-xs text-[color:var(--gmail-text-dim)] shrink-0">
+                {option.value.length} chars
+            </span>
+        </button>
     );
 }
