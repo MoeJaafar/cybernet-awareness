@@ -97,7 +97,6 @@ export function ScenarioRunner({
 
     return (
         <>
-            <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
             <AnimatePresence mode="wait">
                 <motion.div
                     key={scene.id}
