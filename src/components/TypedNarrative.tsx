@@ -32,47 +32,78 @@ export function TypedNarrative({
 }) {
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
-    const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
+    /**
+     * Phases:
+     *   type : typewriter is in motion
+     *   wait : line finished typing, waiting for the player to click
+     *   done : every line is shown, CTA children revealed
+     */
+    const [phase, setPhase] = useState<"type" | "wait" | "done">("type");
 
+    // Typewriter drive: only active during "type". When the line
+    // finishes, move to "wait" (player click advances) instead of
+    // auto-advancing on a timer.
     useEffect(() => {
-        if (phase === "done") return;
-        if (lineIndex >= lines.length) {
-            setPhase("done");
+        if (phase !== "type") return;
+        if (lineIndex >= lines.length) return;
+        const line = lines[lineIndex];
+        if (charIndex >= line.length) {
+            setPhase("wait");
             return;
         }
-        const line = lines[lineIndex];
-        if (phase === "type") {
-            if (charIndex >= line.length) {
-                setPhase("hold");
-                return;
-            }
-            const prev = line[charIndex - 1] ?? "";
-            const delay =
-                prev === "."
-                    ? 320
-                    : prev === ","
-                      ? 160
-                      : prev === "—"
-                        ? 200
-                        : 28;
-            const t = window.setTimeout(() => setCharIndex((c) => c + 1), delay);
-            return () => window.clearTimeout(t);
-        }
-        if (phase === "hold") {
-            const isLast = lineIndex === lines.length - 1;
-            const holdMs = isLast ? 700 : 900;
-            const t = window.setTimeout(() => {
-                if (isLast) {
-                    setPhase("done");
-                } else {
-                    setLineIndex((i) => i + 1);
-                    setCharIndex(0);
-                    setPhase("type");
-                }
-            }, holdMs);
-            return () => window.clearTimeout(t);
-        }
+        const prev = line[charIndex - 1] ?? "";
+        const delay =
+            prev === "."
+                ? 320
+                : prev === ","
+                  ? 160
+                  : prev === "—"
+                    ? 200
+                    : 28;
+        const t = window.setTimeout(() => setCharIndex((c) => c + 1), delay);
+        return () => window.clearTimeout(t);
     }, [lineIndex, charIndex, phase, lines]);
+
+    // Advance handler — click anywhere (see outer handler below) or
+    // Enter/Space/ArrowRight. Two behaviours:
+    //   - during "type": skip to end of current line
+    //   - during "wait": move on to the next line, or finish
+    const advance = () => {
+        if (phase === "type") {
+            const line = lines[lineIndex];
+            setCharIndex(line?.length ?? 0);
+            setPhase("wait");
+            return;
+        }
+        if (phase === "wait") {
+            const isLast = lineIndex === lines.length - 1;
+            if (isLast) {
+                setPhase("done");
+            } else {
+                setLineIndex((i) => i + 1);
+                setCharIndex(0);
+                setPhase("type");
+            }
+            return;
+        }
+    };
+
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if (phase === "done") return;
+            if (
+                e.key === "Enter" ||
+                e.key === " " ||
+                e.key === "ArrowRight"
+            ) {
+                e.preventDefault();
+                advance();
+            }
+        };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase, lineIndex, charIndex]);
 
     const current = lines[lineIndex];
     const visible = phase === "done" ? lines[lines.length - 1] : current?.slice(0, charIndex) ?? "";
@@ -104,7 +135,21 @@ export function TypedNarrative({
               : "text-[color:var(--color-amber)]";
 
     return (
-        <div className={`min-h-[calc(100vh-61px)] w-full ${toneBg} flex flex-col items-center justify-center px-6 py-12 relative`}>
+        <div
+            className={`min-h-[calc(100vh-61px)] w-full ${toneBg} flex flex-col items-center justify-center px-6 py-12 relative ${
+                phase === "done" ? "" : "cursor-pointer select-none"
+            }`}
+            onClick={phase === "done" ? undefined : advance}
+            role={phase === "done" ? undefined : "button"}
+            tabIndex={phase === "done" ? undefined : 0}
+            aria-label={
+                phase === "type"
+                    ? "skip to end of line"
+                    : phase === "wait"
+                      ? "continue"
+                      : undefined
+            }
+        >
             <div
                 aria-hidden
                 className="absolute inset-0 pointer-events-none"
@@ -188,12 +233,45 @@ export function TypedNarrative({
                     )}
                 </AnimatePresence>
 
+                {/* Continue hint during 'wait' — click anywhere to advance. */}
+                {phase === "wait" && (
+                    <motion.div
+                        className="flex items-center gap-3"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        <span
+                            className="type-mono text-[color:var(--color-bone-muted)]"
+                            style={{
+                                animation:
+                                    "pulse-dot 1.6s ease-in-out infinite",
+                            }}
+                        >
+                            click to continue
+                        </span>
+                        <span
+                            aria-hidden
+                            className="h-px w-8 bg-[color:var(--color-bone-muted)]"
+                        ></span>
+                        <span
+                            aria-hidden
+                            className="type-mono text-[color:var(--color-bone-muted)]"
+                        >
+                            ↵
+                        </span>
+                    </motion.div>
+                )}
+
+                {/* Final CTA block — stops clicks from the outer surface
+                 *  so buttons inside (continue, quiz options) work. */}
                 {phase === "done" && children && (
                     <motion.div
-                        className="flex flex-col items-center gap-4 pt-4"
+                        className="flex flex-col items-start gap-4 pt-4 w-full"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
+                        onClick={(e) => e.stopPropagation()}
                     >
                         {children}
                     </motion.div>
