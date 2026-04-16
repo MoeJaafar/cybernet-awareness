@@ -16,5 +16,14 @@ export default async function ScenarioPage({
     if (!scenario) {
         notFound();
     }
-    return <ScenarioRunner scenario={scenario} />;
+    const idx = ALL_SCENARIOS.findIndex((s) => s.id === id);
+    const next = idx >= 0 && idx < ALL_SCENARIOS.length - 1
+        ? ALL_SCENARIOS[idx + 1]
+        : null;
+    return (
+        <ScenarioRunner
+            scenario={scenario}
+            nextScenarioId={next?.id}
+        />
+    );
 }

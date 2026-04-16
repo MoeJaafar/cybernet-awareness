@@ -13,10 +13,18 @@ import { Workspace } from "./Workspace";
 import { TypedNarrative, splitBeats } from "./TypedNarrative";
 import { PasswordForm } from "./PasswordForm";
 import { PasswordBuilder, evaluatePassword } from "./PasswordBuilder";
+import { PhoneCall } from "./PhoneCall";
+import { vishingCallConfig } from "@/lib/scenarios/vishing";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
-export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
+export function ScenarioRunner({
+    scenario,
+    nextScenarioId,
+}: {
+    scenario: Scenario;
+    nextScenarioId?: string;
+}) {
     const [sceneId, setSceneId] = useState<SceneId>(scenario.startSceneId);
     const [trust, setTrust] = useState(100);
 
@@ -72,14 +80,14 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
     const hasMock =
         sceneWithMock.mock !== undefined ||
         sceneWithMock.passwordForm !== undefined;
-    // The builder scene (id "build") also uses Workspace even though
-    // it has no mock or passwordForm — the builder component IS the
-    // interactive surface.
-    const isBuilderScene =
-        scene.type === "decision" && scene.id === "build";
+    // Special interactive scenes that use Workspace even without
+    // a mock or passwordForm — the custom component IS the surface.
+    const isBuilderScene = scene.type === "decision" && scene.id === "build";
+    const isPhoneScene = scene.type === "decision" && scene.id === "phone-ring";
     const usesWorkspace =
         ((scene.type === "decision" || scene.type === "stimulus") && hasMock) ||
-        isBuilderScene;
+        isBuilderScene ||
+        isPhoneScene;
     const usesNarrative =
         !usesWorkspace &&
         (scene.type === "stimulus" ||
@@ -102,7 +110,7 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                     {usesWorkspace ? (
                         <WorkspaceScene scene={scene} onAdvance={goTo} />
                     ) : usesNarrative ? (
-                        <NarrativeScene scene={scene} onAdvance={goTo} />
+                        <NarrativeScene scene={scene} onAdvance={goTo} nextScenarioId={nextScenarioId} />
                     ) : (
                         <Stage
                             sceneKey={scene.id}
@@ -126,9 +134,11 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
 function NarrativeScene({
     scene,
     onAdvance,
+    nextScenarioId,
 }: {
     scene: Scene;
     onAdvance: (next: SceneId) => void;
+    nextScenarioId?: string;
 }) {
     switch (scene.type) {
         case "stimulus":
@@ -213,7 +223,7 @@ function NarrativeScene({
                     speaker={scene.speaker ?? "one last check"}
                     lines={[scene.prompt]}
                 >
-                    <QuizOptions scene={scene} />
+                    <QuizOptions scene={scene} nextScenarioId={nextScenarioId} />
                 </TypedNarrative>
             );
     }
@@ -226,8 +236,10 @@ function NarrativeScene({
  */
 function QuizOptions({
     scene,
+    nextScenarioId,
 }: {
     scene: import("@/lib/types").QuizScene;
+    nextScenarioId?: string;
 }) {
     const [pickedIdx, setPickedIdx] = useState<number | null>(null);
     const picked = pickedIdx === null ? null : scene.options[pickedIdx];
@@ -289,10 +301,10 @@ function QuizOptions({
             {picked?.correct && (
                 <div className="pt-2">
                     <Link
-                        href="/"
+                        href={nextScenarioId ? `/scenario/${nextScenarioId}` : "/"}
                         className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                     >
-                        Return to queue
+                        {nextScenarioId ? "Next" : "Done"}
                         <span aria-hidden className="text-xl">→</span>
                     </Link>
                 </div>
@@ -368,8 +380,23 @@ function WorkspaceScene({
                 </Workspace>
             );
         }
-        // Password-fortress builder: scene id "build" with no mock
-        // and no passwordForm triggers the interactive builder.
+        // Phone call scene: vishing.
+        if (scene.id === "phone-ring") {
+            return (
+                <Workspace narrator={scene.speaker} prompt={scene.prompt}>
+                    <PhoneCall
+                        callerName={vishingCallConfig.callerName}
+                        callerNumber={vishingCallConfig.callerNumber}
+                        lines={vishingCallConfig.lines}
+                        choices={vishingCallConfig.choices}
+                        onChoice={(nextId) => onAdvance(nextId)}
+                        onDecline={(nextId) => onAdvance(nextId)}
+                        declineNextId={vishingCallConfig.declineNextId}
+                    />
+                </Workspace>
+            );
+        }
+        // Password-fortress builder.
         if (scene.id === "build" && !scene.mock && !scene.passwordForm) {
             return (
                 <Workspace
