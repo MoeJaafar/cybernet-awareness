@@ -111,7 +111,7 @@ export function TypedNarrative({
                 style={{ background: toneWash }}
             />
 
-            <div className="relative max-w-4xl w-full text-center flex flex-col items-center gap-10">
+            <div className="relative max-w-3xl w-full flex flex-col items-start gap-10">
                 {speaker && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -150,7 +150,7 @@ export function TypedNarrative({
                              */}
                             <p
                                 aria-hidden
-                                className={`type-body leading-[1.35] invisible ${
+                                className={`type-body leading-[1.35] invisible text-left ${
                                     useEmphasis
                                         ? "type-display-italic text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
                                         : "text-[26px] sm:text-[38px] lg:text-[44px]"
@@ -158,9 +158,11 @@ export function TypedNarrative({
                             >
                                 {current}
                             </p>
-                            {/* Visible typed text, overlaid. */}
+                            {/* Visible typed text, overlaid. Left-aligned
+                             *  so characters grow left-to-right rather
+                             *  than the middle sliding outward. */}
                             <p
-                                className={`type-body leading-[1.35] absolute inset-0 ${
+                                className={`type-body leading-[1.35] absolute inset-0 text-left ${
                                     useEmphasis
                                         ? "type-display-italic text-[color:var(--color-amber)] text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
                                         : "text-[color:var(--color-bone)] text-[26px] sm:text-[38px] lg:text-[44px]"
