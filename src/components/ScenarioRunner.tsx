@@ -15,7 +15,6 @@ import { TypedNarrative, splitBeats } from "./TypedNarrative";
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
 export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
-    const [started, setStarted] = useState(false);
     const [sceneId, setSceneId] = useState<SceneId>(scenario.startSceneId);
     const [trust, setTrust] = useState(100);
 
@@ -30,18 +29,6 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
         }
         setSceneId(next);
     };
-
-    if (!started) {
-        return (
-            <>
-                <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
-                <SetupScreen
-                    scenario={scenario}
-                    onStart={() => setStarted(true)}
-                />
-            </>
-        );
-    }
 
     if (!scene) {
         return (
@@ -354,100 +341,6 @@ function WorkspaceScene({
         );
     }
     return null;
-}
-
-/**
- * Scenario setup screen — acts as the "cold open" before the scenario
- * begins. Big pull-quote style from the case brief.
- */
-function SetupScreen({
-    scenario,
-    onStart,
-}: {
-    scenario: Scenario;
-    onStart: () => void;
-}) {
-    return (
-        <main className="max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-28">
-            <Link
-                href="/"
-                className="type-mono hover-sweep inline-block mb-16 hover:text-[color:var(--color-amber)] transition-colors"
-            >
-                ← back to queue
-            </Link>
-
-            <motion.div
-                className="flex flex-col gap-10"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                    hidden: {},
-                    visible: { transition: { staggerChildren: 0.15 } },
-                }}
-            >
-                <motion.div
-                    className="flex items-center gap-3"
-                    variants={{
-                        hidden: { opacity: 0, y: 10 },
-                        visible: { opacity: 1, y: 0 },
-                    }}
-                >
-                    <span className="h-px w-10 bg-[color:var(--color-amber)]"></span>
-                    <span className="type-mono text-[color:var(--color-amber)]">
-                        setting the scene
-                    </span>
-                </motion.div>
-
-                <motion.h1
-                    className="type-display text-[52px] sm:text-[84px] lg:text-[104px] text-[color:var(--color-bone)] leading-[0.96]"
-                    variants={{
-                        hidden: { opacity: 0, y: 20 },
-                        visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
-                    }}
-                >
-                    {scenario.title}
-                </motion.h1>
-
-                <motion.blockquote
-                    className="type-body text-xl sm:text-2xl text-[color:var(--color-bone-dim)] leading-[1.55] max-w-3xl border-l-2 border-[color:var(--color-amber)] pl-6"
-                    variants={{
-                        hidden: { opacity: 0, y: 10 },
-                        visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
-                    }}
-                >
-                    <span className="type-display-italic text-[color:var(--color-amber)] text-3xl sm:text-4xl mr-2 align-top">
-                        &ldquo;
-                    </span>
-                    {scenario.setup}
-                </motion.blockquote>
-
-                <motion.div
-                    className="flex flex-col sm:flex-row items-start gap-4 pt-6"
-                    variants={{
-                        hidden: { opacity: 0, y: 10 },
-                        visible: { opacity: 1, y: 0 },
-                    }}
-                >
-                    <button
-                        type="button"
-                        onClick={onStart}
-                        className="group inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-7 py-4 type-display text-xl sm:text-2xl hover:brightness-110 transition-all shadow-[0_0_48px_var(--amber-glow)]"
-                    >
-                        I&apos;m ready
-                        <span
-                            aria-hidden
-                            className="transition-transform group-hover:translate-x-1 text-2xl"
-                        >
-                            →
-                        </span>
-                    </button>
-                    <span className="type-mono self-center sm:self-end ml-2">
-                        ≈ 5 min · 3 choices
-                    </span>
-                </motion.div>
-            </motion.div>
-        </main>
-    );
 }
 
 function SceneDialogue({
