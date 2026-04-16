@@ -208,32 +208,50 @@ function SceneDialogue({
                 </DialogueBox>
             );
 
-        case "decision":
+        case "decision": {
+            const toolbarChoices = scene.choices.filter((c) =>
+                c.location && c.location.startsWith("toolbar-"),
+            );
+            const buttonChoices = scene.choices.filter(
+                (c) => !c.location || c.location === "button",
+            );
+            const allInToolbar =
+                toolbarChoices.length > 0 && buttonChoices.length === 0;
             return (
                 <div className="flex flex-col gap-4">
                     {scene.mock && (
-                        <div className="max-h-[44vh] overflow-hidden border-l-2 border-[color:var(--color-bone-ghost)]">
-                            <EmailMockup email={scene.mock} onTrap={onAdvance} />
+                        <div className="max-h-[72vh] overflow-auto">
+                            <EmailMockup
+                                email={scene.mock}
+                                toolbarChoices={toolbarChoices}
+                                onTrap={onAdvance}
+                                onChoice={(c) => onAdvance(c.nextId)}
+                            />
                         </div>
                     )}
-                    <DialogueBox
-                        speaker={scene.speaker ?? "choose"}
-                        text={scene.prompt}
-                        instant={true}
-                    >
-                        <div className="flex flex-col gap-0 border-t border-[color:var(--color-edge-subtle)]">
-                            {scene.choices.map((c, i) => (
-                                <ChoiceRow
-                                    key={c.label}
-                                    index={i}
-                                    label={c.label}
-                                    onClick={() => onAdvance(c.nextId)}
-                                />
-                            ))}
-                        </div>
-                    </DialogueBox>
+                    {!allInToolbar && (
+                        <DialogueBox
+                            speaker={scene.speaker ?? "choose"}
+                            text={scene.prompt}
+                            instant={true}
+                        >
+                            {buttonChoices.length > 0 && (
+                                <div className="flex flex-col gap-0 border-t border-[color:var(--color-edge-subtle)]">
+                                    {buttonChoices.map((c, i) => (
+                                        <ChoiceRow
+                                            key={c.label}
+                                            index={i}
+                                            label={c.label}
+                                            onClick={() => onAdvance(c.nextId)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </DialogueBox>
+                    )}
                 </div>
             );
+        }
 
         case "outcome":
             return (

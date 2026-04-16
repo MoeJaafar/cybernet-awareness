@@ -50,6 +50,19 @@
     --font-display: var(--font-instrument-serif), Georgia, serif;
     --font-body:    var(--font-newsreader), Georgia, serif;
     --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
+    /* Gmail mock font — Roboto is the free equivalent of Google Sans. */
+    --font-gmail:   var(--font-roboto), "Segoe UI", Arial, sans-serif;
+
+    /* Gmail dark-mode palette (approximate). */
+    --gmail-bg:           #202124;
+    --gmail-panel:        #2b2c2f;
+    --gmail-border:       #3c4043;
+    --gmail-text:         #e8eaed;
+    --gmail-text-dim:     #9aa0a6;
+    --gmail-link:         #8ab4f8;
+    --gmail-toolbar:      #2b2c2f;
+    --gmail-hover:        #3c4043;
+    --gmail-danger:       #f28b82;
 }
 
 @theme inline {

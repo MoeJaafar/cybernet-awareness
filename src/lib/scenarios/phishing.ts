@@ -41,7 +41,7 @@ export const phishing: Scenario = {
             portrait: { role: "player", expression: "alarmed" },
             speaker: "your move",
             prompt:
-                "The email is in front of you. You can click the link if you want — or pick a safer move below.",
+                "The email is open in your inbox. Decide what to do.",
             mock: {
                 fromName: "IT Helpdesk",
                 from: "helpdesk@portal-secure-verify.com",
@@ -73,8 +73,16 @@ export const phishing: Scenario = {
                 ],
             },
             choices: [
-                { label: "Report to IT as suspicious", nextId: "outcome-reported" },
-                { label: "Delete the email and move on", nextId: "outcome-deleted" },
+                {
+                    label: "Report spam",
+                    nextId: "outcome-reported",
+                    location: "toolbar-report",
+                },
+                {
+                    label: "Delete",
+                    nextId: "outcome-deleted",
+                    location: "toolbar-delete",
+                },
             ],
         },
 

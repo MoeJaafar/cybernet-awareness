@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 
 /*
@@ -37,6 +37,16 @@ const jetbrainsMono = JetBrains_Mono({
     display: "swap",
 });
 
+// Roboto for the Gmail-accurate email mock. Gmail's real font is
+// Google Sans (licensed); Roboto is the open equivalent and is very
+// close visually.
+const roboto = Roboto({
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "700"],
+    variable: "--font-roboto",
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "CyberNet — Could you spot the attack?",
     description:
@@ -49,7 +59,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
+            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable}`}
         >
             <body className="min-h-screen">
                 {/* Atmosphere stack — order matters (scanlines below vignette below grain). */}

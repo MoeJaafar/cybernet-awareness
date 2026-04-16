@@ -105,6 +105,12 @@ export interface Choice {
     label: string;
     /** Scene to advance to when this choice is picked. */
     nextId: SceneId;
+    /**
+     * Where the choice lives. Default is a standalone button row below
+     * the mock. 'toolbar-report' and 'toolbar-delete' put the choice
+     * inside the Gmail mock's toolbar for a fully immersive decision.
+     */
+    location?: "button" | "toolbar-report" | "toolbar-delete" | "toolbar-archive";
 }
 
 /**
