@@ -3,106 +3,71 @@ import type { Scenario } from "@/lib/types";
 /**
  * Scenario 2 — Password fortress.
  *
- * Framing: IT has forced a password change. The player picks one of
- * four options, each representing a different trade-off between
- * memorability and strength. The outcome simulates an attacker's
- * attempts to crack the chosen password, and the debrief names the
- * principle the choice reveals.
+ * The player BUILDS a password from ingredient bricks, then sees how
+ * an attacker fares against it. The "fortress" metaphor is literal:
+ * a visual wall grows as the password lengthens; the outcome reveals
+ * whether the wall held.
  *
- * Options cover the real decision space most users face:
- *   A - reuse of the current password        (weak, memorable, reused)
- *   B - current password + a small tweak     (weak, memorable, predictable)
- *   C - three unrelated words joined         (strong, memorable, unique)
- *   D - long random string                   (very strong, unmemorable)
- *
- * The professor-approved learning goal is "strong defences through
- * password construction and managing trade-offs" — option C is the
- * best in practice; D is strong but has a hidden failure mode
- * (written down / reused across sites because nobody memorises it).
+ * Four outcome tiers mapped by evaluatePassword() in PasswordBuilder:
+ *   too-short     < 8 chars → instant fail
+ *   common-pattern  all-common-word bricks → dictionary crack
+ *   medium         8-13 chars, not all common → cracked in hours
+ *   fortress       14+ chars with random words → holds
  */
 export const passwordFortress: Scenario = {
     id: "password-fortress",
     title: "Your password is expiring",
     concept:
         "Password strength — length, randomness, and the real-world trade-off with memorability.",
-    setup: "", // unused; experience jumps straight in
-    startSceneId: "pick",
+    setup: "",
+    startSceneId: "build",
     scenes: {
-        "pick": {
+        "build": {
             type: "decision",
-            id: "pick",
+            id: "build",
             speaker: "your password expires today",
             prompt:
-                "IT is forcing a reset. Pick a new password from the four options below. Hover an option to see the actual password.",
+                "IT is forcing a reset. Use the bricks below to build a new password. Each brick adds to the wall.",
             choices: [],
-            passwordForm: {
-                header:
-                    "Your password will expire in 2 hours. Set a new one to continue working.",
-                caption:
-                    "Your new password must be at least 8 characters and different from the previous one.",
-                options: [
-                    {
-                        value: "Password1!",
-                        label: "",
-                        strength: 1,
-                        nextId: "outcome-cracked-instantly",
-                    },
-                    {
-                        value: "Summer25!",
-                        label: "",
-                        strength: 2,
-                        nextId: "outcome-cracked-minutes",
-                    },
-                    {
-                        value: "horseraincamerathursday",
-                        label: "",
-                        strength: 5,
-                        nextId: "outcome-strong-memorable",
-                    },
-                    {
-                        value: "xK9#mQ2$pL!7",
-                        label: "",
-                        strength: 5,
-                        nextId: "outcome-strong-unmemorable",
-                    },
-                ],
-            },
+            // The PasswordBuilder component is wired in ScenarioRunner
+            // when the scene id matches. evaluatePassword() maps the
+            // built password to one of the outcome scenes below.
         },
 
-        "outcome-cracked-instantly": {
+        "outcome-too-short": {
             type: "outcome",
-            id: "outcome-cracked-instantly",
+            id: "outcome-too-short",
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You chose Password1! — one of the top ten most commonly used passwords in the world. Three weeks later a breach dumps your company's password database onto a forum. An attacker runs a list of common passwords against the dump. Yours falls on the first pass. They're in your mailbox within a minute. A better choice would have been horseraincamerathursday — four random words, twenty-three characters long, easy to remember but almost impossible to guess.",
+                "Your password was fewer than eight characters. The system accepted it but a brute-force attacker cycles through every possible combination of that length in seconds. Your account was compromised before your coffee went cold. Try building a longer wall — pick more bricks, especially from the random-words category. Length is the single biggest factor in password strength.",
             nextId: "debrief",
         },
-        "outcome-cracked-minutes": {
+        "outcome-common-pattern": {
             type: "outcome",
-            id: "outcome-cracked-minutes",
+            id: "outcome-common-pattern",
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You chose Summer25! — a season, a year, and an exclamation mark. Cracking tools try this pattern first: capitalised word, two digits, one symbol. Eight million variations in an hour. Yours falls in three minutes. It felt different from your last password but followed the exact same shape. A passphrase like horseraincamerathursday would have been just as easy to remember and dramatically harder to crack.",
+                "Every brick you used was a common word or number. Attackers don't brute-force these — they try dictionary lists first. Your password fell on the first pass. Next time, mix in random words that have no connection to each other. The words 'horse', 'rain', 'camera', 'thursday' strung together would take decades to crack because the attacker can't predict the combination.",
             nextId: "debrief",
         },
-        "outcome-strong-memorable": {
+        "outcome-medium": {
             type: "outcome",
-            id: "outcome-strong-memorable",
+            id: "outcome-medium",
+            speaker: "what happened next",
+            attackerWon: true,
+            narration:
+                "Your password had some strength but wasn't long enough to survive a sustained offline attack. Real password-cracking rigs try billions of combinations per second. At your length, it falls within hours. The fix is simple: add more bricks. Every extra character multiplies the time an attacker needs. Three or four random words is the sweet spot — long enough to resist cracking, short enough to remember.",
+            nextId: "debrief",
+        },
+        "outcome-fortress": {
+            type: "outcome",
+            id: "outcome-fortress",
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You chose horseraincamerathursday — twenty-three characters of lowercase English words. A brute-force attacker would need decades of GPU time to crack this. A dictionary attacker would need to try every four-word combination in the language — that's an absurd search space. And you can still remember it by picturing a horse in the rain photographing a calendar. This is the right answer. Length and memorability, not symbols and tricks.",
-            nextId: "debrief",
-        },
-        "outcome-strong-unmemorable": {
-            type: "outcome",
-            id: "outcome-strong-unmemorable",
-            speaker: "what happened next",
-            attackerWon: false,
-            narration:
-                "You chose xK9#mQ2$pL!7 — mathematically very strong. But a week later you can't remember it. You write it on a sticky note under your keyboard. Two months later you reuse it on a shopping site that gets breached. The attacker tries the leaked password on your work account. What started strong ended weak because you couldn't live with it. A passphrase like horseraincamerathursday would have given you the same strength without the sticky note.",
+                "Your wall held. Fourteen or more characters built from random words creates an enormous search space. A brute-force attacker would need years or decades of GPU time. The best part: you can probably still remember it, because unrelated words form a mental image. That's the fortress — long, memorable, and unique.",
             nextId: "debrief",
         },
 
@@ -111,9 +76,9 @@ export const passwordFortress: Scenario = {
             id: "debrief",
             speaker: "the takeaway",
             takeaway:
-                "Length plus randomness beats special characters. Memorability matters as much as strength — because what you can't remember, you reuse or write down.",
+                "Length plus randomness beats special characters. A few unrelated words strung together is both strong and memorable — that's the fortress.",
             lesson:
-                "A passphrase of three or four unrelated words is long enough to resist brute force and short enough for humans to remember. Short passwords with Capital/number/symbol tricks look compliant but are guessed first by real attackers. If you need truly random passwords, use a password manager so you only have to remember one.",
+                "Short passwords with Capital/number/symbol tricks look compliant but are guessed first by real attackers. A passphrase of three or four unrelated words is long enough to resist brute force and easy enough to remember. If you need truly random passwords, use a password manager so you only remember one.",
             nextId: "quiz",
         },
         "quiz": {
@@ -128,21 +93,21 @@ export const passwordFortress: Scenario = {
                         "Having a capital letter, a number, and a special character.",
                     correct: false,
                     feedback:
-                        "These policies make the password FEEL strong, but attackers account for them. Cracking tools try capitalised words with a digit and a symbol first — that's the most common human pattern.",
+                        "These policies make the password FEEL strong, but attackers account for them. Cracking tools try capitalised words with a digit and a symbol first.",
                 },
                 {
                     label:
-                        "Length — more characters of any kind, especially if the password is words you can remember.",
+                        "Length — more characters of any kind, especially random words you can remember.",
                     correct: true,
                     feedback:
-                        "Right. Each extra character roughly multiplies the search space. Long passphrases of common words outperform short passwords with tricks, and they don't get written on sticky notes.",
+                        "Right. Each extra character roughly multiplies the search space. Long passphrases of random words outperform short passwords with tricks.",
                 },
                 {
                     label:
                         "Replacing letters with look-alike symbols (p@ssw0rd).",
                     correct: false,
                     feedback:
-                        "This is the oldest attacker-known substitution pattern. Cracking tools try it automatically as part of every dictionary pass.",
+                        "This is the oldest attacker-known substitution pattern. Cracking tools try it automatically.",
                 },
             ],
             nextId: "done",

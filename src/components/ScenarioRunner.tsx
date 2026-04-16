@@ -12,6 +12,7 @@ import { DialogueBox } from "./DialogueBox";
 import { Workspace } from "./Workspace";
 import { TypedNarrative, splitBeats } from "./TypedNarrative";
 import { PasswordForm } from "./PasswordForm";
+import { PasswordBuilder, evaluatePassword } from "./PasswordBuilder";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -71,8 +72,14 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
     const hasMock =
         sceneWithMock.mock !== undefined ||
         sceneWithMock.passwordForm !== undefined;
+    // The builder scene (id "build") also uses Workspace even though
+    // it has no mock or passwordForm — the builder component IS the
+    // interactive surface.
+    const isBuilderScene =
+        scene.type === "decision" && scene.id === "build";
     const usesWorkspace =
-        (scene.type === "decision" || scene.type === "stimulus") && hasMock;
+        ((scene.type === "decision" || scene.type === "stimulus") && hasMock) ||
+        isBuilderScene;
     const usesNarrative =
         !usesWorkspace &&
         (scene.type === "stimulus" ||
@@ -358,6 +365,25 @@ function WorkspaceScene({
                     prompt={scene.prompt}
                 >
                     <PasswordForm form={scene.passwordForm} onPick={onAdvance} />
+                </Workspace>
+            );
+        }
+        // Password-fortress builder: scene id "build" with no mock
+        // and no passwordForm triggers the interactive builder.
+        if (scene.id === "build" && !scene.mock && !scene.passwordForm) {
+            return (
+                <Workspace
+                    narrator={scene.speaker ?? "your move"}
+                    prompt={scene.prompt}
+                >
+                    <PasswordBuilder
+                        header="Your password will expire in 2 hours. Build a new one to continue working."
+                        caption="Pick bricks from the categories below. Each brick adds to your password."
+                        onSubmit={(result) => {
+                            const outcomeId = evaluatePassword(result);
+                            onAdvance(outcomeId);
+                        }}
+                    />
                 </Workspace>
             );
         }
