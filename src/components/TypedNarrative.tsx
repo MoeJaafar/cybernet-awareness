@@ -288,14 +288,7 @@ export function TypedNarrative({
     );
 }
 
-/**
- * Break a paragraph into beats at sentence boundaries. Keeps the
- * period on each beat. Used so narration types one sentence at a
- * time instead of as a wall.
- */
-export function splitBeats(paragraph: string): string[] {
-    return paragraph
-        .split(/(?<=\.|\?|\!) +/)
-        .map((s) => s.trim())
-        .filter(Boolean);
-}
+// splitBeats moved to src/lib/beats.ts so the audio-gen script can
+// import it without pulling React. Re-exported here for any callers
+// that import from the component file.
+export { splitBeats } from "@/lib/beats";
