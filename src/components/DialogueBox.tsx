@@ -40,25 +40,19 @@ export function DialogueBox({
 
     return (
         <motion.section
-            className={`relative border-l-2 ${accentClass} bg-[color:var(--color-ink-deep)]/82 backdrop-blur-xl pl-7 sm:pl-10 pr-6 sm:pr-10 py-7 sm:py-9 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.9)]`}
+            className={`relative border-l-2 ${accentClass} bg-[color:var(--color-ink-deep)]/85 backdrop-blur-xl px-6 sm:px-8 py-6 sm:py-7 shadow-[0_24px_64px_-20px_rgba(0,0,0,0.85)]`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
         >
-            {/* Amber serif drop-cap marker — the "chapter quill". */}
-            <span
-                aria-hidden
-                className={`absolute top-7 -left-[5px] h-6 w-2.5 ${speakerColour.replace("text", "bg")}`}
-            />
-
             {speaker && (
-                <p className={`type-mono mb-4 ${speakerColour}`}>
+                <p className={`type-mono mb-3 ${speakerColour}`}>
                     {speaker}
                 </p>
             )}
 
             <div
-                className="type-body text-[17px] sm:text-[19px] leading-[1.6] text-[color:var(--color-bone)] min-h-[3.5em]"
+                className="type-body text-[17px] sm:text-[18px] leading-[1.55] text-[color:var(--color-bone)] min-h-[2.8em]"
                 dangerouslySetInnerHTML={{
                     __html: revealed.replace(
                         /\*\*(.+?)\*\*/g,

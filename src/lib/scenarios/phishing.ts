@@ -22,26 +22,16 @@ export const phishing: Scenario = {
         "Spear phishing — recognising urgency, mismatched senders, and look-alike domains.",
     setup:
         "You're at your desk. Five emails are waiting this morning. Three are meeting invites, one is payroll, and one is asking you to act fast.",
-    startSceneId: "open-inbox",
+    startSceneId: "show-email",
     scenes: {
-        "open-inbox": {
-            type: "stimulus",
-            id: "open-inbox",
-            background: "/art/backgrounds/office-desk.svg",
-            portrait: { role: "player", expression: "neutral" },
-            speaker: "the morning",
-            content:
-                "An email from IT Helpdesk is at the top of your inbox. The subject line says **URGENT: account verification required within 24 hours**. You hover over the message.",
-            nextId: "show-email",
-        },
         "show-email": {
             type: "decision",
             id: "show-email",
             background: "/art/backgrounds/inbox-closeup.svg",
             portrait: { role: "player", expression: "alarmed" },
-            speaker: "your move",
+            speaker: "your inbox",
             prompt:
-                "The email is open in your inbox. Decide what to do.",
+                "An email from IT Helpdesk is at the top of your inbox. Subject: URGENT: account verification required within 24 hours. You open it.",
             mock: {
                 fromName: "IT Helpdesk",
                 from: "helpdesk@portal-secure-verify.com",

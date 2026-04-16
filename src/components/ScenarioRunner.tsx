@@ -9,6 +9,7 @@ import { StatusBar } from "./StatusBar";
 import { Stage } from "./Stage";
 import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
+import { Workspace } from "./Workspace";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -69,6 +70,13 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                 : "contained"
             : "default";
 
+    // Scenes whose point IS an on-screen interactive surface (Gmail
+    // inbox, password form, phone call) render inside Workspace — no
+    // portrait, no staged background image. The mock is the screen.
+    const isWorkspaceScene =
+        (scene.type === "decision" || scene.type === "stimulus") &&
+        (scene as { mock?: unknown }).mock !== undefined;
+
     return (
         <>
             <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
@@ -80,18 +88,78 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.35 }}
                 >
-                    <Stage
-                        sceneKey={scene.id}
-                        background={background}
-                        portrait={portraitNode}
-                        tone={tone}
-                    >
-                        <SceneDialogue scene={scene} onAdvance={goTo} />
-                    </Stage>
+                    {isWorkspaceScene ? (
+                        <WorkspaceScene scene={scene} onAdvance={goTo} />
+                    ) : (
+                        <Stage
+                            sceneKey={scene.id}
+                            background={background}
+                            portrait={portraitNode}
+                            tone={tone}
+                        >
+                            <SceneDialogue scene={scene} onAdvance={goTo} />
+                        </Stage>
+                    )}
                 </motion.div>
             </AnimatePresence>
         </>
     );
+}
+
+/**
+ * Workspace-style scene — the email mock takes centre stage, with a
+ * slim narrator ribbon above it and no portrait/dialogue chrome.
+ * Used for stimulus and decision scenes where the player's focus is
+ * on an interactive on-screen surface.
+ */
+function WorkspaceScene({
+    scene,
+    onAdvance,
+}: {
+    scene: Scene;
+    onAdvance: (next: SceneId) => void;
+}) {
+    if (scene.type === "stimulus" && scene.mock) {
+        return (
+            <Workspace narrator={scene.speaker ?? "incoming"} prompt={scene.content}>
+                <EmailMockup email={scene.mock} onTrap={onAdvance} />
+                <div className="pt-2">
+                    <PrimaryButton label="Continue" onClick={() => onAdvance(scene.nextId)} />
+                </div>
+            </Workspace>
+        );
+    }
+    if (scene.type === "decision" && scene.mock) {
+        const toolbarChoices = scene.choices.filter((c) =>
+            c.location && c.location.startsWith("toolbar-"),
+        );
+        const buttonChoices = scene.choices.filter(
+            (c) => !c.location || c.location === "button",
+        );
+        return (
+            <Workspace narrator={scene.speaker ?? "your move"} prompt={scene.prompt}>
+                <EmailMockup
+                    email={scene.mock}
+                    toolbarChoices={toolbarChoices}
+                    onTrap={onAdvance}
+                    onChoice={(c) => onAdvance(c.nextId)}
+                />
+                {buttonChoices.length > 0 && (
+                    <div className="flex flex-col gap-0 border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-raised)] overflow-hidden mt-4">
+                        {buttonChoices.map((c, i) => (
+                            <ChoiceRow
+                                key={c.label}
+                                index={i}
+                                label={c.label}
+                                onClick={() => onAdvance(c.nextId)}
+                            />
+                        ))}
+                    </div>
+                )}
+            </Workspace>
+        );
+    }
+    return null;
 }
 
 /**
