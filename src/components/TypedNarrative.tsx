@@ -133,34 +133,56 @@ export function TypedNarrative({
 
                 <AnimatePresence mode="wait">
                     {lineIndex < lines.length && (
-                        <motion.p
+                        <motion.div
                             key={lineIndex}
-                            className={`type-body leading-[1.35] ${
-                                useEmphasis
-                                    ? "type-display-italic text-[color:var(--color-amber)] text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
-                                    : "text-[color:var(--color-bone)] text-[26px] sm:text-[38px] lg:text-[44px]"
-                            }`}
+                            className="relative w-full"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0, transition: { duration: 0.4 } }}
                             transition={{ duration: 0.5 }}
                         >
-                            {visible}
-                            {isTyping && (
-                                <span
-                                    aria-hidden
-                                    className={`inline-block ml-1 w-[0.08em] h-[0.75em] align-[-0.08em] ${
-                                        useEmphasis
-                                            ? "bg-[color:var(--color-amber)]"
-                                            : "bg-[color:var(--color-bone)]"
-                                    }`}
-                                    style={{
-                                        animation:
-                                            "pulse-dot 0.9s ease-in-out infinite",
-                                    }}
-                                />
-                            )}
-                        </motion.p>
+                            {/*
+                             * Ghost paragraph reserves the FINAL height so
+                             * the layout doesn't jump as new lines of text
+                             * wrap in. It must use identical font, size,
+                             * and leading to the visible overlay so the
+                             * wrap points match.
+                             */}
+                            <p
+                                aria-hidden
+                                className={`type-body leading-[1.35] invisible ${
+                                    useEmphasis
+                                        ? "type-display-italic text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
+                                        : "text-[26px] sm:text-[38px] lg:text-[44px]"
+                                }`}
+                            >
+                                {current}
+                            </p>
+                            {/* Visible typed text, overlaid. */}
+                            <p
+                                className={`type-body leading-[1.35] absolute inset-0 ${
+                                    useEmphasis
+                                        ? "type-display-italic text-[color:var(--color-amber)] text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
+                                        : "text-[color:var(--color-bone)] text-[26px] sm:text-[38px] lg:text-[44px]"
+                                }`}
+                            >
+                                {visible}
+                                {isTyping && (
+                                    <span
+                                        aria-hidden
+                                        className={`inline-block ml-1 w-[0.08em] h-[0.75em] align-[-0.08em] ${
+                                            useEmphasis
+                                                ? "bg-[color:var(--color-amber)]"
+                                                : "bg-[color:var(--color-bone)]"
+                                        }`}
+                                        style={{
+                                            animation:
+                                                "pulse-dot 0.9s ease-in-out infinite",
+                                        }}
+                                    />
+                                )}
+                            </p>
+                        </motion.div>
                     )}
                 </AnimatePresence>
 
