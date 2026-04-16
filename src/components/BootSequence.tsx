@@ -78,35 +78,53 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
-            <AnimatePresence mode="wait">
-                {lineIndex < SCRIPT.length && (
-                    <motion.p
-                        key={lineIndex}
-                        className={`type-body text-center leading-[1.3] max-w-4xl ${
-                            current.emphasis
-                                ? "type-display-italic text-[color:var(--color-amber)] text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
-                                : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[60px]"
-                        }`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                    >
-                        {visible}
-                        {isTyping && (
-                            <span
+            <div className="max-w-3xl w-full flex flex-col items-start">
+                <AnimatePresence mode="wait">
+                    {lineIndex < SCRIPT.length && current && (
+                        <motion.div
+                            key={lineIndex}
+                            className="relative w-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                        >
+                            {/* Ghost paragraph reserves final wrapped height. */}
+                            <p
                                 aria-hidden
-                                className={`inline-block ml-1 w-[0.12em] h-[0.8em] align-[-0.1em] ${
+                                className={`type-body leading-[1.3] text-left invisible ${
                                     current.emphasis
-                                        ? "bg-[color:var(--color-amber)]"
-                                        : "bg-[color:var(--color-bone)]"
+                                        ? "type-display-italic text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
+                                        : "text-[32px] sm:text-[48px] lg:text-[60px]"
                                 }`}
-                                style={{ animation: "pulse-dot 0.9s ease-in-out infinite" }}
-                            />
-                        )}
-                    </motion.p>
-                )}
-            </AnimatePresence>
+                            >
+                                {current.text}
+                            </p>
+                            {/* Typed overlay, writes left-to-right. */}
+                            <p
+                                className={`type-body leading-[1.3] text-left absolute inset-0 ${
+                                    current.emphasis
+                                        ? "type-display-italic text-[color:var(--color-amber)] text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
+                                        : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[60px]"
+                                }`}
+                            >
+                                {visible}
+                                {isTyping && (
+                                    <span
+                                        aria-hidden
+                                        className={`inline-block ml-1 w-[0.12em] h-[0.8em] align-[-0.1em] ${
+                                            current.emphasis
+                                                ? "bg-[color:var(--color-amber)]"
+                                                : "bg-[color:var(--color-bone)]"
+                                        }`}
+                                        style={{ animation: "pulse-dot 0.9s ease-in-out infinite" }}
+                                    />
+                                )}
+                            </p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
 
             {/* Skip affordance. */}
             {phase !== "done" && (
