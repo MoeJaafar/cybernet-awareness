@@ -147,7 +147,15 @@ export function PhoneCall({
                             </div>
                         )}
 
-                        {(phase === "connected" || phase === "deciding") && (
+                        {phase === "connected" && (
+                            <div className="mt-auto flex items-center gap-6">
+                                <CallButton icon="mute" />
+                                <CallButton icon="keypad" />
+                                <CallButton icon="speaker" />
+                            </div>
+                        )}
+
+                        {phase === "deciding" && (
                             <div className="mt-auto flex items-center gap-6">
                                 <CallButton icon="mute" />
                                 <CallButton icon="keypad" />
