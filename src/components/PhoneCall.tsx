@@ -99,7 +99,7 @@ export function PhoneCall({
                     </div>
 
                     {/* Call content — fixed height. */}
-                    <div className="px-6 pt-6 pb-4 flex flex-col items-center h-[320px]">
+                    <div className="px-8 pt-8 pb-5 flex flex-col items-center h-[400px]">
                         {/* Avatar. */}
                         <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[color:var(--color-amber)]/40 to-[color:var(--color-amber)]/10 border border-white/10 flex items-center justify-center mb-3">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" opacity="0.7">
