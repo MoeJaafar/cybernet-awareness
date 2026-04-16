@@ -26,7 +26,7 @@ export function Stage({
     tone?: "default" | "breach" | "contained";
 }) {
     return (
-        <div className="relative w-full min-h-[calc(100vh-61px)] overflow-hidden bg-[color:var(--color-ink-deeper)]">
+        <div className="relative w-full min-h-screen overflow-hidden bg-[color:var(--color-ink-deeper)]">
             {/* Background plate. Slow scale + fade so it breathes. */}
             <motion.img
                 key={sceneKey}

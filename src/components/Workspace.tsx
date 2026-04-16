@@ -21,7 +21,7 @@ export function Workspace({
     children: ReactNode;
 }) {
     return (
-        <div className="min-h-[calc(100vh-61px)] w-full bg-[color:var(--color-ink-deep)] px-4 sm:px-8 py-8 sm:py-12">
+        <div className="min-h-screen w-full bg-[color:var(--color-ink-deep)] px-4 sm:px-8 py-8 sm:py-12">
             <motion.div
                 className="max-w-3xl mx-auto flex flex-col gap-6"
                 initial={{ opacity: 0, y: 8 }}

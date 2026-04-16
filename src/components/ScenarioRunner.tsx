@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
 import { EmailMockup } from "./EmailMockup";
-import { StatusBar } from "./StatusBar";
+// StatusBar removed — "this is not a website, it's an experience."
 import { Stage } from "./Stage";
 import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
@@ -43,7 +43,6 @@ export function ScenarioRunner({
     if (!scene) {
         return (
             <>
-                <StatusBar survived={0} total={1} closeCalls={trust < 100 ? 1 : 0} />
                 <div className="max-w-xl mx-auto p-8 mt-10 border-l-2 border-[color:var(--color-signal-red)] bg-[color:var(--color-ink-raised)]">
                     <p className="type-mono text-[color:var(--color-signal-red)] mb-2">error</p>
                     <p className="type-body">Scene &quot;{sceneId}&quot; not found.</p>

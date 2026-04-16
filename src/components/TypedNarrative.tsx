@@ -136,7 +136,7 @@ export function TypedNarrative({
 
     return (
         <div
-            className={`min-h-[calc(100vh-61px)] w-full ${toneBg} flex flex-col items-center justify-center px-6 py-12 relative ${
+            className={`min-h-screen w-full ${toneBg} flex flex-col items-center justify-center px-6 py-12 relative ${
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
