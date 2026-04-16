@@ -56,16 +56,6 @@ export const vishing: Scenario = {
                 "You hung up and called IT on the number listed on the company intranet. They confirmed no one from their team had called you. The attack was blocked because you didn't trust the incoming number. Outbound verification — calling back on a number you control — is the simplest defence against vishing.",
             nextId: "debrief",
         },
-        "outcome-declined": {
-            type: "outcome",
-            id: "outcome-declined",
-            speaker: "what happened next",
-            attackerWon: false,
-            narration:
-                "You declined the call. The attacker moved to the next name on their list. You're safe, but you also didn't flag the attempt to IT. Next time, let it ring or decline, then report the number to your security team so they can warn others.",
-            nextId: "debrief",
-        },
-
         "debrief": {
             type: "debrief",
             id: "debrief",
@@ -117,7 +107,6 @@ export const vishing: Scenario = {
 export const vishingCallConfig = {
     callerName: "IT Support",
     callerNumber: "+1 (555) 012-3456",
-    declineNextId: "outcome-declined",
     lines: [
         {
             text: "Hi, this is Mike from IT support. I'm calling about your VPN account.",
