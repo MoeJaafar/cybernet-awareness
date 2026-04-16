@@ -14,7 +14,6 @@ export interface CallerLine {
     text: string;
     speed?: number;
     hold?: number;
-    audio?: string;
 }
 
 export interface PhoneCallProps {
@@ -66,16 +65,6 @@ export function PhoneCall({
             return () => clearTimeout(t);
         }
     }, [phase, lineIndex, charIndex, linePhase, lines]);
-
-    // Audio playback.
-    useEffect(() => {
-        if (phase !== "connected") return;
-        const line = lines[lineIndex];
-        if (!line?.audio) return;
-        const audio = new Audio(line.audio);
-        audio.play().catch(() => {});
-        return () => { audio.pause(); audio.currentTime = 0; };
-    }, [phase, lineIndex, lines]);
 
     const currentLine = lines[lineIndex];
     const subtitle = currentLine?.text.slice(0, charIndex) ?? "";
