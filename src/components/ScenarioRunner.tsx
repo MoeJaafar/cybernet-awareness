@@ -390,8 +390,6 @@ function WorkspaceScene({
                         lines={vishingCallConfig.lines}
                         choices={vishingCallConfig.choices}
                         onChoice={(nextId) => onAdvance(nextId)}
-                        onDecline={(nextId) => onAdvance(nextId)}
-                        declineNextId={vishingCallConfig.declineNextId}
                     />
                 </Workspace>
             );
