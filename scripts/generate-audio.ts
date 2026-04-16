@@ -78,16 +78,18 @@ function buildManifest(): Job[] {
     });
 
     // Every narrated beat in every scene of every scenario.
+    //
+    // Decision-scene prompts are intentionally NOT narrated — every
+    // decision scene in the game ships with a dedicated visual
+    // (Gmail mock, phone call, password builder, USB stick, Wi-Fi
+    // picker) and the prompt reads as a caption for that visual.
+    // Voicing it over the interactive UI is distracting; the player
+    // reads it while studying the screen. Outcomes, debriefs, and
+    // quiz prompts DO get narrated — those are typed beats the
+    // player reads while the narrator speaks.
     for (const scenario of ALL_SCENARIOS) {
         const folder = scenarioFolder(scenario.id);
         for (const scene of Object.values(scenario.scenes)) {
-            if (scene.type === "decision" && scene.prompt) {
-                jobs.push({
-                    text: scene.prompt,
-                    voice: "narrator",
-                    outputPath: join(folder, `${scene.id}-prompt.mp3`),
-                });
-            }
             if (scene.type === "outcome") {
                 splitBeats(scene.narration).forEach((text, i) => {
                     jobs.push({

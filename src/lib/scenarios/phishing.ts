@@ -31,7 +31,7 @@ export const phishing: Scenario = {
             portrait: { role: "player", expression: "alarmed" },
             speaker: "your inbox",
             prompt:
-                "An email from IT Helpdesk is at the top of your inbox. Subject: URGENT: account verification required within 24 hours. You open it.",
+                "An email from IT Helpdesk sits at the top of your inbox. Subject: URGENT: account verification required within 24 hours. You open it.",
             mock: {
                 fromName: "IT Helpdesk",
                 from: "helpdesk@portal-secure-verify.com",
@@ -84,7 +84,7 @@ export const phishing: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You click. A login page that looks exactly like your company's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real company homepage. You assume everything worked. It didn't. The attacker already has your credentials.",
+                "You click. A login page that looks exactly like your company's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real homepage. You assume it worked. It didn't. The attacker already has your credentials.",
             nextId: "debrief",
         },
         "outcome-reported": {
@@ -93,7 +93,7 @@ export const phishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You forward the email to IT as a phishing report. Within an hour they confirm the domain is a typosquat registered last week, block it at the gateway, and warn everyone else. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
+                "You forward the email to IT as a phishing report. Within an hour they confirm the domain is a typosquat registered last week, block it at the gateway, and warn everyone else. Three colleagues had already received it but hadn't clicked yet. The campaign is contained because you spoke up.",
             nextId: "debrief",
         },
         "outcome-deleted": {
@@ -102,7 +102,7 @@ export const phishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You delete the email. Your account is safe for now. But you didn't tell IT. The same campaign keeps landing in other inboxes, and three days later, a payroll spreadsheet leaves the building.",
+                "You delete the email. Your account is safe for now. But you didn't tell IT. The same campaign keeps landing in other inboxes, and three days later a payroll spreadsheet leaves the building.",
             nextId: "debrief",
         },
 
@@ -115,7 +115,7 @@ export const phishing: Scenario = {
             takeaway:
                 "Spear phishing leans on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:
-                "Three signals were in plain sight: the sender domain (portal-secure-verify.com, not your company's real IT domain), the artificial 24-hour deadline, and a request IT would never make (re-verifying an account via a one-off link). When two of those three signals are present, treat the email as malicious by default.",
+                "Three signals were in plain sight — a look-alike sender domain, an artificial 24-hour deadline, and a request IT would never make. When two of those three are present, treat the email as malicious by default.",
             nextId: "quiz",
         },
         "quiz": {
@@ -129,19 +129,19 @@ export const phishing: Scenario = {
                     label: "The 24-hour deadline in the subject line.",
                     correct: false,
                     feedback:
-                        "Close — urgency is a red flag, but it was inside the email. Look for something visible in the inbox itself, before you open anything.",
+                        "Urgency is a red flag, but this one was inside the email. Look for a signal visible in the inbox before you open anything.",
                 },
                 {
                     label: "The sender's domain didn't match your company's real IT domain.",
                     correct: true,
                     feedback:
-                        "Exactly. The sender line in the inbox shows the domain. A mismatched domain is visible before you open the email, before you read the urgency, before you're ever tempted to click.",
+                        "Exactly. The domain shows in the inbox — visible before you open, before you read, before you're ever tempted to click.",
                 },
                 {
                     label: "The request to re-verify the account.",
                     correct: false,
                     feedback:
-                        "An unusual request is a red flag, but you only see it after opening. The domain mismatch is visible at the inbox level — that's the earliest warning.",
+                        "An unusual request is a red flag, but only after opening. The domain mismatch is the earliest warning — visible at the inbox level.",
                 },
             ],
             nextId: "done",

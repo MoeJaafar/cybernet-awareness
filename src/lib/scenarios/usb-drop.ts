@@ -46,7 +46,7 @@ export const usbDrop: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You plug it in. Windows mounts the drive — one folder, Bonuses_2026. You double-click. Nothing visible happens. Behind the scenes a payload has already run. It registered your laptop with a command-and-control server in another country, harvested your saved browser passwords, and planted a scheduled task that runs every time you log in. The label was bait. The attacker didn't need to breach the network remotely — you carried the breach in by hand.",
+                "You plug it in. Windows mounts the drive — one folder, Bonuses_2026. You double-click. Nothing visible happens. Behind the scenes a payload has already run. It registered your laptop with a server abroad, stole your saved passwords, and set itself to auto-run on every login. The label was bait. You carried the breach in by hand.",
             nextId: "debrief",
         },
         "outcome-left": {
@@ -55,7 +55,7 @@ export const usbDrop: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You leave it on the break-room table. By lunchtime a colleague notices it, reads the label, and plugs it into their laptop to find the owner. Same payload. Same breach. The only thing that changed is whose machine was compromised first. A dropped-USB attack is a numbers game — the attacker only needs one curious person. Leaving it in a public space guarantees that person eventually appears.",
+                "You leave it on the break-room table. By lunchtime a colleague reads the label and plugs it in to find the owner. Same payload. Same breach. A dropped-USB attack is a numbers game — the attacker only needs one curious person. Leaving it public guarantees that person appears.",
             nextId: "debrief",
         },
         "outcome-given": {
@@ -64,7 +64,7 @@ export const usbDrop: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You take the stick to IT security without opening it. They image it on an air-gapped machine and confirm it's a malicious drop — a preloaded payload designed to exfiltrate credentials within seconds of being plugged in. Two other sticks are found that morning in the building. IT sends a company-wide warning and locks USB ports on unattended machines by the end of the day. The attack failed because no one with a production machine plugged one in.",
+                "You take the stick to IT security without opening it. They image it on an air-gapped machine and confirm it's a malicious drop — a payload designed to exfiltrate credentials within seconds. Two other sticks are found that morning. IT sends a company-wide warning. The attack failed because no production machine ever plugged one in.",
             nextId: "debrief",
         },
 
@@ -75,7 +75,7 @@ export const usbDrop: Scenario = {
             takeaway:
                 "An unknown USB stick isn't lost property — it's a delivery vehicle.",
             lesson:
-                "Dropped-USB attacks are decades old and still work, because curiosity beats caution for most people. A University of Illinois study famously found that 48% of USB sticks dropped in a car park were plugged in — most within ten minutes of being found. The attacker doesn't need your network credentials or a software exploit. They need one person to plug one drive into one machine. The rule is simple: if it didn't come from a sealed package from a trusted source, it doesn't touch any computer you own. Hand it to IT.",
+                "Dropped-USB attacks are decades old and still work, because curiosity beats caution. A University of Illinois study found 48% of USB sticks dropped in a car park were plugged in. The attacker doesn't need your credentials or a software exploit — just one person plugging one drive into one machine. The rule: if it didn't come from a sealed package from a trusted source, it doesn't touch any computer you own.",
             nextId: "quiz",
         },
 
@@ -90,19 +90,19 @@ export const usbDrop: Scenario = {
                     label: "Plug it into a spare laptop so you can identify the owner.",
                     correct: false,
                     feedback:
-                        "This is exactly what the drop is designed for. A spare laptop is still a machine on your network — one plug-in is enough for the payload to run.",
+                        "This is exactly what the drop is designed for. A spare laptop is still on your network — one plug-in is enough for the payload to run.",
                 },
                 {
                     label: "Drop it in the lost-and-found box at reception.",
                     correct: false,
                     feedback:
-                        "Better than plugging it in yourself, but lost-and-found boxes aren't air-gapped. Someone will eventually plug it in to 'check whose it is' and the attack still lands.",
+                        "Better than plugging it in yourself, but lost-and-found boxes aren't air-gapped. Someone will eventually plug it in, and the attack still lands.",
                 },
                 {
                     label: "Hand it to IT security without plugging it in anywhere.",
                     correct: true,
                     feedback:
-                        "Right. The only safe path is to keep it out of every machine until a specialist handles it. IT has the tooling to analyse drives without running their payload.",
+                        "Right. Keep it out of every machine until a specialist handles it. IT can analyse drives without running their payload.",
                 },
             ],
             nextId: "done",

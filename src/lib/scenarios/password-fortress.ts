@@ -27,7 +27,7 @@ export const passwordFortress: Scenario = {
             id: "build",
             speaker: "your password expires today",
             prompt:
-                "IT is forcing a reset. Type a new password. You'll see, in real time, how long it would take an attacker to crack.",
+                "IT is forcing a reset. Type a new password. You'll see how long it would take an attacker to crack it.",
             choices: [],
             // The PasswordBuilder component is wired in ScenarioRunner
             // when the scene id matches. evaluatePassword() maps the
@@ -40,7 +40,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "Your password was fewer than eight characters. The system accepted it but a brute-force attacker cycles through every possible combination of that length in seconds. Your account was compromised before your coffee went cold. Length is the single biggest factor in password strength — three or four random words strung together would have taken decades to crack.",
+                "Your password was fewer than eight characters. The system accepted it, but a brute-force attacker cycles through every combination of that length in seconds. Your account was compromised before your coffee went cold. Length is the biggest factor in password strength — three or four random words would have taken decades to crack.",
             nextId: "debrief",
         },
         "outcome-common-pattern": {
@@ -49,7 +49,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "The words and numbers you used are on every attacker's dictionary list. They don't brute-force these — they try the lists first. Your password fell on the first pass. Next time, string together random words that have no connection to each other. 'Horse', 'rain', 'camera', 'thursday' placed side by side would take decades to crack, because the attacker can't predict the combination.",
+                "The words and numbers you used are on every attacker's dictionary list. They don't brute-force these — they try the lists first. Your password fell on the first pass. Next time, string together unrelated random words. 'Horse', 'rain', 'camera', 'thursday' side by side would take decades, because the attacker can't predict the combination.",
             nextId: "debrief",
         },
         "outcome-medium": {
@@ -58,7 +58,7 @@ export const passwordFortress: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "Your password had some strength but wasn't long enough to survive a sustained offline attack. Real password-cracking rigs try billions of combinations per second. At your length, it falls within hours. The fix is simple: make it longer. Every extra character multiplies the time an attacker needs. Three or four random words is the sweet spot — long enough to resist cracking, short enough to remember.",
+                "Your password had some strength but wasn't long enough for a sustained offline attack. Real cracking rigs try billions of combinations per second. At your length, it falls within hours. The fix: make it longer. Every extra character multiplies the time an attacker needs. Three or four random words is the sweet spot — long enough to resist cracking, short enough to remember.",
             nextId: "debrief",
         },
         "outcome-fortress": {
@@ -78,7 +78,7 @@ export const passwordFortress: Scenario = {
             takeaway:
                 "Length plus randomness beats special characters. A few unrelated words strung together is both strong and memorable — that's the fortress.",
             lesson:
-                "Short passwords with Capital/number/symbol tricks look compliant but are guessed first by real attackers. A passphrase of three or four unrelated words is long enough to resist brute force and easy enough to remember. If you need truly random passwords, use a password manager so you only remember one.",
+                "Short passwords with capital/number/symbol tricks look compliant but are guessed first. A passphrase of three or four unrelated words resists brute force and stays memorable. If you need truly random passwords, use a password manager so you only remember one.",
             nextId: "quiz",
         },
         "quiz": {
@@ -93,21 +93,21 @@ export const passwordFortress: Scenario = {
                         "Having a capital letter, a number, and a special character.",
                     correct: false,
                     feedback:
-                        "These policies make the password FEEL strong, but attackers account for them. Cracking tools try capitalised words with a digit and a symbol first.",
+                        "These policies make passwords FEEL strong, but cracking tools try capitalised words with a digit and a symbol first.",
                 },
                 {
                     label:
                         "Length — more characters of any kind, especially random words you can remember.",
                     correct: true,
                     feedback:
-                        "Right. Each extra character roughly multiplies the search space. Long passphrases of random words outperform short passwords with tricks.",
+                        "Right. Every extra character multiplies the search space. Long passphrases beat short passwords with tricks.",
                 },
                 {
                     label:
                         "Replacing letters with look-alike symbols (p@ssw0rd).",
                     correct: false,
                     feedback:
-                        "This is the oldest attacker-known substitution pattern. Cracking tools try it automatically.",
+                        "This is the oldest known substitution pattern. Cracking tools try it automatically.",
                 },
             ],
             nextId: "done",
