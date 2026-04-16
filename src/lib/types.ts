@@ -71,9 +71,14 @@ export interface DecisionScene extends SceneVisuals {
     type: "decision";
     id: SceneId;
     prompt: string;
-    /** Optional inline mock-up shown above the prompt (e.g. an email card). */
+    /** Optional email mock shown above the prompt. */
     mock?: EmailMock;
-    /** 2–4 options. Order matters for rendering. */
+    /** Optional password-change form mock. The scene uses the first
+     *  mock it finds (email wins if both are set). */
+    passwordForm?: PasswordFormMock;
+    /** 2–4 explicit choices. May be empty when the only interactions
+     *  live inside a mock (e.g. picking a password option fires the
+     *  scene advance directly). */
     choices: Choice[];
 }
 
@@ -142,6 +147,38 @@ export interface QuizOption {
 export interface EmailHotspot {
     target: "from" | "subject" | "link";
     caption: string;
+}
+
+/**
+ * Password-change form. A decision scene can carry a `passwordForm`
+ * mock instead of an `email` mock; the Workspace picks the right
+ * renderer.
+ */
+export interface PasswordFormMock {
+    /** What the user sees at the top of the form (system message). */
+    header: string;
+    /** Optional subtitle / caption, e.g. "your current password
+     *  expires in 2 hours." */
+    caption?: string;
+    /** Pre-built password options to pick from. */
+    options: PasswordOption[];
+}
+
+export interface PasswordOption {
+    /** The literal password text shown to the user. */
+    value: string;
+    /**
+     * A one-line label describing the trade-off the player is making
+     * ("short, easy to remember, similar to your last one").
+     */
+    label: string;
+    /**
+     * Subjective strength bucket used for visual representation —
+     * drives the strength bar. 1..5 where 5 is strongest.
+     */
+    strength: 1 | 2 | 3 | 4 | 5;
+    /** Scene to advance to when this option is picked. */
+    nextId: SceneId;
 }
 
 /** Stylised email shown alongside a stimulus or decision scene. */

@@ -11,6 +11,7 @@ import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
 import { Workspace } from "./Workspace";
 import { TypedNarrative, splitBeats } from "./TypedNarrative";
+import { PasswordForm } from "./PasswordForm";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -59,11 +60,17 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
             : "default";
 
     // Pick the right surface per scene type:
-    //   - decision / stimulus WITH mock  -> Workspace (the mock is the screen)
+    //   - decision / stimulus WITH mock (email / password form) -> Workspace
     //   - outcome / debrief / quiz       -> TypedNarrative (centered prose)
     //   - stimulus without mock          -> TypedNarrative (simple beat)
     //   - decision without mock          -> TypedNarrative + choices
-    const hasMock = (scene as { mock?: unknown }).mock !== undefined;
+    const sceneWithMock = scene as {
+        mock?: unknown;
+        passwordForm?: unknown;
+    };
+    const hasMock =
+        sceneWithMock.mock !== undefined ||
+        sceneWithMock.passwordForm !== undefined;
     const usesWorkspace =
         (scene.type === "decision" || scene.type === "stimulus") && hasMock;
     const usesNarrative =
@@ -310,35 +317,50 @@ function WorkspaceScene({
             </Workspace>
         );
     }
-    if (scene.type === "decision" && scene.mock) {
-        const toolbarChoices = scene.choices.filter((c) =>
-            c.location && c.location.startsWith("toolbar-"),
-        );
-        const buttonChoices = scene.choices.filter(
-            (c) => !c.location || c.location === "button",
-        );
-        return (
-            <Workspace narrator={scene.speaker ?? "your move"} prompt={scene.prompt}>
-                <EmailMockup
-                    email={scene.mock}
-                    toolbarChoices={toolbarChoices}
-                    onTrap={onAdvance}
-                    onChoice={(c) => onAdvance(c.nextId)}
-                />
-                {buttonChoices.length > 0 && (
-                    <div className="flex flex-col gap-0 border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-raised)] overflow-hidden mt-4">
-                        {buttonChoices.map((c, i) => (
-                            <ChoiceRow
-                                key={c.label}
-                                index={i}
-                                label={c.label}
-                                onClick={() => onAdvance(c.nextId)}
-                            />
-                        ))}
-                    </div>
-                )}
-            </Workspace>
-        );
+    if (scene.type === "decision") {
+        if (scene.mock) {
+            const toolbarChoices = scene.choices.filter((c) =>
+                c.location && c.location.startsWith("toolbar-"),
+            );
+            const buttonChoices = scene.choices.filter(
+                (c) => !c.location || c.location === "button",
+            );
+            return (
+                <Workspace
+                    narrator={scene.speaker ?? "your move"}
+                    prompt={scene.prompt}
+                >
+                    <EmailMockup
+                        email={scene.mock}
+                        toolbarChoices={toolbarChoices}
+                        onTrap={onAdvance}
+                        onChoice={(c) => onAdvance(c.nextId)}
+                    />
+                    {buttonChoices.length > 0 && (
+                        <div className="flex flex-col gap-0 border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-raised)] overflow-hidden mt-4">
+                            {buttonChoices.map((c, i) => (
+                                <ChoiceRow
+                                    key={c.label}
+                                    index={i}
+                                    label={c.label}
+                                    onClick={() => onAdvance(c.nextId)}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </Workspace>
+            );
+        }
+        if (scene.passwordForm) {
+            return (
+                <Workspace
+                    narrator={scene.speaker ?? "your move"}
+                    prompt={scene.prompt}
+                >
+                    <PasswordForm form={scene.passwordForm} onPick={onAdvance} />
+                </Workspace>
+            );
+        }
     }
     return null;
 }
