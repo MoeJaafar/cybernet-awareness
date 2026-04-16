@@ -12,9 +12,9 @@ import type { Scenario } from "@/lib/types";
  */
 export const vishing: Scenario = {
     id: "vishing-helpdesk",
-    title: "A call from IT support",
+    title: "A call from Microsoft Support",
     concept:
-        "Vishing — voice-based social engineering, pretexting, and why IT never asks for your password over the phone.",
+        "Vishing — voice-based social engineering, pretexting, and why tech companies never call you to ask for your password.",
     setup: "",
     startSceneId: "phone-ring",
     scenes: {
@@ -35,7 +35,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                'You gave your password. The caller thanked you warmly and hung up. Within ten minutes they logged into your VPN from an IP address in another country. By the time IT noticed the unusual login, two shared drives had been copied. Real IT support will never ask for your password over the phone. If someone calls and asks, hang up and call back on the official number from your company\'s website.',
+                'You gave your password. The caller thanked you warmly and hung up. Within ten minutes someone logged into your Microsoft account from an IP in another country. Your emails, your OneDrive, your Teams — all accessible. Microsoft will never call you to ask for your password. Not ever. If someone does, it\'s not Microsoft.',
             nextId: "debrief",
         },
         "outcome-asked-verify": {
@@ -44,7 +44,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                'You asked the caller for their employee ID and said you\'d call back through the official IT number. There was a pause. They stammered something about "system limitations" and hung up. Real IT can always verify their identity. Attackers can\'t — that\'s how you know.',
+                'You asked for their employee ID and said you\'d call Microsoft back on the number from their website. There was a pause. They stammered something about "system limitations" and hung up. Real support agents can always verify their identity. Scammers can\'t — that\'s how you know.',
             nextId: "debrief",
         },
         "outcome-hung-up": {
@@ -53,7 +53,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You hung up and called IT on the number listed on the company intranet. They confirmed no one from their team had called you. The attack was blocked because you didn't trust the incoming number. Outbound verification — calling back on a number you control — is the simplest defence against vishing.",
+                "You hung up and went to microsoft.com/support. The real Microsoft confirmed they never call customers to ask for passwords. The attack failed because you didn't trust an incoming call. Outbound verification — looking up the real number yourself — is the simplest defence against vishing.",
             nextId: "debrief",
         },
         "debrief": {
@@ -61,9 +61,9 @@ export const vishing: Scenario = {
             id: "debrief",
             speaker: "the takeaway",
             takeaway:
-                "IT will never ask for your password over the phone. If someone does, hang up and call back on the official number you already know.",
+                "Microsoft, Apple, Google — none of them will ever call you to ask for your password. If someone does, it's a scam.",
             lesson:
-                "Vishing works because the caller controls the narrative — they create urgency (your VPN will be disabled), authority (I'm from IT), and helpfulness (I'm here to fix it). Breaking out of the script — asking for verification, calling back on your own terms — collapses the pretence. The attacker has no answer for that.",
+                "Vishing works because the caller controls the narrative — they create urgency (your account is compromised), authority (I'm from Microsoft), and helpfulness (I'm here to fix it). Breaking out of the script — asking for verification, looking up the real number yourself — collapses the pretence. The scammer has no answer for that.",
             nextId: "quiz",
         },
         "quiz": {
@@ -71,7 +71,7 @@ export const vishing: Scenario = {
             id: "quiz",
             speaker: "one last check",
             prompt:
-                "Someone calls claiming to be from IT and asks for your password to fix an urgent issue. What should you do?",
+                "Someone calls claiming to be from Microsoft and asks for your password to fix an urgent issue. What should you do?",
             options: [
                 {
                     label: "Give the password — they said it's urgent.",
@@ -81,10 +81,10 @@ export const vishing: Scenario = {
                 },
                 {
                     label:
-                        "Hang up and call IT back on the official number from the company website.",
+                        "Hang up and check microsoft.com/support for the real contact number.",
                     correct: true,
                     feedback:
-                        "Right. Outbound verification on a number you control is the one move a pretexting attacker can't survive.",
+                        "Right. Looking up the real number yourself — outbound verification — is the one move a scammer can't survive.",
                 },
                 {
                     label:
@@ -105,36 +105,36 @@ export const vishing: Scenario = {
  * pulling the full scenario.
  */
 export const vishingCallConfig = {
-    callerName: "IT Support",
-    callerNumber: "+1 (555) 012-3456",
+    callerName: "Microsoft Support",
+    callerNumber: "+1 (800) 642-7676",
     lines: [
         {
-            text: "Hi, this is Mike from IT support. I'm calling about your VPN account.",
-            speed: 34,
+            text: "Hello, this is David from Microsoft Support. We're calling because our system has detected suspicious activity on your Microsoft account.",
+            speed: 32,
             hold: 900,
         },
         {
-            text: "We've detected some unusual login attempts and we need to verify your credentials to keep your access active.",
+            text: "Someone may have accessed your account from an unrecognised device. We need to verify your identity to secure it before any data is compromised.",
             speed: 30,
             hold: 900,
         },
         {
-            text: "It'll only take a moment. Could you confirm your username and password so I can run a quick security check?",
+            text: "Could you please confirm the email address and password associated with your Microsoft account so we can run a security check?",
             speed: 32,
             hold: 600,
         },
     ],
     choices: [
         {
-            label: '"Sure, my password is…"',
+            label: '"Sure, let me give you my password…"',
             nextId: "outcome-gave-password",
         },
         {
-            label: '"Can I get your employee ID? I\'d like to verify who I\'m speaking with."',
+            label: '"What\'s your employee ID? I\'d like to verify this is really Microsoft."',
             nextId: "outcome-asked-verify",
         },
         {
-            label: '"I\'ll call IT back on the official number. Thanks."',
+            label: '"I\'ll check microsoft.com myself. Thanks."',
             nextId: "outcome-hung-up",
         },
     ],
