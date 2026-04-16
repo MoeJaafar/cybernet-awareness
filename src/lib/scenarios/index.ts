@@ -3,6 +3,7 @@ import { phishing } from "./phishing";
 import { passwordFortress } from "./password-fortress";
 import { vishing } from "./vishing";
 import { usbDrop } from "./usb-drop";
+import { publicWiFi } from "./public-wifi";
 
 /** Master registry of all scenarios. Order is the play order. */
 export const ALL_SCENARIOS: Scenario[] = [
@@ -10,6 +11,7 @@ export const ALL_SCENARIOS: Scenario[] = [
     passwordFortress,
     vishing,
     usbDrop,
+    publicWiFi,
 ];
 
 const BY_ID: Record<ScenarioId, Scenario> = Object.fromEntries(

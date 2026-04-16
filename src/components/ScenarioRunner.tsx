@@ -17,6 +17,8 @@ import { PhoneCall } from "./PhoneCall";
 import { vishingCallConfig } from "@/lib/scenarios/vishing";
 import { UsbStick } from "./UsbStick";
 import { usbStickConfig } from "@/lib/scenarios/usb-drop";
+import { WiFiPicker } from "./WiFiPicker";
+import { publicWiFiPickerConfig } from "@/lib/scenarios/public-wifi";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -86,11 +88,13 @@ export function ScenarioRunner({
     const isBuilderScene = scene.type === "decision" && scene.id === "build";
     const isPhoneScene = scene.type === "decision" && scene.id === "phone-ring";
     const isUsbScene = scene.type === "decision" && scene.id === "found-usb";
+    const isWiFiScene = scene.type === "decision" && scene.id === "choose-wifi";
     const usesWorkspace =
         ((scene.type === "decision" || scene.type === "stimulus") && hasMock) ||
         isBuilderScene ||
         isPhoneScene ||
-        isUsbScene;
+        isUsbScene ||
+        isWiFiScene;
     const usesNarrative =
         !usesWorkspace &&
         (scene.type === "stimulus" ||
@@ -405,6 +409,18 @@ function WorkspaceScene({
                         context={usbStickConfig.context}
                         choices={usbStickConfig.choices}
                         onChoice={(nextId) => onAdvance(nextId)}
+                    />
+                </Workspace>
+            );
+        }
+        // Public Wi-Fi picker scene.
+        if (scene.id === "choose-wifi") {
+            return (
+                <Workspace narrator={scene.speaker} prompt={scene.prompt}>
+                    <WiFiPicker
+                        location={publicWiFiPickerConfig.location}
+                        networks={publicWiFiPickerConfig.networks}
+                        onPick={(nextId) => onAdvance(nextId)}
                     />
                 </Workspace>
             );
