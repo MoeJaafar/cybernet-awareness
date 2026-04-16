@@ -98,6 +98,9 @@ export interface DebriefScene extends SceneVisuals {
      * which is the narrative-flavoured retelling.
      */
     takeaway: string;
+    /** Optional onward scene (usually a quiz). If omitted, the
+     *  scenario ends and the player returns to the queue. */
+    nextId?: SceneId;
 }
 
 export interface Choice {

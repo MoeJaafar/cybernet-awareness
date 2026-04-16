@@ -10,6 +10,7 @@ import { Stage } from "./Stage";
 import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
 import { Workspace } from "./Workspace";
+import { TypedNarrative, splitBeats } from "./TypedNarrative";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -70,12 +71,21 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                 : "contained"
             : "default";
 
-    // Scenes whose point IS an on-screen interactive surface (Gmail
-    // inbox, password form, phone call) render inside Workspace — no
-    // portrait, no staged background image. The mock is the screen.
-    const isWorkspaceScene =
-        (scene.type === "decision" || scene.type === "stimulus") &&
-        (scene as { mock?: unknown }).mock !== undefined;
+    // Pick the right surface per scene type:
+    //   - decision / stimulus WITH mock  -> Workspace (the mock is the screen)
+    //   - outcome / debrief / quiz       -> TypedNarrative (centered prose)
+    //   - stimulus without mock          -> TypedNarrative (simple beat)
+    //   - decision without mock          -> TypedNarrative + choices
+    const hasMock = (scene as { mock?: unknown }).mock !== undefined;
+    const usesWorkspace =
+        (scene.type === "decision" || scene.type === "stimulus") && hasMock;
+    const usesNarrative =
+        !usesWorkspace &&
+        (scene.type === "stimulus" ||
+            scene.type === "outcome" ||
+            scene.type === "debrief" ||
+            scene.type === "quiz" ||
+            scene.type === "decision");
 
     return (
         <>
@@ -86,10 +96,12 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35 }}
+                    transition={{ duration: 0.4 }}
                 >
-                    {isWorkspaceScene ? (
+                    {usesWorkspace ? (
                         <WorkspaceScene scene={scene} onAdvance={goTo} />
+                    ) : usesNarrative ? (
+                        <NarrativeScene scene={scene} onAdvance={goTo} />
                     ) : (
                         <Stage
                             sceneKey={scene.id}
@@ -103,6 +115,188 @@ export function ScenarioRunner({ scenario }: { scenario: Scenario }) {
                 </motion.div>
             </AnimatePresence>
         </>
+    );
+}
+
+/**
+ * Centered typed-narrative renderer. Handles outcome / debrief /
+ * quiz / portrait-less stimulus+decision scenes.
+ */
+function NarrativeScene({
+    scene,
+    onAdvance,
+}: {
+    scene: Scene;
+    onAdvance: (next: SceneId) => void;
+}) {
+    switch (scene.type) {
+        case "stimulus":
+            return (
+                <TypedNarrative
+                    speaker={scene.speaker ?? "narrator"}
+                    lines={splitBeats(scene.content)}
+                >
+                    <PrimaryButton
+                        label="Continue"
+                        onClick={() => onAdvance(scene.nextId)}
+                    />
+                </TypedNarrative>
+            );
+
+        case "decision":
+            return (
+                <TypedNarrative
+                    speaker={scene.speaker ?? "your move"}
+                    lines={splitBeats(scene.prompt)}
+                >
+                    <div className="flex flex-col gap-0 border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-raised)] overflow-hidden w-full max-w-2xl">
+                        {scene.choices.map((c, i) => (
+                            <ChoiceRow
+                                key={c.label}
+                                index={i}
+                                label={c.label}
+                                onClick={() => onAdvance(c.nextId)}
+                            />
+                        ))}
+                    </div>
+                </TypedNarrative>
+            );
+
+        case "outcome": {
+            const tone = scene.attackerWon ? "breach" : "contained";
+            return (
+                <TypedNarrative
+                    tone={tone}
+                    speaker={scene.speaker ?? (scene.attackerWon ? "breach" : "contained")}
+                    lines={splitBeats(scene.narration)}
+                >
+                    <PrimaryButton
+                        label="View the takeaway"
+                        onClick={() => onAdvance(scene.nextId)}
+                        variant={scene.attackerWon ? "breach" : "contained"}
+                    />
+                </TypedNarrative>
+            );
+        }
+
+        case "debrief": {
+            const lessonBeats = splitBeats(scene.lesson);
+            return (
+                <TypedNarrative
+                    tone="takeaway"
+                    speaker={scene.speaker ?? "the takeaway"}
+                    lines={[scene.takeaway, ...lessonBeats]}
+                    finalEmphasis={false}
+                >
+                    {scene.nextId ? (
+                        <PrimaryButton
+                            label="Continue"
+                            onClick={() => onAdvance(scene.nextId!)}
+                        />
+                    ) : (
+                        <Link
+                            href="/"
+                            className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                        >
+                            Return to queue
+                            <span aria-hidden className="text-xl">→</span>
+                        </Link>
+                    )}
+                </TypedNarrative>
+            );
+        }
+
+        case "quiz":
+            return (
+                <TypedNarrative
+                    speaker={scene.speaker ?? "one last check"}
+                    lines={[scene.prompt]}
+                >
+                    <QuizOptions scene={scene} />
+                </TypedNarrative>
+            );
+    }
+    return null;
+}
+
+/**
+ * Quiz options — renders beneath the typed prompt. Try-again cycle
+ * on wrong answers; on correct, shows continue.
+ */
+function QuizOptions({
+    scene,
+}: {
+    scene: import("@/lib/types").QuizScene;
+}) {
+    const [pickedIdx, setPickedIdx] = useState<number | null>(null);
+    const picked = pickedIdx === null ? null : scene.options[pickedIdx];
+
+    return (
+        <div className="w-full max-w-2xl flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
+                {scene.options.map((opt, i) => {
+                    const isPicked = pickedIdx === i;
+                    const colourClass = !isPicked
+                        ? "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)]"
+                        : opt.correct
+                          ? "border-[color:var(--color-signal-green)]"
+                          : "border-[color:var(--color-signal-red)]";
+                    return (
+                        <button
+                            key={opt.label}
+                            type="button"
+                            onClick={() => setPickedIdx(i)}
+                            disabled={picked?.correct}
+                            className={`group text-left border ${colourClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
+                        >
+                            <div className="flex items-start gap-4">
+                                <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
+                                    {String.fromCharCode(65 + i)}
+                                </span>
+                                <span className="type-body text-[16px] text-[color:var(--color-bone)] flex-1">
+                                    {opt.label}
+                                </span>
+                            </div>
+                        </button>
+                    );
+                })}
+            </div>
+            {picked && (
+                <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`border-l-2 pl-4 py-1 text-left ${
+                        picked.correct
+                            ? "border-[color:var(--color-signal-green)]"
+                            : "border-[color:var(--color-signal-red)]"
+                    }`}
+                >
+                    <p
+                        className={`type-mono mb-1 ${
+                            picked.correct
+                                ? "text-[color:var(--color-signal-green)]"
+                                : "text-[color:var(--color-signal-red)]"
+                        }`}
+                    >
+                        {picked.correct ? "right" : "not quite — try again"}
+                    </p>
+                    <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
+                        {picked.feedback}
+                    </p>
+                </motion.div>
+            )}
+            {picked?.correct && (
+                <div className="pt-2">
+                    <Link
+                        href="/"
+                        className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                    >
+                        Return to queue
+                        <span aria-hidden className="text-xl">→</span>
+                    </Link>
+                </div>
+            )}
+        </div>
     );
 }
 

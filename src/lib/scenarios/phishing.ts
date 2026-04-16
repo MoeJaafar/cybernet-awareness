@@ -81,67 +81,28 @@ export const phishing: Scenario = {
         "outcome-clicked": {
             type: "outcome",
             id: "outcome-clicked",
-            background: "/art/backgrounds/office-desk.svg",
-            portrait: { role: "player", expression: "alarmed" },
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You click. A login page that looks exactly like your company's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real company homepage — so you assume everything worked. It didn't. The attacker already has your credentials and is logging into your mailbox from a residential IP in another country.",
-            nextId: "pov-breach",
+                "You click. A login page that looks exactly like your company's Microsoft sign-in opens. You enter your username and password. The page spins, then redirects you to the real company homepage. You assume everything worked. It didn't. The attacker already has your credentials.",
+            nextId: "debrief",
         },
         "outcome-reported": {
             type: "outcome",
             id: "outcome-reported",
-            background: "/art/backgrounds/office-desk.svg",
-            portrait: { role: "player", expression: "neutral" },
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You forward the email to IT as a phishing report. Within an hour they confirm that portal-secure-verify.com is a typosquat domain registered last week, block it at the gateway, and warn everyone else. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
-            nextId: "pov-contained",
+                "You forward the email to IT as a phishing report. Within an hour they confirm the domain is a typosquat registered last week, block it at the gateway, and warn everyone else. Three colleagues had already received the same message but hadn't clicked yet. The campaign is contained because you spoke up.",
+            nextId: "debrief",
         },
         "outcome-deleted": {
             type: "outcome",
             id: "outcome-deleted",
-            background: "/art/backgrounds/office-desk.svg",
-            portrait: { role: "player", expression: "neutral" },
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You delete the email. Your account is safe — for now. But you didn't tell IT, so the same campaign continues to land in other people's inboxes, and one of them is less cautious than you. Three days later, a payroll spreadsheet leaves the building.",
-            nextId: "pov-delete",
-        },
-
-        /* -------- Attacker POV cutaways -------- */
-
-        "pov-breach": {
-            type: "stimulus",
-            id: "pov-breach",
-            background: "/art/backgrounds/attacker-workspace.svg",
-            portrait: { role: "attacker", expression: "smug" },
-            speaker: "somewhere else · the attacker",
-            content:
-                "*\"Another one in. Same template always works. I'll forward anything marked 'contract' and 'invoice' to my own mailbox, then try these credentials on the VPN. If the VPN's single sign-on, I'm in the file server too. Give me an hour.\"*",
-            nextId: "debrief",
-        },
-        "pov-contained": {
-            type: "stimulus",
-            id: "pov-contained",
-            background: "/art/backgrounds/attacker-workspace.svg",
-            portrait: { role: "attacker", expression: "smug" },
-            speaker: "somewhere else · the attacker",
-            content:
-                "*\"Domain got blocked. Someone must've reported. I've still got the mailing list — I'll switch to a new look-alike domain by tonight and send round two with a different subject line. Most people won't bother to check twice.\"*",
-            nextId: "debrief",
-        },
-        "pov-delete": {
-            type: "stimulus",
-            id: "pov-delete",
-            background: "/art/backgrounds/attacker-workspace.svg",
-            portrait: { role: "attacker", expression: "smug" },
-            speaker: "somewhere else · the attacker",
-            content:
-                "*\"One fewer target, but no heat. The domain's still live, the mailing list's still good. I just need one careless person out of fifty to bite. Patience.\"*",
+                "You delete the email. Your account is safe for now. But you didn't tell IT. The same campaign keeps landing in other inboxes, and three days later, a payroll spreadsheet leaves the building.",
             nextId: "debrief",
         },
 
@@ -150,18 +111,16 @@ export const phishing: Scenario = {
         "debrief": {
             type: "debrief",
             id: "debrief",
-            background: "/art/backgrounds/office-desk.svg",
             speaker: "the takeaway",
             takeaway:
                 "Spear phishing leans on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:
                 "Three signals were in plain sight: the sender domain (portal-secure-verify.com, not your company's real IT domain), the artificial 24-hour deadline, and a request IT would never make (re-verifying an account via a one-off link). When two of those three signals are present, treat the email as malicious by default.",
             nextId: "quiz",
-        } as Scenario["scenes"][string],
+        },
         "quiz": {
             type: "quiz",
             id: "quiz",
-            background: "/art/backgrounds/office-desk.svg",
             speaker: "one last check",
             prompt:
                 "Which single signal should have made you suspicious before you even opened the email?",
@@ -186,7 +145,7 @@ export const phishing: Scenario = {
                 },
             ],
             nextId: "done",
-        } as Scenario["scenes"][string],
+        },
     },
 };
 
