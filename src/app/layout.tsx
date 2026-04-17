@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import { AudioSettingsProvider } from "@/lib/audio-settings";
+import { SessionProvider } from "@/lib/session";
 import { BgMusic } from "@/components/BgMusic";
 import { VolumeControl } from "@/components/VolumeControl";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
             className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable}`}
         >
             <body className="min-h-screen">
+                <SessionProvider>
                 <AudioSettingsProvider>
                     {/* Atmosphere stack — order matters (scanlines below vignette below grain). */}
                     <div aria-hidden className="atmos-scanlines" />
@@ -75,6 +77,7 @@ export default function RootLayout({
                     <VolumeControl />
                     {children}
                 </AudioSettingsProvider>
+                </SessionProvider>
             </body>
         </html>
     );

@@ -21,6 +21,7 @@ import { UsbStick } from "./UsbStick";
 import { usbStickConfig } from "@/lib/scenarios/usb-drop";
 import { WiFiPicker } from "./WiFiPicker";
 import { publicWiFiPickerConfig } from "@/lib/scenarios/public-wifi";
+import { useSession } from "@/lib/session";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
@@ -33,6 +34,7 @@ export function ScenarioRunner({
 }) {
     const [sceneId, setSceneId] = useState<SceneId>(scenario.startSceneId);
     const [trust, setTrust] = useState(100);
+    const { logEvent } = useSession();
 
     const scene = scenario.scenes[sceneId];
 
@@ -42,6 +44,11 @@ export function ScenarioRunner({
             setTrust((t) =>
                 Math.max(0, Math.min(100, t + (target.attackerWon ? -35 : +5))),
             );
+            logEvent("choice", {
+                scenarioId: scenario.id,
+                sceneId: next,
+                attackerWon: target.attackerWon,
+            });
         }
         setSceneId(next);
     };
