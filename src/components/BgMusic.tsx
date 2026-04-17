@@ -1,45 +1,45 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { useAudioSettings } from "@/lib/audio-settings";
 
 let _bgAudio: HTMLAudioElement | null = null;
 let _bgStarted = false;
 
-/**
- * Start the background music. Safe to call from any component — only
- * the first call does anything. Exposed as a module-level function so
- * BootSequence (or any future component) can trigger it directly
- * inside a click handler, guaranteeing the browser treats it as a
- * user-gesture-initiated playback.
- */
-export function startBgMusic(src: string, volume: number) {
+function tryPlay(src: string, volume: number) {
     if (_bgStarted) return;
-    _bgStarted = true;
     const audio = new Audio(src);
     audio.loop = true;
     audio.volume = volume;
-    audio.play().catch(() => {});
-    _bgAudio = audio;
+    audio
+        .play()
+        .then(() => {
+            _bgStarted = true;
+            _bgAudio = audio;
+        })
+        .catch(() => {
+            // Autoplay blocked — leave _bgStarted false so fallback
+            // listeners can retry on the next user gesture.
+        });
 }
 
-/**
- * Global background music. Renders nothing visible. Also listens for
- * any click/keypress as a fallback trigger in case the component that
- * should call startBgMusic() doesn't.
- */
-export function BgMusic({ src, volume = 0.10 }: { src: string; volume?: number }) {
-    const srcRef = useRef(src);
-    const volRef = useRef(volume);
-    srcRef.current = src;
-    volRef.current = volume;
+export function startBgMusic(src: string, volume: number) {
+    tryPlay(src, volume);
+}
 
+export function BgMusic({ src }: { src: string }) {
+    const { musicVolume } = useAudioSettings();
+
+    // Keep the running audio element's volume in sync with the slider.
     useEffect(() => {
-        // Attempt autoplay immediately — works on repeat visits where
-        // the browser's Media Engagement Index remembers this origin.
-        // First visit: silently rejected, fallback listeners below.
-        startBgMusic(srcRef.current, volRef.current);
+        if (_bgAudio) _bgAudio.volume = musicVolume;
+    }, [musicVolume]);
 
-        const fallback = () => startBgMusic(srcRef.current, volRef.current);
+    // Attempt autoplay on mount + fallback on first gesture.
+    useEffect(() => {
+        tryPlay(src, musicVolume);
+
+        const fallback = () => tryPlay(src, musicVolume);
         document.addEventListener("click", fallback);
         document.addEventListener("keydown", fallback);
 
@@ -50,7 +50,8 @@ export function BgMusic({ src, volume = 0.10 }: { src: string; volume?: number }
             _bgAudio = null;
             _bgStarted = false;
         };
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [src]);
 
     return null;
 }

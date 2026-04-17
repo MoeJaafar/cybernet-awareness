@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { getNarratorVolume } from "@/lib/audio-settings";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
 import { EmailMockup } from "./EmailMockup";
 // StatusBar removed — "this is not a website, it's an experience."
@@ -277,6 +278,7 @@ function QuizOptions({
         setPickedIdx(i);
         currentAudioRef.current?.pause();
         const audio = new Audio(feedbackAudioPath(scenarioId, scene.id, i));
+        audio.volume = getNarratorVolume();
         currentAudioRef.current = audio;
         audio.play().catch(() => {});
     };

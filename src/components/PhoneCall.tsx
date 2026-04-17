@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { getNarratorVolume } from "@/lib/audio-settings";
 
 /**
  * Phone-call mock. The phone screen is just a visual — caller info,
@@ -50,7 +51,7 @@ export function PhoneCall({
         if (phase !== "ringing") return;
         const audio = new Audio("/audio/iphone_ringtone_origin.mp3");
         audio.loop = true;
-        audio.volume = 0.7;
+        audio.volume = getNarratorVolume() * 0.7;
         audio.play().catch(() => {});
         return () => {
             audio.pause();
@@ -86,6 +87,7 @@ export function PhoneCall({
         const line = lines[lineIndex];
         if (!line?.audio) return;
         const audio = new Audio(line.audio);
+        audio.volume = getNarratorVolume();
         audio.play().catch(() => {});
         return () => { audio.pause(); audio.currentTime = 0; };
     }, [phase, lineIndex, lines]);

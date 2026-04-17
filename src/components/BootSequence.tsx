@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { startBgMusic } from "./BgMusic";
+import { getNarratorVolume, getMusicVolume } from "@/lib/audio-settings";
 
 /**
  * Opening story beat. Types out one line of prose at a time, fades
@@ -43,6 +44,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
         if (lineIndex >= SCRIPT.length) return;
         const n = String(lineIndex + 1).padStart(2, "0");
         const audio = new Audio(`/audio/boot/${n}.mp3`);
+        audio.volume = getNarratorVolume();
         audio.play().catch(() => {});
         return () => {
             audio.pause();
@@ -98,7 +100,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             <button
                 type="button"
                 onClick={() => {
-                    startBgMusic("/audio/bg-music.mp3", 0.10);
+                    startBgMusic("/audio/bg-music.mp3", getMusicVolume());
                     setArmed(true);
                 }}
                 className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"

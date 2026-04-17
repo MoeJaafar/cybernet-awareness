@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto } from "next/font/google";
 import "./globals.css";
+import { AudioSettingsProvider } from "@/lib/audio-settings";
 import { BgMusic } from "@/components/BgMusic";
+import { VolumeControl } from "@/components/VolumeControl";
 
 /*
  * Typography — deliberately away from the generic Inter / Space-Grotesk
@@ -63,13 +65,16 @@ export default function RootLayout({
             className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable}`}
         >
             <body className="min-h-screen">
-                {/* Atmosphere stack — order matters (scanlines below vignette below grain). */}
-                <div aria-hidden className="atmos-scanlines" />
-                <div aria-hidden className="atmos-vignette" />
-                <div aria-hidden className="atmos-grain" />
+                <AudioSettingsProvider>
+                    {/* Atmosphere stack — order matters (scanlines below vignette below grain). */}
+                    <div aria-hidden className="atmos-scanlines" />
+                    <div aria-hidden className="atmos-vignette" />
+                    <div aria-hidden className="atmos-grain" />
 
-                <BgMusic src="/audio/bg-music.mp3" volume={0.10} />
-                {children}
+                    <BgMusic src="/audio/bg-music.mp3" />
+                    <VolumeControl />
+                    {children}
+                </AudioSettingsProvider>
             </body>
         </html>
     );
