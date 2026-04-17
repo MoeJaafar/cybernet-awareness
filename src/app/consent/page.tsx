@@ -18,7 +18,7 @@ export default function ConsentPage() {
         try {
             await startSession();
             logEvent("consent");
-            router.push("/pretest");
+            router.push("/briefing");
         } catch (err) {
             setSubmitting(false);
             setError(
