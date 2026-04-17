@@ -106,6 +106,17 @@ html {
     }
 }
 
+/* Use dynamic viewport height so the iOS Safari URL bar does not
+ * force a page to scroll when its content already fits the visible
+ * area. Tailwind's default min-h-screen compiles to 100vh, which on
+ * mobile Safari is the tall viewport including the retractable URL
+ * bar; 100dvh tracks the actual visible area. */
+@supports (height: 100dvh) {
+    .min-h-screen {
+        min-height: 100dvh;
+    }
+}
+
 html, body {
     color: var(--bone);
     font-family: var(--font-body);
@@ -122,7 +133,11 @@ body {
         radial-gradient(ellipse 100% 80% at 50% 110%, rgba(255, 153, 51, 0.06), transparent 60%),
         radial-gradient(ellipse 80% 60% at 20% -20%, rgba(105, 144, 168, 0.05), transparent 70%);
     background-attachment: fixed;
-    min-height: 100vh;
+    /* 100dvh tracks the visible viewport on mobile Safari as the URL
+     * bar collapses and expands; 100vh leaves the body taller than the
+     * visible area on iOS, which forces an unnecessary scroll on
+     * pages whose content already fits the screen. */
+    min-height: 100dvh;
     overflow-x: hidden;
     /* Gentle breathing of the ambient gradients. */
     animation: ambient-breathe 24s ease-in-out infinite;
