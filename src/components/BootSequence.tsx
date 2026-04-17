@@ -97,26 +97,83 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             <button
                 type="button"
                 onClick={() => setArmed(true)}
-                className="min-h-screen w-full flex flex-col items-center justify-center gap-6 relative cursor-pointer group"
+                className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"
                 aria-label="Begin"
             >
-                <motion.span
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.9, ease: "easeOut" }}
-                    className="type-display text-[color:var(--color-bone)] text-[40px] sm:text-[56px] lg:text-[72px] tracking-tight group-hover:text-[color:var(--color-amber)] transition-colors"
-                >
-                    CyberNet
-                </motion.span>
-                <motion.span
-                    className="type-mono text-[color:var(--color-bone-muted)] group-hover:text-[color:var(--color-amber)] transition-colors"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.2, delay: 0.8 }}
-                    style={{ animation: "pulse-dot 2.2s ease-in-out infinite" }}
-                >
-                    tap to begin
-                </motion.span>
+                <div className="max-w-2xl w-full flex flex-col items-center gap-8">
+                    {/* Small above-title marker line. */}
+                    <motion.div
+                        className="flex items-center gap-3 type-mono text-[color:var(--color-bone-muted)]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.9 }}
+                    >
+                        <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                        <span>a cybersecurity awareness game</span>
+                        <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                    </motion.div>
+
+                    {/* Title — large, serif, tight. Amber on hover. */}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+                        className="type-display text-[color:var(--color-bone)] text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight group-hover:text-[color:var(--color-amber)] transition-colors"
+                    >
+                        CyberNet
+                    </motion.h1>
+
+                    {/* Thin amber accent line. */}
+                    <motion.span
+                        aria-hidden
+                        className="block h-px w-24 bg-[color:var(--color-amber)]/60"
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+                    />
+
+                    {/* Description. Serif body, restrained width. */}
+                    <motion.p
+                        className="type-body text-[color:var(--color-bone-dim)] text-[20px] sm:text-[24px] leading-relaxed max-w-xl"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, delay: 0.9 }}
+                    >
+                        Five short scenarios. A phishing email, a suspicious call, a USB on the floor. You make the choices — each outcome shows you what an attacker would have done with the one you picked.
+                    </motion.p>
+
+                    {/* Meta strip — duration + style. */}
+                    <motion.div
+                        className="flex items-center gap-4 type-mono text-[color:var(--color-bone-muted)] pt-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.9, delay: 1.2 }}
+                    >
+                        <span>5 scenarios</span>
+                        <span aria-hidden>·</span>
+                        <span>~20 minutes</span>
+                        <span aria-hidden>·</span>
+                        <span>audio on</span>
+                    </motion.div>
+
+                    {/* Tap CTA. */}
+                    <motion.div
+                        className="flex items-center gap-3 pt-10 group-hover:text-[color:var(--color-amber)] transition-colors"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.9, delay: 1.6 }}
+                    >
+                        <span
+                            className="type-mono"
+                            style={{ animation: "pulse-dot 2.2s ease-in-out infinite" }}
+                        >
+                            tap to begin
+                        </span>
+                        <span aria-hidden className="type-mono">
+                            ↵
+                        </span>
+                    </motion.div>
+                </div>
             </button>
         );
     }
