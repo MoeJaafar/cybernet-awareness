@@ -24,16 +24,16 @@ export default function Home() {
             className="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10 relative cursor-pointer group text-center"
             aria-label="Begin"
         >
-            <div className="max-w-2xl w-full flex flex-col items-center gap-8">
+            <div className="max-w-2xl w-full mx-auto flex flex-col items-center gap-6 sm:gap-8">
                 <motion.div
-                    className="flex items-center gap-3 type-mono text-[color:var(--color-bone-muted)]"
+                    className="flex items-center justify-center gap-3 type-mono text-[color:var(--color-bone-muted)]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.9 }}
                 >
-                    <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
-                    <span>a cybersecurity awareness game</span>
-                    <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                    <span aria-hidden className="hidden sm:inline-block h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                    <span className="text-center">a cybersecurity awareness game</span>
+                    <span aria-hidden className="hidden sm:inline-block h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
                 </motion.div>
 
                 <motion.h1
@@ -66,7 +66,7 @@ export default function Home() {
                 </motion.p>
 
                 <motion.div
-                    className="flex items-center gap-4 type-mono text-[color:var(--color-bone-muted)] pt-2"
+                    className="flex items-center justify-center flex-wrap gap-x-3 gap-y-1 type-mono text-[color:var(--color-bone-muted)] pt-2"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.9, delay: 1.2 }}
@@ -79,7 +79,7 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div
-                    className="flex items-center gap-3 pt-10 group-hover:text-[color:var(--color-amber)] transition-colors"
+                    className="flex items-center justify-center gap-3 pt-6 sm:pt-10 group-hover:text-[color:var(--color-amber)] transition-colors"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.9, delay: 1.6 }}
