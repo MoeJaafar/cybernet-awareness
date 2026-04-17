@@ -2,41 +2,51 @@
 
 import { useEffect, useRef } from "react";
 
+let _bgAudio: HTMLAudioElement | null = null;
+let _bgStarted = false;
+
 /**
- * Global background music. Renders nothing visible. Waits for the
- * first user gesture (any click/tap anywhere on the page), then
- * starts a looping ambient track at low volume. Persists across
- * Next.js client-side navigations because it lives in the root layout.
+ * Start the background music. Safe to call from any component — only
+ * the first call does anything. Exposed as a module-level function so
+ * BootSequence (or any future component) can trigger it directly
+ * inside a click handler, guaranteeing the browser treats it as a
+ * user-gesture-initiated playback.
  */
-export function BgMusic({ src, volume = 0.18 }: { src: string; volume?: number }) {
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-    const startedRef = useRef(false);
+export function startBgMusic(src: string, volume: number) {
+    if (_bgStarted) return;
+    _bgStarted = true;
+    const audio = new Audio(src);
+    audio.loop = true;
+    audio.volume = volume;
+    audio.play().catch(() => {});
+    _bgAudio = audio;
+}
+
+/**
+ * Global background music. Renders nothing visible. Also listens for
+ * any click/keypress as a fallback trigger in case the component that
+ * should call startBgMusic() doesn't.
+ */
+export function BgMusic({ src, volume = 0.10 }: { src: string; volume?: number }) {
+    const srcRef = useRef(src);
+    const volRef = useRef(volume);
+    srcRef.current = src;
+    volRef.current = volume;
 
     useEffect(() => {
-        const start = () => {
-            if (startedRef.current) return;
-            startedRef.current = true;
+        const fallback = () => startBgMusic(srcRef.current, volRef.current);
 
-            const audio = new Audio(src);
-            audio.loop = true;
-            audio.volume = volume;
-            audio.play().catch(() => {});
-            audioRef.current = audio;
-
-            document.removeEventListener("click", start);
-            document.removeEventListener("keydown", start);
-        };
-
-        document.addEventListener("click", start, { once: false });
-        document.addEventListener("keydown", start, { once: false });
+        document.addEventListener("click", fallback);
+        document.addEventListener("keydown", fallback);
 
         return () => {
-            document.removeEventListener("click", start);
-            document.removeEventListener("keydown", start);
-            audioRef.current?.pause();
-            audioRef.current = null;
+            document.removeEventListener("click", fallback);
+            document.removeEventListener("keydown", fallback);
+            _bgAudio?.pause();
+            _bgAudio = null;
+            _bgStarted = false;
         };
-    }, [src, volume]);
+    }, []);
 
     return null;
 }

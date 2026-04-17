@@ -68,7 +68,7 @@ export default function RootLayout({
                 <div aria-hidden className="atmos-vignette" />
                 <div aria-hidden className="atmos-grain" />
 
-                <BgMusic src="/audio/bg-music.mp3" />
+                <BgMusic src="/audio/bg-music.mp3" volume={0.10} />
                 {children}
             </body>
         </html>

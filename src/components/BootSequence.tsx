@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { startBgMusic } from "./BgMusic";
 
 /**
  * Opening story beat. Types out one line of prose at a time, fades
@@ -96,7 +97,10 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
         return (
             <button
                 type="button"
-                onClick={() => setArmed(true)}
+                onClick={() => {
+                    startBgMusic("/audio/bg-music.mp3", 0.10);
+                    setArmed(true);
+                }}
                 className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"
                 aria-label="Begin"
             >
