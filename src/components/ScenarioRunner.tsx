@@ -478,7 +478,7 @@ function WorkspaceScene({
                 >
                     <PasswordBuilder
                         header="This site requires you to set a new password before continuing."
-                        caption="Type a password in the field below. The wall and crack-time update as you type."
+                        caption="Pick the one you'd actually use. The outcome will show how it fares against a real attacker."
                         onSubmit={(result) => {
                             const outcomeId = evaluatePassword(result);
                             onAdvance(outcomeId);
