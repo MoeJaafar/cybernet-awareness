@@ -354,10 +354,10 @@ function QuizOptions({
             {picked?.correct && (
                 <div className="pt-2">
                     <Link
-                        href={nextScenarioId ? `/scenario/${nextScenarioId}` : "/"}
+                        href={nextScenarioId ? `/scenario/${nextScenarioId}` : "/posttest"}
                         className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                     >
-                        {nextScenarioId ? "Next" : "Done"}
+                        {nextScenarioId ? "Next" : "Continue"}
                         <span aria-hidden className="text-xl">→</span>
                     </Link>
                 </div>
