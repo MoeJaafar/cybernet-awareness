@@ -114,6 +114,8 @@ body {
     background-attachment: fixed;
     min-height: 100vh;
     overflow-x: hidden;
+    /* Gentle breathing of the ambient gradients. */
+    animation: ambient-breathe 24s ease-in-out infinite;
 }
 
 /* ==============================
@@ -156,6 +158,59 @@ body {
     z-index: 59;
     background:
         radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* Faint SOC-style dot grid. Breathes in and out so the background
+ * never looks fully static. Only visible against the darker surfaces. */
+.atmos-grid {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 56;
+    background-image:
+        radial-gradient(circle, rgba(255, 153, 51, 0.09) 1px, transparent 1.2px);
+    background-size: 36px 36px;
+    background-position: 0 0;
+    mask-image:
+        radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9), transparent 70%);
+    -webkit-mask-image:
+        radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9), transparent 70%);
+    animation: grid-breathe 18s ease-in-out infinite;
+    opacity: 0.4;
+}
+
+/* Soft amber sheen that drifts across the screen at a slow cadence. */
+.atmos-sheen {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 57;
+    background:
+        radial-gradient(ellipse 55% 35% at 50% 50%, rgba(255, 153, 51, 0.055), transparent 65%);
+    filter: blur(20px);
+    animation: sheen-drift 34s ease-in-out infinite;
+}
+
+/* Horizontal scan line that sweeps the screen once per cycle. */
+.atmos-sweep {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: -10%;
+    height: 160px;
+    pointer-events: none;
+    z-index: 57;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(255, 153, 51, 0.0) 20%,
+        rgba(255, 153, 51, 0.05) 50%,
+        rgba(255, 153, 51, 0.0) 80%,
+        transparent 100%
+    );
+    filter: blur(6px);
+    animation: sweep-down 16s linear infinite;
+    mix-blend-mode: screen;
 }
 
 /* ==============================
@@ -252,6 +307,39 @@ body {
     50%      { transform: translate(-3px, -2px); }
 }
 .atmos-grain { animation: slow-drift 14s ease-in-out infinite; }
+
+@keyframes ambient-breathe {
+    0%, 100% {
+        background-image:
+            radial-gradient(ellipse 100% 80% at 50% 110%, rgba(255, 153, 51, 0.06), transparent 60%),
+            radial-gradient(ellipse 80% 60% at 20% -20%, rgba(105, 144, 168, 0.05), transparent 70%);
+    }
+    50% {
+        background-image:
+            radial-gradient(ellipse 110% 90% at 50% 115%, rgba(255, 153, 51, 0.10), transparent 62%),
+            radial-gradient(ellipse 90% 70% at 25% -22%, rgba(105, 144, 168, 0.08), transparent 72%);
+    }
+}
+
+@keyframes grid-breathe {
+    0%, 100% { opacity: 0.28; background-position: 0 0; }
+    50%      { opacity: 0.55; background-position: 8px 6px; }
+}
+
+@keyframes sheen-drift {
+    0%   { transform: translate(-18%, -8%); opacity: 0.35; }
+    25%  { transform: translate(10%,  6%);  opacity: 0.85; }
+    50%  { transform: translate(20%, -4%);  opacity: 0.55; }
+    75%  { transform: translate(-6%, 10%);  opacity: 0.75; }
+    100% { transform: translate(-18%, -8%); opacity: 0.35; }
+}
+
+@keyframes sweep-down {
+    0%   { transform: translateY(-40vh); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(120vh); opacity: 0; }
+}
 
 @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }

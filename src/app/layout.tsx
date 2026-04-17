@@ -90,7 +90,12 @@ export default function RootLayout({
             <body className="min-h-screen">
                 <SessionProvider>
                 <AudioSettingsProvider>
-                    {/* Atmosphere stack, order matters (scanlines below vignette below grain). */}
+                    {/* Atmosphere stack. Order matters: grid/sheen/sweep sit
+                     * under scanlines and vignette, with grain on top. Lower
+                     * z-index = further back. */}
+                    <div aria-hidden className="atmos-grid" />
+                    <div aria-hidden className="atmos-sheen" />
+                    <div aria-hidden className="atmos-sweep" />
                     <div aria-hidden className="atmos-scanlines" />
                     <div aria-hidden className="atmos-vignette" />
                     <div aria-hidden className="atmos-grain" />
