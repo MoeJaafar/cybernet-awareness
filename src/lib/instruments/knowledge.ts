@@ -1,14 +1,15 @@
 /**
- * Pre/post-test, 15 scenario-based MCQ with 4 options each.
- * 10 concept-aligned (2 per game scenario) + 5 general controls.
+ * Pre/post-test, 10 scenario-based MCQ with 4 options each.
+ * Two items per scenario topic (phishing, password, vishing, USB, Wi-Fi).
  *
  * Design rules:
  *   - All 4 options similar length, no structural tells
- *   - Each wrong option = a real misconception, not a strawman
+ *   - Each wrong option = a plausible everyday choice, not a strawman
  *   - No absolute qualifiers (always, never, completely, guarantees)
- *   - Scenario-based framing where possible
- *   - Same questions pre and post, order randomised
- *   - Correct-answer distribution spread across A/B/C/D (no "always pick C" tell)
+ *   - "What do you do?" intention framing where it reads naturally,
+ *     evaluative framing otherwise
+ *   - Correct-answer distribution spread across A/B/C/D: a=3, b=3, c=2, d=2
+ *   - Same items pre and post, order reversed at post-test
  */
 
 export interface KnowledgeQuestion {
@@ -24,24 +25,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "phish-1",
         concept: "phishing",
         prompt:
-            "You receive an email asking you to verify your account. The page it links to shows a padlock icon and https://. What should you consider?",
+            "You're in the middle of work when an email from \"IT Helpdesk\" says your account password expires in two hours and links to a reset page. The sender name and the logo look right. What do you do?",
         options: [
-            { key: "a", label: "The padlock confirms the site is legitimate, so it's safe to proceed.", correct: false },
-            { key: "b", label: "The padlock means encrypted, but phishing sites use https too, so check the actual domain.", correct: true },
-            { key: "c", label: "Padlocks only appear on sites your browser has previously verified as safe.", correct: false },
-            { key: "d", label: "The email is safe if the padlock is green rather than grey.", correct: false },
+            { key: "a", label: "Open a new browser tab, go to the company login page directly, and reset it from there.", correct: true },
+            { key: "b", label: "Click the link in the email and reset through that page.", correct: false },
+            { key: "c", label: "Reply to the email to ask if it's genuine.", correct: false },
+            { key: "d", label: "Forward it to a colleague to see if they received one too.", correct: false },
         ],
     },
     {
         id: "phish-2",
         concept: "phishing",
         prompt:
-            "You get an urgent message that looks like it's from a close family member, asking you to send money right away because of an emergency. The name and sender details look correct. What's the best way to verify it?",
+            "You get an urgent message that looks like it's from a close family member, saying they're stranded and need you to send money right away. The name and photo are familiar. What do you do?",
         options: [
-            { key: "a", label: "Call or message the person on a number you already have saved, not one from the message.", correct: true },
-            { key: "b", label: "Look for spelling and grammar mistakes in the message.", correct: false },
-            { key: "c", label: "Check whether the message came from their usual email or phone.", correct: false },
-            { key: "d", label: "Reply to the message and ask if they really sent it.", correct: false },
+            { key: "a", label: "Send a smaller amount first to check it's really them.", correct: false },
+            { key: "b", label: "Reply on the same app to ask if they really sent it.", correct: false },
+            { key: "c", label: "Call or message them on a number you already have saved before doing anything.", correct: true },
+            { key: "d", label: "Send the money; they can pay you back later.", correct: false },
         ],
     },
 
@@ -50,22 +51,22 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "pw-1",
         concept: "password",
         prompt:
-            "You need a new password. Which of these would be hardest for an attacker to crack?",
+            "You need a new password for an account you use every day. Which would you choose?",
         options: [
-            { key: "a", label: '"Tr0ub4d0r&3" (11 characters, symbol substitutions)', correct: false },
-            { key: "b", label: '"sunset piano bicycle" (20 characters, three plain words)', correct: true },
-            { key: "c", label: '"aX9$kL2!mN" (10 characters, fully random)', correct: false },
-            { key: "d", label: '"Jessica1987!" (12 characters, name + year + symbol)', correct: false },
+            { key: "a", label: "Tr0ub4d0r&3, because it's a familiar word with substitutions and a symbol.", correct: false },
+            { key: "b", label: "sunset-piano-bicycle, because three unrelated words give length without being hard to remember.", correct: true },
+            { key: "c", label: "Jessica1987!, because a personal name and year are easy to recall.", correct: false },
+            { key: "d", label: "aX9$kL2!, because a short fully-random string feels secure.", correct: false },
         ],
     },
     {
         id: "pw-2",
         concept: "password",
         prompt:
-            'A friend sets "March2026!" as their password and says the website accepted it, so it must be safe. How would you assess it?',
+            "A friend tells you her password is March2026!. She says it's easy to remember and the site accepted it, so it must be fine. What do you think?",
         options: [
-            { key: "a", label: "If the website accepts it, it must meet the strength requirements.", correct: false },
-            { key: "b", label: "The length and mix of letters, numbers, and a symbol make it reasonably secure.", correct: false },
+            { key: "a", label: "If the site accepted it, it probably meets the strength rules.", correct: false },
+            { key: "b", label: "The mix of letters, a number, and a symbol makes it reasonably secure.", correct: false },
             { key: "c", label: "Adding another symbol at the end would make it strong enough.", correct: false },
             { key: "d", label: "Month-and-year patterns are among the first combinations attackers try.", correct: true },
         ],
@@ -76,24 +77,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "vish-1",
         concept: "vishing",
         prompt:
-            "Your phone rings. The caller knows your full name, address, and the last four digits of your account. They ask you to verify your password for security. What's the best response?",
+            "Your phone rings. The caller knows your full name, address, and the last four digits of your bank card. They say they're from your bank's fraud team and ask you to confirm your online-banking password \"for security.\" What do you do?",
         options: [
-            { key: "a", label: "They know enough details that they're most likely legitimate.", correct: false },
-            { key: "b", label: "Ask them for their employee ID and continue if they provide one.", correct: false },
-            { key: "c", label: "Hang up and call the organisation back on a number from their official website.", correct: true },
-            { key: "d", label: "Give only part of your password as a compromise.", correct: false },
+            { key: "a", label: "Give it to them; they clearly know who you are.", correct: false },
+            { key: "b", label: "Ask them to prove it by telling you your current balance first.", correct: false },
+            { key: "c", label: "Tell them you'll call the bank back on the number printed on your card.", correct: true },
+            { key: "d", label: "Give a slightly wrong version of the password to see how they react.", correct: false },
         ],
     },
     {
         id: "vish-2",
         concept: "vishing",
         prompt:
-            'A caller says they\'re from Microsoft support and reads back details like your operating system and that "we\'ve detected errors on your computer." What does this actually demonstrate?',
+            "A caller says he's from Microsoft Support, reads your operating system back to you, and claims \"we've detected errors on your computer.\" What do you do?",
         options: [
-            { key: "a", label: "They must have access to your device, so they're likely genuine.", correct: false },
-            { key: "b", label: "Details like your operating system can be guessed or gathered without seeing your computer, so this proves nothing.", correct: true },
-            { key: "c", label: "Your computer has been compromised and they detected the issue.", correct: false },
-            { key: "d", label: "Only Microsoft could detect errors from afar, so they're credible.", correct: false },
+            { key: "a", label: "Hang up — Microsoft doesn't cold-call users about errors.", correct: true },
+            { key: "b", label: "Let him connect remotely; the errors could be serious.", correct: false },
+            { key: "c", label: "Ask which department he's from and call Microsoft back to verify.", correct: false },
+            { key: "d", label: "Tell him you're not the account owner and end the call.", correct: false },
         ],
     },
 
@@ -102,24 +103,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "usb-1",
         concept: "usb",
         prompt:
-            'You plug a USB stick into your laptop but don\'t open any files. A friend tells you "you\'re fine as long as you didn\'t open anything." Is that right?',
+            "You find a USB stick on your desk labelled \"HR — Bonuses\" with no note. What do you do?",
         options: [
-            { key: "a", label: "Yes, a harmful program needs you to double-click a file before it can do anything.", correct: false },
-            { key: "b", label: "Yes, the computer scans USB sticks the moment they're plugged in and blocks anything bad.", correct: false },
-            { key: "c", label: "Yes, as long as autorun is switched off in your settings, nothing can happen on its own.", correct: false },
-            { key: "d", label: "No, some USB devices can launch a hidden program the moment they're plugged in, before you open anything.", correct: true },
+            { key: "a", label: "Plug it in to find out whose it is.", correct: false },
+            { key: "b", label: "Hand it to IT with a short note about where you found it.", correct: true },
+            { key: "c", label: "Leave it on a colleague's desk in case it's theirs.", correct: false },
+            { key: "d", label: "Take it home and check it on your personal laptop first.", correct: false },
         ],
     },
     {
         id: "usb-2",
         concept: "usb",
         prompt:
-            'You find a USB stick labelled "Holiday photos 2026" in a shared area. A friend suggests checking it on an old spare laptop that\'s not connected to the internet. Is this a safe approach?',
+            "A colleague finds a labelled USB stick in the car park and wants to check it on a spare laptop that isn't connected to the internet. What do you think?",
         options: [
-            { key: "a", label: "No, any hidden program on the stick would still run on that laptop whether it's online or not, and the label is likely bait.", correct: true },
-            { key: "b", label: "Yes, without an internet connection anything harmful is trapped on that one machine.", correct: false },
-            { key: "c", label: "Yes, a spare laptop has nothing valuable on it, so there's no real risk.", correct: false },
-            { key: "d", label: "Yes, as long as the antivirus on the spare laptop is up to date.", correct: false },
+            { key: "a", label: "Fine — being offline means nothing bad can happen.", correct: false },
+            { key: "b", label: "Fine as long as the spare laptop has antivirus up to date.", correct: false },
+            { key: "c", label: "Fine as long as he only looks at the file list without opening anything.", correct: false },
+            { key: "d", label: "Any hidden program on the stick could still run on that laptop, online or not.", correct: true },
         ],
     },
 
@@ -128,86 +129,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "wifi-1",
         concept: "wifi",
         prompt:
-            "You're at a café and open an incognito window before connecting to the public Wi-Fi. What does incognito mode protect in this situation?",
+            "You open an incognito window before connecting to a café's Wi-Fi, because you want your browsing to stay private. What does incognito actually do for you here?",
         options: [
-            { key: "a", label: "It encrypts your traffic so other people on the network can't see it.", correct: false },
-            { key: "b", label: "It hides your browsing from the Wi-Fi provider and other users.", correct: false },
-            { key: "c", label: "It only prevents your browser from saving local history; the network still sees your traffic.", correct: true },
-            { key: "d", label: "It provides similar protection to a VPN for casual browsing.", correct: false },
+            { key: "a", label: "It encrypts your traffic so other people on the Wi-Fi can't read it.", correct: false },
+            { key: "b", label: "It only stops your browser saving your history; the network still sees your traffic.", correct: true },
+            { key: "c", label: "It hides your browsing from the café's Wi-Fi provider.", correct: false },
+            { key: "d", label: "It gives you similar protection to a VPN for casual browsing.", correct: false },
         ],
     },
     {
         id: "wifi-2",
         concept: "wifi",
         prompt:
-            "You're in a café and want to log into your bank account. You can connect to the café's password-protected Wi-Fi, or use your phone's mobile data. Which is more secure, and why?",
+            "You're in a café and want to log into your bank account. You can use the café's password-protected Wi-Fi, or tether to your phone's mobile data. Which is safer, and why?",
         options: [
-            { key: "a", label: "The café Wi-Fi, because the password gives each person their own protected channel.", correct: false },
-            { key: "b", label: "Either is fine, because banking sites are encrypted no matter which network you use.", correct: false },
-            { key: "c", label: "The café Wi-Fi, because a familiar café is safer than a mobile connection.", correct: false },
-            { key: "d", label: "Your phone's mobile data, because the connection is between your phone and your mobile network, not shared with other people in the café.", correct: true },
-        ],
-    },
-
-    // ── General awareness controls (5) ────────────────────────
-    {
-        id: "gen-1",
-        concept: "general",
-        prompt:
-            "You have the extra verification step turned on for your email (a code sent to your phone in addition to your password). A fake website captures both your password and the code in real time as you type them. What happens?",
-        options: [
-            { key: "a", label: "The attacker can use the code before it expires and get into your account.", correct: true },
-            { key: "b", label: "The attacker is blocked because the code only works from your own device.", correct: false },
-            { key: "c", label: "Your email provider spots the unusual login and blocks it automatically.", correct: false },
-            { key: "d", label: "The code is tied to your browser, so it won't work for the attacker.", correct: false },
-        ],
-    },
-    {
-        id: "gen-2",
-        concept: "general",
-        prompt:
-            'A software update pops up labelled "important security update." You\'re in the middle of something. What\'s the real risk of putting it off for a few days?',
-        options: [
-            { key: "a", label: "Minimal, because security updates mostly fix rare problems that never come up in real life.", correct: false },
-            { key: "b", label: "The update likely fixes a flaw that attackers are already using to get into devices.", correct: true },
-            { key: "c", label: "Low risk, because your antivirus covers the gap until you update.", correct: false },
-            { key: "d", label: "No risk as long as you avoid suspicious websites until you update.", correct: false },
-        ],
-    },
-    {
-        id: "gen-3",
-        concept: "general",
-        prompt:
-            'You keep getting spam from the same sender. You reply "STOP" without clicking any links. What\'s the likely result?',
-        options: [
-            { key: "a", label: "The sender removes you from their list within a few days.", correct: false },
-            { key: "b", label: "Nothing changes, because the reply goes to an unmonitored inbox.", correct: false },
-            { key: "c", label: "You've confirmed your address is active, which may increase the spam you receive.", correct: true },
-            { key: "d", label: "Your email provider flags the thread and blocks future messages from that sender.", correct: false },
-        ],
-    },
-    {
-        id: "gen-4",
-        concept: "general",
-        prompt:
-            "You download a file and your antivirus doesn't flag it. How confident should you be that it's safe?",
-        options: [
-            { key: "a", label: "Very, because if the antivirus cleared it the file has been thoroughly scanned.", correct: false },
-            { key: "b", label: "It depends on whether the file came from a source you already trust.", correct: false },
-            { key: "c", label: "If the download site uses HTTPS, the file is almost certainly clean.", correct: false },
-            { key: "d", label: "Somewhat, because antivirus catches known threats but can miss new or targeted ones.", correct: true },
-        ],
-    },
-    {
-        id: "gen-5",
-        concept: "general",
-        prompt:
-            "You post on social media about starting a new job, your team name, and a photo of your office badge (blurred). How could an attacker use this?",
-        options: [
-            { key: "a", label: "They could use the details to craft a convincing phishing email pretending to be from your company.", correct: true },
-            { key: "b", label: "They couldn't, because the badge is blurred and the post doesn't contain passwords.", correct: false },
-            { key: "c", label: "Only if your profile is public; a private account prevents this.", correct: false },
-            { key: "d", label: "Social media platforms scan for sensitive info and would block the post.", correct: false },
+            { key: "a", label: "Mobile data — the connection is between your phone and your mobile network, not shared with other café users.", correct: true },
+            { key: "b", label: "The café's Wi-Fi — the password gives each person their own protected channel.", correct: false },
+            { key: "c", label: "Either is fine — banking sites are encrypted regardless of the network.", correct: false },
+            { key: "d", label: "The café's Wi-Fi — a familiar café is safer than a mobile connection.", correct: false },
         ],
     },
 ];
