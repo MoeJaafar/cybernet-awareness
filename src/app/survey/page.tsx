@@ -72,7 +72,7 @@ export default function SurveyPage() {
                 </div>
 
                 <p className="type-ui text-[color:var(--color-bone)] text-[22px] leading-relaxed">
-                    &ldquo;{q.statement}&rdquo;
+                    {q.statement}
                 </p>
 
                 <div
