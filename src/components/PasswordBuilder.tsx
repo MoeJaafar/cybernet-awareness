@@ -163,6 +163,29 @@ export function PasswordBuilder({
                     </motion.div>
                 )}
 
+                {/* Why — context-aware explanation that updates as the
+                 *  user types. Turns the counter into a teaching moment. */}
+                {password.length > 0 && stats.reason && (
+                    <motion.div
+                        key={stats.reason}
+                        className="border-l-2 pl-4 py-1"
+                        style={{ borderColor: stats.wallColor }}
+                        initial={{ opacity: 0, x: -4 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <p
+                            className="text-[11px] uppercase tracking-widest mb-1"
+                            style={{ color: stats.wallColor }}
+                        >
+                            why
+                        </p>
+                        <p className="text-sm text-[color:var(--gmail-text)] leading-relaxed">
+                            {stats.reason}
+                        </p>
+                    </motion.div>
+                )}
+
                 {/* Submit. */}
                 <button
                     type="button"
@@ -184,6 +207,7 @@ interface PasswordStats {
     crackLabel: string;
     wallPercent: number;
     wallColor: string;
+    reason: string;
 }
 
 const COMMON_PASSWORDS = new Set([
@@ -197,7 +221,13 @@ const COMMON_PASSWORDS = new Set([
 
 function analyzePassword(password: string): PasswordStats {
     if (password.length === 0) {
-        return { crackSeconds: 0, crackLabel: ",", wallPercent: 0, wallColor: "#3c4043" };
+        return {
+            crackSeconds: 0,
+            crackLabel: ",",
+            wallPercent: 0,
+            wallColor: "#3c4043",
+            reason: "",
+        };
     }
 
     // Check common passwords first.
@@ -207,32 +237,61 @@ function analyzePassword(password: string): PasswordStats {
             crackLabel: "instant",
             wallPercent: Math.min(password.length * 3, 15),
             wallColor: "var(--signal-red)",
+            reason:
+                "This is one of the most-used passwords online. Attackers try leaked-password lists first, so they don't have to guess anything at all.",
         };
     }
 
     // Estimate charset size.
     let charset = 0;
-    if (/[a-z]/.test(password)) charset += 26;
-    if (/[A-Z]/.test(password)) charset += 26;
-    if (/[0-9]/.test(password)) charset += 10;
-    if (/[^a-zA-Z0-9]/.test(password)) charset += 32;
+    const hasLower = /[a-z]/.test(password);
+    const hasUpper = /[A-Z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+    const hasSymbol = /[^a-zA-Z0-9]/.test(password);
+    if (hasLower) charset += 26;
+    if (hasUpper) charset += 26;
+    if (hasDigit) charset += 10;
+    if (hasSymbol) charset += 32;
     if (charset === 0) charset = 26;
 
-    // Entropy in bits.
     const entropy = password.length * Math.log2(charset);
-
-    // Assume 10 billion guesses/sec (modern GPU rig).
     const guessesPerSec = 1e10;
     const totalGuesses = Math.pow(2, entropy);
     const seconds = totalGuesses / guessesPerSec;
 
-    // Penalize common patterns.
+    // Penalise common patterns.
     let adjustedSeconds = seconds;
-    if (/^[A-Z][a-z]+\d{1,4}[!@#$%]?$/.test(password)) {
-        adjustedSeconds = Math.min(adjustedSeconds, 180);
-    }
-    if (/^[a-z]+\d{1,4}$/.test(password)) {
-        adjustedSeconds = Math.min(adjustedSeconds, 60);
+    const isNamePlusYear = /^[A-Z][a-z]+\d{1,4}[!@#$%]?$/.test(password);
+    const isWordPlusDigits = /^[a-z]+\d{1,4}$/.test(password);
+    if (isNamePlusYear) adjustedSeconds = Math.min(adjustedSeconds, 180);
+    if (isWordPlusDigits) adjustedSeconds = Math.min(adjustedSeconds, 60);
+
+    // Pick a reason based on the dominant weakness or strength.
+    let reason: string;
+    if (isNamePlusYear) {
+        reason =
+            "Patterns like a capitalised word followed by digits and a symbol are among the first things cracking tools try. Even with a symbol, the structure is predictable.";
+    } else if (isWordPlusDigits) {
+        reason =
+            "Dictionary word plus a short number is a classic pattern. Attackers try these combinations before anything else.";
+    } else if (password.length < 8) {
+        reason =
+            "Short passwords have a tiny search space. A modern GPU can try every possible combination of this length in seconds.";
+    } else if (password.length < 12 && !hasSymbol && !hasUpper) {
+        reason =
+            "All-lowercase passwords only use 26 possible characters per position. Mixing cases, numbers, or symbols multiplies the search space.";
+    } else if (adjustedSeconds < 60) {
+        reason =
+            "The combination of length and character variety gives attackers too small a space to search through. Longer always helps more than special-character tricks.";
+    } else if (adjustedSeconds < 86400 * 365) {
+        reason =
+            "Decent strength, but length is still the weakest link. Every extra character roughly multiplies the attacker's work.";
+    } else if (password.length >= 16) {
+        reason =
+            "Length is doing the heavy lifting. Each extra character multiplies the search space, so a long passphrase can outperform a short random string.";
+    } else {
+        reason =
+            "Strong mix of length and unpredictability. Brute force on this scale would need years of dedicated GPU time.";
     }
 
     const crackLabel = formatTime(adjustedSeconds);
@@ -252,6 +311,7 @@ function analyzePassword(password: string): PasswordStats {
         crackLabel,
         wallPercent,
         wallColor,
+        reason,
     };
 }
 
