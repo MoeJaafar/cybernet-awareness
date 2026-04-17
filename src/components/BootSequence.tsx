@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { createNarratorAudio } from "@/lib/audio-settings";
 
@@ -34,18 +34,30 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
+    const currentReleaseRef = useRef<(() => void) | null>(null);
 
-    // Audio, one mp3 per line. Stops immediately when phase flips to
-    // "done" (e.g. the player tapped skip) so it doesn't bleed into
-    // the first scenario.
+    // Audio, one mp3 per line. Keyed ONLY on lineIndex so that the
+    // type → hold phase transition doesn't restart the clip. A
+    // separate effect below stops audio on skip (phase === "done").
     useEffect(() => {
-        if (phase === "done") return;
         if (lineIndex >= SCRIPT.length) return;
         const n = String(lineIndex + 1).padStart(2, "0");
         const { audio, release } = createNarratorAudio(`/audio/boot/${n}.mp3`);
+        currentReleaseRef.current = release;
         audio.play().catch(() => {});
-        return release;
-    }, [lineIndex, phase]);
+        return () => {
+            currentReleaseRef.current = null;
+            release();
+        };
+    }, [lineIndex]);
+
+    // Skip / done: stop whatever audio is playing right now.
+    useEffect(() => {
+        if (phase === "done") {
+            currentReleaseRef.current?.();
+            currentReleaseRef.current = null;
+        }
+    }, [phase]);
 
     useEffect(() => {
         if (phase === "done") {
