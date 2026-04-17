@@ -204,10 +204,12 @@ export function TypedNarrative({
                 )}
             </div>
 
-            {/* Middle section: typed text. On desktop vertically centers in
-             *  the remaining space; on mobile anchors to the top so the
-             *  choices below don't land off-screen. */}
-            <div className="relative flex-1 flex items-start sm:items-center pt-2 sm:pt-0 max-w-3xl w-full mx-auto">
+            {/* Middle section: typed text. On desktop stretches to fill
+             *  the viewport and vertically centers the text. On mobile
+             *  the flex-1 is dropped so the section takes its natural
+             *  height and the choices below sit tight against it
+             *  instead of being pushed to the bottom of the screen. */}
+            <div className="relative sm:flex-1 flex items-start sm:items-center pt-2 sm:pt-0 max-w-3xl w-full mx-auto">
 
                 <AnimatePresence mode="wait">
                     {lineIndex < lines.length && (
@@ -268,9 +270,11 @@ export function TypedNarrative({
             </div>
 
             {/* Bottom dock: continue hint / CTA / quiz options.
-             *  Always takes space (min-h) so nothing shifts above. */}
+             *  On desktop a min-h keeps the layout stable while lines
+             *  change; on mobile the dock flows naturally after the
+             *  typed text so there is no empty strip between them. */}
             <div
-                className="relative max-w-3xl w-full mx-auto pb-8 sm:pb-12 pt-4 sm:pt-6 min-h-[120px] sm:min-h-[175px] flex flex-col justify-end"
+                className="relative max-w-3xl w-full mx-auto pb-8 sm:pb-12 pt-4 sm:pt-6 sm:min-h-[175px] flex flex-col sm:justify-end"
                 onClick={(e) => e.stopPropagation()}
             >
                 {phase === "wait" && (

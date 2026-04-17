@@ -14,7 +14,7 @@ export default function DonePage() {
     }, []);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10 text-center">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

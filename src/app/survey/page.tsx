@@ -53,7 +53,7 @@ export default function SurveyPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10">
             <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 8 }}

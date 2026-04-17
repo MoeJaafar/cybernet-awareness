@@ -21,7 +21,7 @@ export default function Home() {
         <button
             type="button"
             onClick={handleTap}
-            className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"
+            className="min-h-screen w-full flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10 relative cursor-pointer group text-center"
             aria-label="Begin"
         >
             <div className="max-w-2xl w-full flex flex-col items-center gap-8">
