@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAudioSettings } from "@/lib/audio-settings";
+import { unlockAudio, useAudioSettings, wireAudioToChannel } from "@/lib/audio-settings";
 
 let _bgAudio: HTMLAudioElement | null = null;
 let _bgStarted = false;
@@ -12,9 +12,14 @@ function tryPlay(src: string, volume: number) {
     // their own Audio, on mobile, a tap can fire several handlers in
     // the same tick, and without this lock we'd get doubled playback.
     _bgStarted = true;
+    // Unlock and wire first so the audio plays through the gain node,
+    // not the default destination. iOS Safari ignores audio.volume but
+    // honours GainNode.gain.
+    unlockAudio();
     const audio = new Audio(src);
     audio.loop = true;
     audio.volume = volume;
+    wireAudioToChannel(audio, "music");
     audio
         .play()
         .then(() => {
@@ -34,7 +39,9 @@ export function startBgMusic(src: string, volume: number) {
 export function BgMusic({ src }: { src: string }) {
     const { musicVolume } = useAudioSettings();
 
-    // Keep the running audio element's volume in sync with the slider.
+    // Fallback only: GainNode already tracks musicVolume via the
+    // context setter. This covers browsers where MediaElementSource
+    // didn't wire (older Safari on cross-origin assets, etc.).
     useEffect(() => {
         if (_bgAudio) _bgAudio.volume = musicVolume;
     }, [musicVolume]);
