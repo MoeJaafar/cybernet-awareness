@@ -99,7 +99,7 @@ export function PhoneCall({
     return (
         <div className="flex flex-col items-center gap-8 w-full">
             {/* ========== PHONE FRAME ========== */}
-            <div className="w-full max-w-[350px]">
+            <div className="w-full max-w-[min(350px,90vw)]">
                 <div className="rounded-[40px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
                     {/* Status bar. */}
                     <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[14px] text-white/60">

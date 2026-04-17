@@ -24,7 +24,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
     return (
         <div className="flex flex-col items-center gap-10 w-full">
             {/* ========== STICK VISUAL ========== */}
-            <div className="relative w-full max-w-[525px] aspect-[5/3] flex items-center justify-center">
+            <div className="relative w-full max-w-[min(525px,90vw)] aspect-[5/3] flex items-center justify-center">
                 {/* Floor / surface wash. */}
                 <div
                     aria-hidden

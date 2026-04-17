@@ -113,6 +113,7 @@ body {
         radial-gradient(ellipse 80% 60% at 20% -20%, rgba(105, 144, 168, 0.05), transparent 70%);
     background-attachment: fixed;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* ==============================
