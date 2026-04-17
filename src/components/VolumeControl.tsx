@@ -18,13 +18,23 @@ export function VolumeControl() {
     }, []);
 
     const panel = (
-        <div className="bg-[color:var(--color-ink-raised)] border border-[color:var(--color-edge-subtle)] rounded-lg p-3 flex flex-col gap-3 shadow-[0_12px_40px_rgba(0,0,0,0.6)] w-[180px]">
-            <Slider label="Music" value={musicVolume} onChange={setMusicVolume} />
-            <Slider label="Narrator" value={narratorVolume} onChange={setNarratorVolume} />
+        <div className="bg-[color:var(--color-ink-raised)] border border-[color:var(--color-edge-subtle)] rounded-lg p-3 flex flex-col gap-4 shadow-[0_12px_40px_rgba(0,0,0,0.6)] w-[180px]">
+            <Slider
+                label="Music"
+                value={musicVolume}
+                onChange={setMusicVolume}
+                isMobile={isMobile}
+            />
+            <Slider
+                label="Narrator"
+                value={narratorVolume}
+                onChange={setNarratorVolume}
+                isMobile={isMobile}
+            />
         </div>
     );
 
-    // Mobile: collapsed to a small icon button by default
+    // Mobile: collapsed to an icon button by default
     if (isMobile) {
         return (
             <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
@@ -43,8 +53,9 @@ export function VolumeControl() {
                 <button
                     type="button"
                     onClick={() => setOpen((o) => !o)}
-                    className="h-9 w-9 rounded-full bg-[color:var(--color-ink-raised)] border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] flex items-center justify-center transition-colors shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
+                    className="h-11 w-11 rounded-full bg-[color:var(--color-ink-raised)] border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] flex items-center justify-center transition-colors shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
                     aria-label="Volume settings"
+                    aria-expanded={open}
                 >
                     <SpeakerIcon />
                 </button>
@@ -60,19 +71,27 @@ function Slider({
     label,
     value,
     onChange,
+    isMobile,
 }: {
     label: string;
     value: number;
     onChange: (v: number) => void;
+    isMobile: boolean;
 }) {
     const pct = Math.round(value * 100);
+    // Touch-friendly thumb on mobile (Apple HIG: 44pt min). Keep the
+    // desktop thumb visually lighter.
+    const thumb = isMobile
+        ? "[&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5"
+        : "[&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3";
+    const track = isMobile ? "h-1.5" : "h-1";
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-                <span className="type-mono text-[color:var(--color-bone-muted)] text-[10px]">
+                <span className="type-mono text-[color:var(--color-bone-muted)] text-[11px]">
                     {label}
                 </span>
-                <span className="type-mono text-[color:var(--color-bone-dim)] tabular-nums text-[10px]">
+                <span className="type-mono text-[color:var(--color-bone-dim)] tabular-nums text-[11px]">
                     {pct}%
                 </span>
             </div>
@@ -82,18 +101,18 @@ function Slider({
                 max={100}
                 value={pct}
                 onChange={(e) => onChange(Number(e.target.value) / 100)}
-                className="w-full h-1 appearance-none bg-[color:var(--color-bone-ghost)] rounded-full outline-none cursor-pointer
+                aria-label={`${label} volume`}
+                className={`w-full ${track} appearance-none bg-[color:var(--color-bone-ghost)] rounded-full outline-none cursor-pointer touch-none
                     [&::-webkit-slider-thumb]:appearance-none
-                    [&::-webkit-slider-thumb]:h-3
-                    [&::-webkit-slider-thumb]:w-3
+                    ${thumb}
                     [&::-webkit-slider-thumb]:rounded-full
                     [&::-webkit-slider-thumb]:bg-[color:var(--color-amber)]
-                    [&::-webkit-slider-thumb]:shadow-[0_0_8px_var(--amber-glow)]
-                    [&::-moz-range-thumb]:h-3
-                    [&::-moz-range-thumb]:w-3
+                    [&::-webkit-slider-thumb]:shadow-[0_0_12px_var(--amber-glow)]
+                    [&::-webkit-slider-thumb]:border-0
                     [&::-moz-range-thumb]:rounded-full
                     [&::-moz-range-thumb]:border-0
-                    [&::-moz-range-thumb]:bg-[color:var(--color-amber)]"
+                    [&::-moz-range-thumb]:bg-[color:var(--color-amber)]
+                    [&::-moz-range-thumb]:shadow-[0_0_12px_var(--amber-glow)]`}
             />
         </div>
     );

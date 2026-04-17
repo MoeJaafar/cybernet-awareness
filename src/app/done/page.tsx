@@ -25,7 +25,7 @@ export default function DonePage() {
                     session complete
                 </span>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[48px] sm:text-[64px] leading-tight">
+                <h1 className="type-display text-[color:var(--color-bone)] text-[32px] sm:text-[64px] leading-tight">
                     Thank you.
                 </h1>
 

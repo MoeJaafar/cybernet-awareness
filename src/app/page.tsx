@@ -40,7 +40,7 @@ export default function Home() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-                    className="type-display logo-cycle text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight"
+                    className="type-display logo-cycle text-[56px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight"
                 >
                     CyberNet
                 </motion.h1>
@@ -54,7 +54,7 @@ export default function Home() {
                 />
 
                 <motion.p
-                    className="type-body text-[color:var(--color-bone-dim)] text-[20px] sm:text-[24px] leading-relaxed max-w-xl"
+                    className="type-body text-[color:var(--color-bone-dim)] text-[16px] sm:text-[24px] leading-relaxed max-w-xl"
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.9 }}

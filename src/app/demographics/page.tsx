@@ -90,7 +90,7 @@ export default function DemographicsPage() {
                     </span>
                 </div>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[32px] sm:text-[40px] leading-tight">
+                <h1 className="type-display text-[color:var(--color-bone)] text-[26px] sm:text-[40px] leading-tight">
                     One last step.
                 </h1>
 

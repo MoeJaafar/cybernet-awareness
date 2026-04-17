@@ -43,7 +43,7 @@ export default function ConsentPage() {
                     </span>
                 </div>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[36px] sm:text-[48px] leading-tight">
+                <h1 className="type-display text-[color:var(--color-bone)] text-[28px] sm:text-[48px] leading-tight">
                     Before we begin
                 </h1>
 

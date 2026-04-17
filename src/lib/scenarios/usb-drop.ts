@@ -65,7 +65,7 @@ export const usbDrop: Scenario = {
             takeaway:
                 "An unknown USB stick isn't lost property, it's a delivery vehicle.",
             lesson:
-                "Dropped-USB attacks are decades old and still work, because curiosity beats caution. A University of Illinois study found 48% of USB sticks dropped around a university campus were plugged in. The attacker doesn't need your credentials or a software exploit, just one person plugging one drive into one machine. The rule: if it didn't come from a sealed package from a trusted source, it doesn't touch any computer you own.",
+                "Dropped-USB attacks are decades old and still work, because curiosity beats caution. A 2016 study by researchers at the University of Illinois Urbana-Champaign, in collaboration with Google and the University of Michigan, found that 48% of people will plug in USB sticks they find in a parking lot or other public area. The attacker doesn't need your credentials or a software exploit, just one person plugging one drive into one machine. The rule: if it didn't come from a sealed package from a trusted source, it doesn't touch any computer you own.",
             nextId: "quiz",
         },
 

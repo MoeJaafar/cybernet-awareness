@@ -51,7 +51,7 @@ export default function BriefingPage() {
                     </span>
                 </div>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[36px] sm:text-[48px] leading-tight">
+                <h1 className="type-display text-[color:var(--color-bone)] text-[28px] sm:text-[48px] leading-tight">
                     How this works.
                 </h1>
 
@@ -98,7 +98,7 @@ export default function BriefingPage() {
                     transition={{ duration: 0.6, delay: 0.9 }}
                     className="border-t border-[color:var(--color-edge-subtle)] pt-6 flex flex-col gap-4"
                 >
-                    <p className="type-display text-[color:var(--color-bone)] text-[28px] sm:text-[32px]">
+                    <p className="type-display text-[color:var(--color-bone)] text-[22px] sm:text-[32px]">
                         Are you ready to start?
                     </p>
                     <button
