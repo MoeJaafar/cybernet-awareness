@@ -89,6 +89,10 @@
 
 html {
     background: var(--ink-deeper);
+    /* Render the whole page at 125% — matches the density we design at
+     * without asking users to manually zoom. Standardised in all modern
+     * browsers (Firefox added native support in 126, May 2024). */
+    zoom: 1.25;
 }
 
 html, body {
