@@ -34,7 +34,7 @@ export function KnowledgeTest({
     const q = statements[idx];
     const total = statements.length;
     const current = answers[idx];
-    const completedCount = Object.keys(answers).filter((k) => isComplete(answers, Number(k))).length;
+    const completedCount = Object.keys(answers).filter((k) => answers[Number(k)]?.answer !== undefined).length;
     const allAnswered = completedCount === total;
 
     const setAnswer = (val: boolean) => {
@@ -52,18 +52,37 @@ export function KnowledgeTest({
     };
 
     const handleSubmit = () => {
+        let totalCorrect = 0;
+        let totalConfidentCorrect = 0;
+        let totalConfidentWrong = 0;
         for (let i = 0; i < total; i++) {
             const a = answers[i];
             const s = statements[i];
             if (!a || !s) continue;
+            const correct = a.answer === s.answer;
+            const confident = a.confidence === 2;
+            if (correct) totalCorrect++;
+            if (correct && confident) totalConfidentCorrect++;
+            if (!correct && confident) totalConfidentWrong++;
             logEvent(eventType, {
                 questionId: s.id,
                 concept: s.concept,
-                answer: a.answer,
-                correct: a.answer === s.answer,
-                confidence: a.confidence,
+                statement: s.statement,
+                correctAnswer: s.answer,
+                userAnswer: a.answer,
+                correct,
+                confidence: a.confidence || null,
+                confident,
             });
         }
+        logEvent(`${eventType}_summary`, {
+            totalQuestions: total,
+            totalCorrect,
+            totalWrong: total - totalCorrect,
+            accuracy: Math.round((totalCorrect / total) * 100),
+            totalConfidentCorrect,
+            totalConfidentWrong,
+        });
         router.push(nextRoute);
     };
 
@@ -148,7 +167,7 @@ export function KnowledgeTest({
             <div className="max-w-2xl w-full mx-auto pb-8 pt-4 flex flex-col gap-4">
                 <div className="flex flex-wrap gap-1.5">
                     {statements.map((_, i) => {
-                        const done = isComplete(answers, i);
+                        const done = answers[i]?.answer !== undefined;
                         const active = i === idx;
                         const bg = done
                             ? "bg-[color:var(--color-amber)]/20"
@@ -177,6 +196,12 @@ export function KnowledgeTest({
                     })}
                 </div>
 
+                {!allAnswered && (
+                    <p className="type-mono text-[color:var(--color-bone-muted)]">
+                        answer all {total} questions to continue — confidence is optional
+                    </p>
+                )}
+
                 {allAnswered && (
                     <motion.div
                         initial={{ opacity: 0, y: 4 }}
@@ -197,7 +222,3 @@ export function KnowledgeTest({
     );
 }
 
-function isComplete(answers: Record<number, Answer>, i: number): boolean {
-    const a = answers[i];
-    return a !== undefined && a.confidence > 0;
-}
