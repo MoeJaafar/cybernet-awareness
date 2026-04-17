@@ -18,17 +18,15 @@ export default function SurveyPage() {
     const total = SURVEY_QUESTIONS.length;
     const isLast = idx === total - 1;
 
-    const handleSelect = (value: number) => {
-        if (selected !== null) return;
-        setSelected(value);
+    const handleNext = () => {
+        if (selected === null) return;
+        // Log only when advancing — this way changing the pick in
+        // place doesn't create multiple events for the same question.
         logEvent("survey", {
             questionId: q.id,
             construct: q.construct,
-            value,
+            value: selected,
         });
-    };
-
-    const handleNext = () => {
         if (isLast) {
             logEvent("session_end");
             router.push("/done");
@@ -64,18 +62,15 @@ export default function SurveyPage() {
                     {LIKERT_LABELS.map((label, i) => {
                         const value = i + 1;
                         const isSelected = selected === value;
-                        const baseClass = selected === null
-                            ? "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] hover:bg-[color:var(--color-ink-higher)]"
-                            : isSelected
-                              ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
-                              : "border-[color:var(--color-edge-subtle)] opacity-40";
+                        const baseClass = isSelected
+                            ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
+                            : "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] hover:bg-[color:var(--color-ink-higher)]";
                         return (
                             <button
                                 key={value}
                                 type="button"
-                                onClick={() => handleSelect(value)}
-                                disabled={selected !== null}
-                                className={`flex-1 flex flex-col items-center gap-2 border ${baseClass} py-4 px-2 transition-all disabled:cursor-default`}
+                                onClick={() => setSelected(value)}
+                                className={`flex-1 flex flex-col items-center gap-2 border ${baseClass} py-4 px-2 transition-all`}
                             >
                                 <span className="type-display text-2xl text-[color:var(--color-bone)]">
                                     {value}
