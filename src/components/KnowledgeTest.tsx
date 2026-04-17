@@ -4,13 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import {
-    shuffleStatements,
+    shuffleQuestions,
     CONFIDENCE_LABELS,
-    type KnowledgeStatement,
+    type KnowledgeQuestion,
 } from "@/lib/instruments/knowledge";
 import { useSession } from "@/lib/session";
 
-type Answer = { answer: boolean; confidence: number };
+type Answer = { key: string; confidence: number };
 
 export function KnowledgeTest({
     title,
@@ -27,24 +27,26 @@ export function KnowledgeTest({
 }) {
     const router = useRouter();
     const { logEvent } = useSession();
-    const [statements] = useState<KnowledgeStatement[]>(() => shuffleStatements(seed));
+    const [questions] = useState<KnowledgeQuestion[]>(() => shuffleQuestions(seed));
     const [idx, setIdx] = useState(0);
     const [answers, setAnswers] = useState<Record<number, Answer>>({});
 
-    const q = statements[idx];
-    const total = statements.length;
+    const q = questions[idx];
+    const total = questions.length;
     const current = answers[idx];
-    const completedCount = Object.keys(answers).filter((k) => answers[Number(k)]?.answer !== undefined).length;
+    const completedCount = Object.keys(answers).filter(
+        (k) => answers[Number(k)]?.key !== undefined,
+    ).length;
     const allAnswered = completedCount === total;
 
-    const setAnswer = (val: boolean) => {
+    const pickOption = (key: string) => {
         setAnswers((prev) => ({
             ...prev,
-            [idx]: { answer: val, confidence: prev[idx]?.confidence ?? 0 },
+            [idx]: { key, confidence: prev[idx]?.confidence ?? 0 },
         }));
     };
 
-    const setConfidence = (val: number) => {
+    const pickConfidence = (val: number) => {
         setAnswers((prev) => ({
             ...prev,
             [idx]: { ...prev[idx], confidence: val },
@@ -57,9 +59,10 @@ export function KnowledgeTest({
         let totalConfidentWrong = 0;
         for (let i = 0; i < total; i++) {
             const a = answers[i];
-            const s = statements[i];
+            const s = questions[i];
             if (!a || !s) continue;
-            const correct = a.answer === s.answer;
+            const correctKey = s.options.find((o) => o.correct)?.key;
+            const correct = a.key === correctKey;
             const confident = a.confidence === 2;
             if (correct) totalCorrect++;
             if (correct && confident) totalConfidentCorrect++;
@@ -67,12 +70,10 @@ export function KnowledgeTest({
             logEvent(eventType, {
                 questionId: s.id,
                 concept: s.concept,
-                statement: s.statement,
-                correctAnswer: s.answer,
-                userAnswer: a.answer,
+                userAnswer: a.key,
+                correctAnswer: correctKey,
                 correct,
                 confidence: a.confidence || null,
-                confident,
             });
         }
         logEvent(`${eventType}_summary`, {
@@ -86,11 +87,11 @@ export function KnowledgeTest({
         router.push(nextRoute);
     };
 
-    const hasAnswer = current?.answer !== undefined;
+    const hasAnswer = current?.key !== undefined;
 
     return (
         <div className="min-h-screen flex flex-col px-6">
-            {/* ── Top: header ── */}
+            {/* Header */}
             <div className="max-w-2xl w-full mx-auto pt-10 pb-4 flex items-center justify-between">
                 <span className="type-mono text-[color:var(--color-amber)]">
                     {title}
@@ -100,7 +101,7 @@ export function KnowledgeTest({
                 </span>
             </div>
 
-            {/* ── Middle: question area (centered, stable height) ── */}
+            {/* Question area */}
             <div className="flex-1 flex items-center">
                 <div className="max-w-2xl w-full mx-auto">
                     <motion.div
@@ -110,34 +111,45 @@ export function KnowledgeTest({
                         transition={{ duration: 0.2 }}
                         className="flex flex-col gap-6"
                     >
-                        <p className="type-body text-[color:var(--color-bone)] text-[22px] leading-relaxed">
-                            {q.statement}
+                        <p className="type-body text-[color:var(--color-bone)] text-[20px] leading-relaxed">
+                            {q.prompt}
                         </p>
 
-                        {/* True / False */}
-                        <div className="flex gap-3">
-                            {([true, false] as const).map((val) => {
-                                const selected = current?.answer === val;
+                        {/* 4 options */}
+                        <div className="flex flex-col gap-2">
+                            {q.options.map((opt) => {
+                                const selected = current?.key === opt.key;
                                 const borderClass = selected
                                     ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
                                     : "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)]";
                                 return (
                                     <button
-                                        key={String(val)}
+                                        key={opt.key}
                                         type="button"
-                                        onClick={() => setAnswer(val)}
-                                        className={`flex-1 border ${borderClass} py-4 type-body text-xl font-medium text-[color:var(--color-bone)] transition-all`}
+                                        onClick={() => pickOption(opt.key)}
+                                        className={`group text-left border ${borderClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-all`}
                                     >
-                                        {val ? "True" : "False"}
+                                        <div className="flex items-start gap-4">
+                                            <span className={`type-display text-xl w-6 shrink-0 transition-colors ${
+                                                selected
+                                                    ? "text-[color:var(--color-amber)]"
+                                                    : "text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)]"
+                                            }`}>
+                                                {opt.key.toUpperCase()}
+                                            </span>
+                                            <span className="type-body text-[16px] text-[color:var(--color-bone)] leading-snug flex-1">
+                                                {opt.label}
+                                            </span>
+                                        </div>
                                     </button>
                                 );
                             })}
                         </div>
 
-                        {/* Confidence �� always reserves its space to prevent layout shift */}
+                        {/* Optional confidence */}
                         <div className={`flex flex-col gap-3 transition-opacity ${hasAnswer ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                             <span className="type-mono text-[color:var(--color-bone-muted)]">
-                                how confident are you?
+                                how confident? (optional)
                             </span>
                             <div className="flex gap-3">
                                 {CONFIDENCE_LABELS.map((label, i) => {
@@ -150,8 +162,8 @@ export function KnowledgeTest({
                                         <button
                                             key={val}
                                             type="button"
-                                            onClick={() => setConfidence(val)}
-                                            className={`flex-1 border ${borderClass} py-4 type-body text-lg font-medium text-[color:var(--color-bone)] transition-all`}
+                                            onClick={() => pickConfidence(val)}
+                                            className={`flex-1 border ${borderClass} py-3 type-body text-base font-medium text-[color:var(--color-bone)] transition-all`}
                                         >
                                             {label}
                                         </button>
@@ -163,11 +175,11 @@ export function KnowledgeTest({
                 </div>
             </div>
 
-            {/* ── Bottom: nav panel + submit (pinned) ── */}
+            {/* Bottom: nav + submit */}
             <div className="max-w-2xl w-full mx-auto pb-8 pt-4 flex flex-col gap-4">
                 <div className="flex flex-wrap gap-1.5">
-                    {statements.map((_, i) => {
-                        const done = answers[i]?.answer !== undefined;
+                    {questions.map((_, i) => {
+                        const done = answers[i]?.key !== undefined;
                         const active = i === idx;
                         const bg = done
                             ? "bg-[color:var(--color-amber)]/20"
@@ -198,7 +210,7 @@ export function KnowledgeTest({
 
                 {!allAnswered && (
                     <p className="type-mono text-[color:var(--color-bone-muted)]">
-                        answer all {total} questions to continue — confidence is optional
+                        answer all {total} questions to continue
                     </p>
                 )}
 
@@ -221,4 +233,3 @@ export function KnowledgeTest({
         </div>
     );
 }
-
