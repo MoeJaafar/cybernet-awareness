@@ -184,6 +184,16 @@ body {
     line-height: 1.55;
 }
 
+/* Form-like UI (quiz prompts, option labels, survey statements).
+ * DM Sans reads cleaner than the book serif at small sizes and
+ * matches the density of an interactive form. */
+.type-ui {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.005em;
+    line-height: 1.55;
+}
+
 .type-mono {
     font-family: var(--font-mono);
     font-feature-settings: "zero", "ss01";

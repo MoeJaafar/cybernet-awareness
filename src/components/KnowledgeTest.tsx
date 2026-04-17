@@ -130,7 +130,7 @@ export function KnowledgeTest({
                     transition={{ duration: 0.2 }}
                     className="flex flex-col gap-4 sm:gap-6"
                 >
-                    <p className="type-body text-[color:var(--color-bone)] text-[17px] sm:text-[20px] leading-relaxed">
+                    <p className="type-ui text-[color:var(--color-bone)] text-[17px] sm:text-[20px] leading-relaxed">
                         {q.prompt}
                     </p>
 
@@ -156,7 +156,7 @@ export function KnowledgeTest({
                                         }`}>
                                             {opt.key.toUpperCase()}
                                         </span>
-                                        <span className="type-body text-[14px] sm:text-[16px] text-[color:var(--color-bone)] leading-snug flex-1">
+                                        <span className="type-ui text-[14px] sm:text-[16px] text-[color:var(--color-bone)] leading-snug flex-1">
                                             {opt.label}
                                         </span>
                                     </div>
@@ -182,7 +182,7 @@ export function KnowledgeTest({
                                         key={val}
                                         type="button"
                                         onClick={() => pickConfidence(val)}
-                                        className={`flex-1 border ${borderClass} py-2.5 sm:py-3 type-body text-sm sm:text-base font-medium text-[color:var(--color-bone)] transition-all`}
+                                        className={`flex-1 border ${borderClass} py-2.5 sm:py-3 type-ui text-sm sm:text-base font-medium text-[color:var(--color-bone)] transition-all`}
                                     >
                                         {label}
                                     </button>

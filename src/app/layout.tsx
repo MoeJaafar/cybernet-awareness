@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto } from "next/font/google";
+import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { AudioSettingsProvider } from "@/lib/audio-settings";
 import { SessionProvider } from "@/lib/session";
@@ -51,6 +51,15 @@ const roboto = Roboto({
     display: "swap",
 });
 
+// DM Sans for form-like UI: quiz prompts, option labels, survey items.
+// Warm and readable without the book-serif density of Newsreader.
+const dmSans = DM_Sans({
+    subsets: ["latin"],
+    weight: ["400", "500", "600"],
+    variable: "--font-dm-sans",
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "CyberNet",
     description:
@@ -76,7 +85,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable}`}
+            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable} ${dmSans.variable}`}
         >
             <body className="min-h-screen">
                 <SessionProvider>
