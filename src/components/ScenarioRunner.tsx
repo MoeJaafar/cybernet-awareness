@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
@@ -268,12 +268,25 @@ function QuizOptions({
 }) {
     const [pickedIdx, setPickedIdx] = useState<number | null>(null);
     const picked = pickedIdx === null ? null : scene.options[pickedIdx];
+    // Holds the currently-playing feedback clip so retries can stop
+    // the previous one before starting a new one, and unmount stops
+    // anything still in flight.
+    const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
     const handlePick = (i: number) => {
         setPickedIdx(i);
+        currentAudioRef.current?.pause();
         const audio = new Audio(feedbackAudioPath(scenarioId, scene.id, i));
+        currentAudioRef.current = audio;
         audio.play().catch(() => {});
     };
+
+    useEffect(() => {
+        return () => {
+            currentAudioRef.current?.pause();
+            currentAudioRef.current = null;
+        };
+    }, []);
 
     return (
         <div className="w-full max-w-2xl flex flex-col gap-3">
