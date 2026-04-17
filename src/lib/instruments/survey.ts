@@ -1,8 +1,8 @@
 /**
  * Post-game engagement and perception survey. Likert 1–5 scale.
  * Covers perceived usefulness, ease of use, realism, self-efficacy,
- * and behavioural intention, aligned with TAM and TPB constructs
- * cited in the thesis literature review.
+ * behavioural intention (TAM / TPB), plus three presentation items
+ * (narration, music, visuals) evaluated as an active design layer.
  */
 
 export interface SurveyQuestion {
@@ -56,6 +56,24 @@ export const SURVEY_QUESTIONS: SurveyQuestion[] = [
         id: "intent-2",
         construct: "behavioural_intention",
         statement: "I would recommend this game to someone else.",
+    },
+    {
+        id: "present-narration",
+        construct: "presentation_narration",
+        statement:
+            "The narrated voice made it easier to follow what was happening.",
+    },
+    {
+        id: "present-music",
+        construct: "presentation_music",
+        statement:
+            "The background music made the scenarios feel more immersive.",
+    },
+    {
+        id: "present-visuals",
+        construct: "presentation_visuals",
+        statement:
+            "The visual style of the game kept me engaged while I played.",
     },
 ];
 
