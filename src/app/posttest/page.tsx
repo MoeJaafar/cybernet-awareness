@@ -3,37 +3,37 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { shuffleQuestions } from "@/lib/instruments/knowledge";
+import { shuffleStatements, CONFIDENCE_LABELS } from "@/lib/instruments/knowledge";
 import { useSession } from "@/lib/session";
 
-const questions = shuffleQuestions("post");
+const statements = shuffleStatements("post");
 
 export default function PosttestPage() {
     const router = useRouter();
     const { logEvent } = useSession();
     const [idx, setIdx] = useState(0);
-    const [selected, setSelected] = useState<number | null>(null);
+    const [answer, setAnswer] = useState<boolean | null>(null);
+    const [confidence, setConfidence] = useState<number | null>(null);
 
-    const q = questions[idx];
-    const total = questions.length;
+    const q = statements[idx];
+    const total = statements.length;
     const isLast = idx === total - 1;
+    const canAdvance = answer !== null && confidence !== null;
 
-    const handleSelect = (optIdx: number) => {
-        if (selected !== null) return;
-        setSelected(optIdx);
+    const handleSubmit = () => {
         logEvent("posttest", {
             questionId: q.id,
-            answer: q.options[optIdx].label,
-            correct: q.options[optIdx].correct,
+            concept: q.concept,
+            answer,
+            correct: answer === q.answer,
+            confidence,
         });
-    };
-
-    const handleNext = () => {
         if (isLast) {
             router.push("/survey");
             return;
         }
-        setSelected(null);
+        setAnswer(null);
+        setConfidence(null);
         setIdx((i) => i + 1);
     };
 
@@ -56,46 +56,78 @@ export default function PosttestPage() {
                 </div>
 
                 <p className="type-body text-[color:var(--color-bone)] text-[22px] leading-relaxed">
-                    {q.prompt}
+                    &ldquo;{q.statement}&rdquo;
                 </p>
 
-                <div className="flex flex-col gap-2">
-                    {q.options.map((opt, i) => {
-                        const isSelected = selected === i;
-                        const borderClass = selected === null
+                <div className="flex gap-3">
+                    {([true, false] as const).map((val) => {
+                        const selected = answer === val;
+                        const borderClass = answer === null
                             ? "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)]"
-                            : isSelected
-                              ? "border-[color:var(--color-amber)]"
-                              : "border-[color:var(--color-edge-subtle)] opacity-50";
+                            : selected
+                              ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
+                              : "border-[color:var(--color-edge-subtle)] opacity-40";
                         return (
                             <button
-                                key={opt.label}
+                                key={String(val)}
                                 type="button"
-                                onClick={() => handleSelect(i)}
-                                disabled={selected !== null}
-                                className={`group text-left border ${borderClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-all disabled:cursor-default`}
+                                onClick={() => setAnswer(val)}
+                                disabled={answer !== null}
+                                className={`flex-1 border ${borderClass} py-4 type-display text-xl text-[color:var(--color-bone)] transition-all disabled:cursor-default`}
                             >
-                                <div className="flex items-start gap-4">
-                                    <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
-                                        {String.fromCharCode(65 + i)}
-                                    </span>
-                                    <span className="type-body text-[17px] text-[color:var(--color-bone)] leading-snug flex-1">
-                                        {opt.label}
-                                    </span>
-                                </div>
+                                {val ? "True" : "False"}
                             </button>
                         );
                     })}
                 </div>
 
-                {selected !== null && (
+                {answer !== null && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col gap-3"
+                    >
+                        <span className="type-mono text-[color:var(--color-bone-muted)]">
+                            how confident are you?
+                        </span>
+                        <div className="flex gap-2">
+                            {CONFIDENCE_LABELS.map((label, i) => {
+                                const val = i + 1;
+                                const selected = confidence === val;
+                                const borderClass = confidence === null
+                                    ? "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)]"
+                                    : selected
+                                      ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
+                                      : "border-[color:var(--color-edge-subtle)] opacity-40";
+                                return (
+                                    <button
+                                        key={val}
+                                        type="button"
+                                        onClick={() => setConfidence(val)}
+                                        disabled={confidence !== null}
+                                        className={`flex-1 flex flex-col items-center gap-2 border ${borderClass} py-3 px-1 transition-all disabled:cursor-default`}
+                                    >
+                                        <span className="type-display text-xl text-[color:var(--color-bone)]">
+                                            {val}
+                                        </span>
+                                        <span className="type-mono text-[color:var(--color-bone-muted)] text-center leading-tight" style={{ fontSize: "8px" }}>
+                                            {label}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </motion.div>
+                )}
+
+                {canAdvance && (
                     <motion.div
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
                         <button
                             type="button"
-                            onClick={handleNext}
+                            onClick={handleSubmit}
                             className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                         >
                             {isLast ? "One last thing" : "Next"}
@@ -107,7 +139,7 @@ export default function PosttestPage() {
                 <div className="w-full h-0.5 bg-[color:var(--color-bone-ghost)] rounded-full overflow-hidden">
                     <div
                         className="h-full bg-[color:var(--color-amber)] transition-all duration-300"
-                        style={{ width: `${((idx + (selected !== null ? 1 : 0)) / total) * 100}%` }}
+                        style={{ width: `${((idx + (canAdvance ? 1 : 0)) / total) * 100}%` }}
                     />
                 </div>
             </motion.div>
