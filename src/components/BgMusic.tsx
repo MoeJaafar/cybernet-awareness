@@ -34,8 +34,12 @@ export function BgMusic({ src, volume = 0.10 }: { src: string; volume?: number }
     volRef.current = volume;
 
     useEffect(() => {
-        const fallback = () => startBgMusic(srcRef.current, volRef.current);
+        // Attempt autoplay immediately — works on repeat visits where
+        // the browser's Media Engagement Index remembers this origin.
+        // First visit: silently rejected, fallback listeners below.
+        startBgMusic(srcRef.current, volRef.current);
 
+        const fallback = () => startBgMusic(srcRef.current, volRef.current);
         document.addEventListener("click", fallback);
         document.addEventListener("keydown", fallback);
 
