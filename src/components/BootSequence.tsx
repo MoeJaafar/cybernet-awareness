@@ -8,8 +8,9 @@ import { AnimatePresence, motion } from "motion/react";
  * to the next. When every line has played the intro hands off to the
  * caller via onDone.
  *
- * Each line can later carry an audio track — the shape reserves an
- * `audio` field so the user can drop AI-generated narration in.
+ * The intro is gated behind a "tap to begin" overlay so the user has
+ * made a gesture before any audio plays — this is the only reliable
+ * way to unblock browser autoplay for the rest of the session.
  */
 
 type StoryLine = {
@@ -18,8 +19,6 @@ type StoryLine = {
     speed?: number;
     /** ms to hold the finished line before fading out. */
     hold?: number;
-    /** future hook for AI-generated narration audio. */
-    audio?: string;
     /** soft emphasis for short lines. */
     emphasis?: boolean;
 };
@@ -31,13 +30,15 @@ const SCRIPT: StoryLine[] = [
 ];
 
 export function BootSequence({ onDone }: { onDone: () => void }) {
+    const [armed, setArmed] = useState(false);
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
 
-    // Audio — one mp3 per line. First-line autoplay may be blocked on
-    // a cold visit (no prior user gesture); we swallow the rejection.
+    // Audio — one mp3 per line. Only plays once the user has armed
+    // the intro with a click (required for browser autoplay policies).
     useEffect(() => {
+        if (!armed) return;
         if (lineIndex >= SCRIPT.length) return;
         const n = String(lineIndex + 1).padStart(2, "0");
         const audio = new Audio(`/audio/boot/${n}.mp3`);
@@ -46,9 +47,10 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             audio.pause();
             audio.currentTime = 0;
         };
-    }, [lineIndex]);
+    }, [armed, lineIndex]);
 
     useEffect(() => {
+        if (!armed) return;
         if (phase === "done") {
             const t = window.setTimeout(onDone, 400);
             return () => window.clearTimeout(t);
@@ -83,11 +85,41 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             }, line.hold ?? 900);
             return () => window.clearTimeout(t);
         }
-    }, [lineIndex, charIndex, phase, onDone]);
+    }, [armed, lineIndex, charIndex, phase, onDone]);
 
     const current = SCRIPT[lineIndex];
     const visible = current?.text.slice(0, charIndex) ?? "";
     const isTyping = phase === "type" && charIndex < (current?.text.length ?? 0);
+
+    // Tap-to-begin overlay — the one and only user gesture we need.
+    if (!armed) {
+        return (
+            <button
+                type="button"
+                onClick={() => setArmed(true)}
+                className="min-h-screen w-full flex flex-col items-center justify-center gap-6 relative cursor-pointer group"
+                aria-label="Begin"
+            >
+                <motion.span
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    className="type-display text-[color:var(--color-bone)] text-[40px] sm:text-[56px] lg:text-[72px] tracking-tight group-hover:text-[color:var(--color-amber)] transition-colors"
+                >
+                    CyberNet
+                </motion.span>
+                <motion.span
+                    className="type-mono text-[color:var(--color-bone-muted)] group-hover:text-[color:var(--color-amber)] transition-colors"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.2, delay: 0.8 }}
+                    style={{ animation: "pulse-dot 2.2s ease-in-out infinite" }}
+                >
+                    tap to begin
+                </motion.span>
+            </button>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
