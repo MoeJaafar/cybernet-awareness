@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import {
@@ -30,6 +30,10 @@ export function KnowledgeTest({
     const [questions] = useState<KnowledgeQuestion[]>(() => shuffleQuestions(seed));
     const [idx, setIdx] = useState(0);
     const [answers, setAnswers] = useState<Record<number, Answer>>({});
+    const answersRef = useRef(answers);
+    useEffect(() => {
+        answersRef.current = answers;
+    }, [answers]);
 
     const q = questions[idx];
     const total = questions.length;
@@ -51,6 +55,22 @@ export function KnowledgeTest({
             ...prev,
             [idx]: { ...prev[idx], confidence: val },
         }));
+        // Auto-advance to the next unanswered question after a short
+        // delay so the user sees their selection register.
+        setTimeout(() => {
+            const latest = answersRef.current;
+            setIdx((currentIdx) => {
+                // Find the next question after currentIdx that isn't
+                // yet answered. Wrap around to catch any earlier ones.
+                for (let step = 1; step < total; step++) {
+                    const candidate = (currentIdx + step) % total;
+                    if (latest[candidate]?.key === undefined) {
+                        return candidate;
+                    }
+                }
+                return currentIdx;
+            });
+        }, 350);
     };
 
     const handleSubmit = () => {
