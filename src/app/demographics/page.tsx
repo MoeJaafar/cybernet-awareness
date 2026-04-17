@@ -136,8 +136,8 @@ export default function DemographicsPage() {
                         id="selfrating-label"
                         className="type-mono text-[color:var(--color-bone-muted)]"
                     >
-                        Before playing, how would you have rated your
-                        cybersecurity awareness?
+                        Overall, how would you rate your cybersecurity
+                        awareness?
                     </span>
                     <div
                         role="radiogroup"
