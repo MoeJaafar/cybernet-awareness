@@ -55,6 +55,19 @@ export const metadata: Metadata = {
     title: "CyberNet — Could you spot the attack?",
     description:
         "A web-based cybersecurity awareness game. Short scenarios where you face everyday attacks — phishing, USB drops, vishing, password pressure — and see what would have happened next.",
+    openGraph: {
+        title: "CyberNet — Could you spot the attack?",
+        description:
+            "Five interactive cybersecurity scenarios. You make the choices — the outcome shows you what an attacker would have done.",
+        type: "website",
+        siteName: "CyberNet",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "CyberNet — Could you spot the attack?",
+        description:
+            "Five interactive cybersecurity scenarios. You make the choices — the outcome shows you what an attacker would have done.",
+    },
 };
 
 export default function RootLayout({
