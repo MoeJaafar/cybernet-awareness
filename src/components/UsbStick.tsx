@@ -24,7 +24,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
     return (
         <div className="flex flex-col items-center gap-10 w-full">
             {/* ========== STICK VISUAL ========== */}
-            <div className="relative w-full max-w-[420px] aspect-[5/3] flex items-center justify-center">
+            <div className="relative w-full max-w-[525px] aspect-[5/3] flex items-center justify-center">
                 {/* Floor / surface wash. */}
                 <div
                     aria-hidden
@@ -56,8 +56,8 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                         {/* Connector shell. */}
                         <div className="relative h-11 w-16 flex items-center justify-center">
                             <div className="h-full w-full bg-gradient-to-b from-[#b0b4b8] via-[#6b6f74] to-[#3c4045] border border-[#2a2c30] rounded-[2px]" />
-                            <div className="absolute inset-[4px] bg-[#1a1c1f] rounded-[1px] flex items-center justify-center">
-                                <div className="h-[9px] w-[70%] bg-[#d8c48a] rounded-[1px]" />
+                            <div className="absolute inset-[5px] bg-[#1a1c1f] rounded-[1px] flex items-center justify-center">
+                                <div className="h-[11px] w-[70%] bg-[#d8c48a] rounded-[1px]" />
                             </div>
                         </div>
                         {/* Narrow seam between connector and body. */}
@@ -123,7 +123,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                         <span className="type-display text-2xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 shrink-0 tabular-nums">
                             {String.fromCharCode(65 + i)}
                         </span>
-                        <span className="type-body text-[17px] text-[color:var(--color-bone)] leading-snug flex-1">
+                        <span className="type-body text-[21px] text-[color:var(--color-bone)] leading-snug flex-1">
                             {c.label}
                         </span>
                         <span

@@ -89,10 +89,11 @@
 
 html {
     background: var(--ink-deeper);
-    /* Render the whole page at 125% — matches the density we design at
-     * without asking users to manually zoom. Standardised in all modern
-     * browsers (Firefox added native support in 126, May 2024). */
-    zoom: 1.25;
+    /* Bump base font-size from 16px → 20px (1.25×). Every rem-based
+     * Tailwind utility (font sizes, spacing, widths like max-w-*)
+     * scales with it. Fixed-px values in mocks (phone frame, email,
+     * usb, wifi) are bumped explicitly alongside. */
+    font-size: 20px;
 }
 
 html, body {

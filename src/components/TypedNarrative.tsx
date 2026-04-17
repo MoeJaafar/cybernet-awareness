@@ -202,8 +202,8 @@ export function TypedNarrative({
                                 aria-hidden
                                 className={`type-body leading-[1.35] invisible text-left ${
                                     useEmphasis
-                                        ? "type-display-italic text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
-                                        : "text-[26px] sm:text-[38px] lg:text-[44px]"
+                                        ? "type-display-italic text-[45px] sm:text-[65px] lg:text-[80px] leading-[1.1]"
+                                        : "text-[32px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {current}
@@ -214,8 +214,8 @@ export function TypedNarrative({
                             <p
                                 className={`type-body leading-[1.35] absolute inset-0 text-left ${
                                     useEmphasis
-                                        ? "type-display-italic text-[color:var(--color-amber)] text-[36px] sm:text-[52px] lg:text-[64px] leading-[1.1]"
-                                        : "text-[color:var(--color-bone)] text-[26px] sm:text-[38px] lg:text-[44px]"
+                                        ? "type-display-italic text-[color:var(--color-amber)] text-[45px] sm:text-[65px] lg:text-[80px] leading-[1.1]"
+                                        : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {visible}
@@ -242,7 +242,7 @@ export function TypedNarrative({
             {/* Bottom dock: continue hint / CTA / quiz options.
              *  Always takes space (min-h) so nothing shifts above. */}
             <div
-                className="relative max-w-3xl w-full mx-auto pb-12 pt-6 min-h-[140px] flex flex-col justify-end"
+                className="relative max-w-3xl w-full mx-auto pb-12 pt-6 min-h-[175px] flex flex-col justify-end"
                 onClick={(e) => e.stopPropagation()}
             >
                 {phase === "wait" && (

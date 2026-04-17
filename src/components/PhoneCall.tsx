@@ -97,10 +97,10 @@ export function PhoneCall({
     return (
         <div className="flex flex-col items-center gap-8 w-full">
             {/* ========== PHONE FRAME ========== */}
-            <div className="w-full max-w-[280px]">
-                <div className="rounded-[32px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
+            <div className="w-full max-w-[350px]">
+                <div className="rounded-[40px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
                     {/* Status bar. */}
-                    <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[11px] text-white/60">
+                    <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[14px] text-white/60">
                         <span>9:12</span>
                         <div className="flex items-center gap-1.5">
                             <span>5G</span>
@@ -112,7 +112,7 @@ export function PhoneCall({
                     </div>
 
                     {/* Call content — fixed height. */}
-                    <div className="px-8 pt-8 pb-5 flex flex-col items-center h-[400px]">
+                    <div className="px-8 pt-8 pb-5 flex flex-col items-center h-[500px]">
                         {/* Avatar. */}
                         <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[color:var(--color-amber)]/40 to-[color:var(--color-amber)]/10 border border-white/10 flex items-center justify-center mb-3">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" opacity="0.7">
@@ -154,7 +154,7 @@ export function PhoneCall({
                                         <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                                     </svg>
                                 </button>
-                                <span className="text-white/40 text-[11px]" style={{ fontFamily: "var(--font-gmail)" }}>
+                                <span className="text-white/40 text-[14px]" style={{ fontFamily: "var(--font-gmail)" }}>
                                     tap to answer
                                 </span>
                             </div>
@@ -195,7 +195,7 @@ export function PhoneCall({
             </div>
 
             {/* ========== SUBTITLES + CHOICES (below phone, always takes space) ========== */}
-            <div className="w-full max-w-xl min-h-[200px] flex flex-col gap-6">
+            <div className="w-full max-w-xl min-h-[250px] flex flex-col gap-6">
                 {/* Subtitle. */}
                 {phase === "connected" && currentLine && (
                     <AnimatePresence mode="wait">

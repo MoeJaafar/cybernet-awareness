@@ -123,7 +123,7 @@ export function EmailMockup({
 
             {/* Body label inside subject row: "Inbox" chip. */}
             <div className="px-5 pb-3">
-                <span className="inline-block text-[11px] text-[color:var(--gmail-text-dim)] bg-[color:var(--gmail-panel)] border border-[color:var(--gmail-border)] rounded px-2 py-0.5">
+                <span className="inline-block text-[14px] text-[color:var(--gmail-text-dim)] bg-[color:var(--gmail-panel)] border border-[color:var(--gmail-border)] rounded px-2 py-0.5">
                     Inbox
                 </span>
             </div>
@@ -162,7 +162,7 @@ export function EmailMockup({
                     </div>
                     {/* Inspection hint, only when hotspots exist. */}
                     {(email.hotspots ?? []).length > 0 && (
-                        <p className="mt-3 text-[11px] text-[color:var(--gmail-text-dim)] italic">
+                        <p className="mt-3 text-[14px] text-[color:var(--gmail-text-dim)] italic">
                             tip: hover underlined parts to inspect without
                             clicking. the link in the body is a real link.
                         </p>
@@ -172,7 +172,7 @@ export function EmailMockup({
 
             {/* Body + link. */}
             <div className="px-5 py-6">
-                <div className="text-[14px] leading-[1.7] text-[color:var(--gmail-text)] whitespace-pre-line">
+                <div className="text-[18px] leading-[1.7] text-[color:var(--gmail-text)] whitespace-pre-line">
                     {renderBodyWithLink(email.body, email.link, hotspots.link, open.link, () => toggle("link"), onTrap)}
                 </div>
             </div>
@@ -207,7 +207,7 @@ function InspectableSubject({
     if (!hotspot) {
         return (
             <h3
-                className="text-[22px] leading-[1.25] text-[color:var(--gmail-text)] font-normal"
+                className="text-[28px] leading-[1.25] text-[color:var(--gmail-text)] font-normal"
                 style={{ fontFamily: "var(--font-gmail)" }}
             >
                 {children}
@@ -219,7 +219,7 @@ function InspectableSubject({
             <button
                 type="button"
                 onClick={onToggle}
-                className={`text-left text-[22px] leading-[1.25] font-normal text-[color:var(--gmail-text)] border-b border-dotted ${
+                className={`text-left text-[28px] leading-[1.25] font-normal text-[color:var(--gmail-text)] border-b border-dotted ${
                     isOpen ? "border-[color:var(--color-amber)] text-[color:var(--color-amber)]" : "border-[color:var(--color-amber)]/60 hover:text-[color:var(--color-amber)]"
                 } pb-0.5`}
                 style={{ fontFamily: "var(--font-gmail)" }}
@@ -233,7 +233,7 @@ function InspectableSubject({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="mt-2 text-[13px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                        className="mt-2 text-[16px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
                         style={{ fontFamily: "var(--font-gmail)" }}
                     >
                         {hotspot.caption}
@@ -282,7 +282,7 @@ function InspectableSender({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="w-full mt-2 text-[12px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                        className="w-full mt-2 text-[15px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
                     >
                         {hotspot.caption}
                     </motion.p>
@@ -317,7 +317,7 @@ function renderBodyWithLink(
                             onClick={() => {
                                 if (link.trapsTo && onTrap) onTrap(link.trapsTo);
                             }}
-                            className="text-[color:var(--gmail-link)] underline underline-offset-2 hover:brightness-110 hover:text-white text-left text-[14px]"
+                            className="text-[color:var(--gmail-link)] underline underline-offset-2 hover:brightness-110 hover:text-white text-left text-[18px]"
                             style={{ fontFamily: "var(--font-gmail)" }}
                         >
                             {link.url}
@@ -347,7 +347,7 @@ function renderBodyWithLink(
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.25 }}
-                                className="text-[12px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                                className="text-[15px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
                                 style={{ fontFamily: "var(--font-gmail)" }}
                             >
                                 {hotspot.caption}

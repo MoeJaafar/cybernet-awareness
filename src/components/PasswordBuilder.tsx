@@ -77,7 +77,7 @@ export function PasswordBuilder({
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="Start typing your password..."
-                            className="flex-1 bg-transparent px-4 py-3 font-mono text-[16px] text-[color:var(--gmail-text)] outline-none placeholder:text-[color:var(--gmail-text-dim)]/50"
+                            className="flex-1 bg-transparent px-4 py-3 font-mono text-[20px] text-[color:var(--gmail-text)] outline-none placeholder:text-[color:var(--gmail-text-dim)]/50"
                             autoComplete="off"
                             spellCheck={false}
                         />
@@ -136,19 +136,19 @@ export function PasswordBuilder({
                                     </div>
                                 )}
                             </div>
-                            <span className="text-[10px] uppercase tracking-widest text-[color:var(--gmail-text-dim)]">
+                            <span className="text-[13px] uppercase tracking-widest text-[color:var(--gmail-text-dim)]">
                                 your wall
                             </span>
                         </div>
 
                         {/* Time to crack. */}
                         <div className="flex-1 flex flex-col gap-1 pb-8">
-                            <span className="text-[10px] uppercase tracking-widest text-[color:var(--gmail-text-dim)]">
+                            <span className="text-[13px] uppercase tracking-widest text-[color:var(--gmail-text-dim)]">
                                 an attacker would need
                             </span>
                             <motion.span
                                 key={stats.crackLabel}
-                                className="font-mono text-[28px] sm:text-[36px] leading-tight"
+                                className="font-mono text-[35px] sm:text-[45px] leading-tight"
                                 style={{ color: stats.wallColor }}
                                 initial={{ opacity: 0, y: 4 }}
                                 animate={{ opacity: 1, y: 0 }}

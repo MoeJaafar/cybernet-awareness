@@ -46,11 +46,11 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                 initial={{ opacity: 0, y: 6, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="w-full max-w-[280px]"
+                className="w-full max-w-[350px]"
             >
-                <div className="rounded-[32px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
+                <div className="rounded-[40px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
                     {/* Status bar. */}
-                    <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[11px] text-white/70">
+                    <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[14px] text-white/70">
                         <span className="tabular-nums">{statusTime}</span>
                         <div className="flex items-center gap-1.5">
                             <span>5G</span>
@@ -64,17 +64,17 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                     </div>
 
                     {/* Settings screen — fixed height so phone doesn't resize between choices. */}
-                    <div className="px-0 pt-3 pb-4 flex flex-col h-[420px] bg-[#0a0a0b]">
+                    <div className="px-0 pt-3 pb-4 flex flex-col h-[525px] bg-[#0a0a0b]">
                         {/* Header with "< Settings" back arrow + centered "Wi-Fi" title. */}
                         <div className="px-4 pb-3 flex items-center">
-                            <span className="text-[#0a84ff] text-[13px] flex items-center gap-0.5" style={{ fontFamily: "var(--font-gmail)" }}>
+                            <span className="text-[#0a84ff] text-[16px] flex items-center gap-0.5" style={{ fontFamily: "var(--font-gmail)" }}>
                                 <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
                                     <path d="M8 2 3 7l5 5" stroke="#0a84ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 Settings
                             </span>
                             <span
-                                className="flex-1 text-center text-white text-[15px] font-semibold -ml-[72px]"
+                                className="flex-1 text-center text-white text-[19px] font-semibold -ml-[90px]"
                                 style={{ fontFamily: "var(--font-gmail)" }}
                             >
                                 Wi-Fi
@@ -83,16 +83,16 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
 
                         {/* Wi-Fi toggle row. */}
                         <div className="mx-4 mt-2 rounded-xl bg-[#1c1c1e] px-4 py-3 flex items-center justify-between">
-                            <span className="text-white text-[14px]" style={{ fontFamily: "var(--font-gmail)" }}>
+                            <span className="text-white text-[18px]" style={{ fontFamily: "var(--font-gmail)" }}>
                                 Wi-Fi
                             </span>
-                            <span className="relative inline-block w-[34px] h-[20px] rounded-full bg-[#30d158]">
-                                <span className="absolute right-[2px] top-[2px] w-[16px] h-[16px] rounded-full bg-white shadow-sm"></span>
+                            <span className="relative inline-block w-[42px] h-[25px] rounded-full bg-[#30d158]">
+                                <span className="absolute right-[3px] top-[3px] w-[20px] h-[20px] rounded-full bg-white shadow-sm"></span>
                             </span>
                         </div>
 
                         {/* Section header. */}
-                        <p className="px-5 pt-5 pb-1.5 text-white/40 text-[11px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
+                        <p className="px-5 pt-5 pb-1.5 text-white/40 text-[14px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
                             NETWORKS
                         </p>
 
@@ -107,14 +107,14 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                                     >
                                         <span className="flex-1 min-w-0">
                                             <span
-                                                className="block text-white text-[14px] leading-tight truncate"
+                                                className="block text-white text-[18px] leading-tight truncate"
                                                 style={{ fontFamily: "var(--font-gmail)" }}
                                             >
                                                 {n.ssid}
                                             </span>
                                             {n.note && (
                                                 <span
-                                                    className="block text-white/45 text-[10px] mt-0.5 truncate"
+                                                    className="block text-white/45 text-[13px] mt-0.5 truncate"
                                                     style={{ fontFamily: "var(--font-gmail)" }}
                                                 >
                                                     {n.note}
@@ -135,7 +135,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                          *  network list. Realistic: choosing it is "turn off Wi-Fi, use cellular". */}
                         {tether && (
                             <>
-                                <p className="px-5 pt-5 pb-1.5 text-white/40 text-[11px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
+                                <p className="px-5 pt-5 pb-1.5 text-white/40 text-[14px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
                                     OR
                                 </p>
                                 <button
@@ -148,13 +148,13 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                                     </span>
                                     <span className="flex-1 min-w-0">
                                         <span
-                                            className="block text-white text-[14px] leading-tight truncate"
+                                            className="block text-white text-[18px] leading-tight truncate"
                                             style={{ fontFamily: "var(--font-gmail)" }}
                                         >
                                             Use Mobile Data
                                         </span>
                                         <span
-                                            className="block text-white/45 text-[10px] mt-0.5 truncate"
+                                            className="block text-white/45 text-[13px] mt-0.5 truncate"
                                             style={{ fontFamily: "var(--font-gmail)" }}
                                         >
                                             turn off Wi-Fi, use 5G
@@ -175,7 +175,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
 
             {/* Hint strip below phone. */}
             <motion.p
-                className="type-mono text-[color:var(--color-bone-muted)] text-center max-w-md text-[13px]"
+                className="type-mono text-[color:var(--color-bone-muted)] text-center max-w-md text-[16px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}

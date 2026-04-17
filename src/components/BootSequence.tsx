@@ -94,8 +94,8 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                                 aria-hidden
                                 className={`type-body leading-[1.3] text-left invisible ${
                                     current.emphasis
-                                        ? "type-display-italic text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
-                                        : "text-[32px] sm:text-[48px] lg:text-[60px]"
+                                        ? "type-display-italic text-[50px] sm:text-[80px] lg:text-[100px] leading-[1.1]"
+                                        : "text-[40px] sm:text-[60px] lg:text-[75px]"
                                 }`}
                             >
                                 {current.text}
@@ -104,8 +104,8 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                             <p
                                 className={`type-body leading-[1.3] text-left absolute inset-0 ${
                                     current.emphasis
-                                        ? "type-display-italic text-[color:var(--color-amber)] text-[40px] sm:text-[64px] lg:text-[80px] leading-[1.1]"
-                                        : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[60px]"
+                                        ? "type-display-italic text-[color:var(--color-amber)] text-[50px] sm:text-[80px] lg:text-[100px] leading-[1.1]"
+                                        : "text-[color:var(--color-bone)] text-[40px] sm:text-[60px] lg:text-[75px]"
                                 }`}
                             >
                                 {visible}
