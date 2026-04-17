@@ -189,11 +189,18 @@ async function generate(
 }
 
 async function main() {
-    const args = new Set(process.argv.slice(2));
+    const argv = process.argv.slice(2);
+    const args = new Set(argv);
     const dry = args.has("--dry");
     const force = args.has("--force");
+    const limitIdx = argv.indexOf("--limit");
+    const limit =
+        limitIdx >= 0 && argv[limitIdx + 1]
+            ? Math.max(1, Number(argv[limitIdx + 1]))
+            : Infinity;
 
-    const jobs = buildManifest();
+    let jobs = buildManifest();
+    if (Number.isFinite(limit)) jobs = jobs.slice(0, limit);
 
     if (dry) {
         let existing = 0;
