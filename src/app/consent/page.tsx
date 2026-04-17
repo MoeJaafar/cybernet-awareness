@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { useSession } from "@/lib/session";
@@ -7,11 +8,24 @@ import { useSession } from "@/lib/session";
 export default function ConsentPage() {
     const router = useRouter();
     const { startSession, logEvent } = useSession();
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleAgree = async () => {
-        await startSession();
-        logEvent("consent");
-        router.push("/pretest");
+        if (submitting) return;
+        setSubmitting(true);
+        setError(null);
+        try {
+            await startSession();
+            logEvent("consent");
+            router.push("/pretest");
+        } catch (err) {
+            setSubmitting(false);
+            setError(
+                "Something went wrong starting the session. Check your internet and try again.",
+            );
+            console.error(err);
+        }
     };
 
     return (
@@ -62,11 +76,18 @@ export default function ConsentPage() {
                     <button
                         type="button"
                         onClick={handleAgree}
-                        className="self-start inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                        disabled={submitting}
+                        aria-busy={submitting}
+                        className="self-start inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)] disabled:opacity-60 disabled:cursor-wait"
                     >
-                        I agree, begin
+                        {submitting ? "Starting…" : "I agree, begin"}
                         <span aria-hidden className="text-xl">→</span>
                     </button>
+                    {error && (
+                        <p className="type-mono text-[color:var(--color-signal-red)] text-sm">
+                            {error}
+                        </p>
+                    )}
                 </div>
             </motion.div>
         </div>

@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 import type { SceneId } from "@/lib/types";
 
 /**
- * Interactive password fortress , the player types freely into a real
+ * Interactive password fortress, the player types freely into a real
  * input. A fortress wall reacts in real time: it grows with length,
  * shifts color with estimated crack time, and a live "time to crack"
- * counter updates on every keystroke. No "weak / strong" labels , the
+ * counter updates on every keystroke. No "weak / strong" labels, the
  * wall and the number speak for themselves.
  */
 
@@ -259,21 +259,30 @@ function analyzePassword(password: string): PasswordStats {
     const totalGuesses = Math.pow(2, entropy);
     const seconds = totalGuesses / guessesPerSec;
 
-    // Penalise common patterns.
+    // Penalise common patterns. Case-insensitive + optional trailing
+    // symbol so "summer2026!", "Summer2026", "password1!" all match.
     let adjustedSeconds = seconds;
-    const isNamePlusYear = /^[A-Z][a-z]+\d{1,4}[!@#$%]?$/.test(password);
-    const isWordPlusDigits = /^[a-z]+\d{1,4}$/.test(password);
+    const isSeasonOrMonth =
+        /^(spring|summer|autumn|fall|winter|january|february|march|april|may|june|july|august|september|october|november|december)\d{2,4}[!@#$%*]?$/i.test(
+            password,
+        );
+    const isNamePlusYear = /^[A-Z][a-z]+\d{1,4}[!@#$%*]?$/.test(password);
+    const isWordPlusDigits = /^[a-zA-Z]+\d{1,4}[!@#$%*]?$/.test(password);
+    if (isSeasonOrMonth) adjustedSeconds = Math.min(adjustedSeconds, 30);
     if (isNamePlusYear) adjustedSeconds = Math.min(adjustedSeconds, 180);
-    if (isWordPlusDigits) adjustedSeconds = Math.min(adjustedSeconds, 60);
+    if (isWordPlusDigits) adjustedSeconds = Math.min(adjustedSeconds, 120);
 
     // Pick a reason based on the dominant weakness or strength.
     let reason: string;
-    if (isNamePlusYear) {
+    if (isSeasonOrMonth) {
+        reason =
+            "Season or month names followed by a year and optional symbol are the single most-common corporate password pattern. Cracking tools try every combination of these in the first few seconds.";
+    } else if (isNamePlusYear) {
         reason =
             "Patterns like a capitalised word followed by digits and a symbol are among the first things cracking tools try. Even with a symbol, the structure is predictable.";
     } else if (isWordPlusDigits) {
         reason =
-            "Dictionary word plus a short number is a classic pattern. Attackers try these combinations before anything else.";
+            "Dictionary word plus a short number (and maybe a symbol) is a classic pattern. Attackers try these combinations before anything else.";
     } else if (password.length < 8) {
         reason =
             "Short passwords have a tiny search space. A modern GPU can try every possible combination of this length in seconds.";
@@ -337,6 +346,20 @@ export function evaluatePassword(result: PasswordBuilderResult): SceneId {
     if (COMMON_PASSWORDS.has(pw.toLowerCase())) return "outcome-common-pattern";
     if (pw.length < 8) return "outcome-too-short";
 
+    // Case-insensitive common-pattern checks. Seasons/months + year
+    // and dictionary-word + digits (with or without a trailing
+    // symbol) all route to the dictionary-pattern outcome.
+    if (
+        /^(spring|summer|autumn|fall|winter|january|february|march|april|may|june|july|august|september|october|november|december)\d{2,4}[!@#$%*]?$/i.test(
+            pw,
+        )
+    ) {
+        return "outcome-common-pattern";
+    }
+    if (/^[a-zA-Z]+\d{1,4}[!@#$%*]?$/.test(pw)) {
+        return "outcome-common-pattern";
+    }
+
     // Charset + entropy check.
     let charset = 0;
     if (/[a-z]/.test(pw)) charset += 26;
@@ -348,10 +371,6 @@ export function evaluatePassword(result: PasswordBuilderResult): SceneId {
     const entropy = pw.length * Math.log2(charset);
     const seconds = Math.pow(2, entropy) / 1e10;
 
-    // Common pattern penalty.
-    if (/^[A-Z][a-z]+\d{1,4}[!@#$%]?$/.test(pw)) return "outcome-medium";
-    if (/^[a-z]+\d{1,4}$/.test(pw)) return "outcome-medium";
-
-    if (seconds < 86400) return "outcome-medium";
+    if (seconds < 86400 * 365) return "outcome-medium";
     return "outcome-fortress";
 }

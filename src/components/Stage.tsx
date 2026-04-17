@@ -78,7 +78,7 @@ export function Stage({
                 />
             )}
 
-            {/* Portrait , anchored bottom-left, feathered into the scene.
+            {/* Portrait, anchored bottom-left, feathered into the scene.
              *  Size is held modest (~18vw cap) so the dialogue dock can
              *  center without competing. */}
             {portrait && (
@@ -116,7 +116,7 @@ export function Stage({
                 <div className="max-w-3xl mx-auto">{children}</div>
             </motion.div>
 
-            {/* Corner bracket marks , small editorial flourish. */}
+            {/* Corner bracket marks, small editorial flourish. */}
             <div aria-hidden className="absolute inset-0 pointer-events-none">
                 <CornerMark position="tl" />
                 <CornerMark position="tr" />

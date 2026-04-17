@@ -13,6 +13,7 @@ export default function SurveyPage() {
     const { logEvent } = useSession();
     const [idx, setIdx] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
+    const [submitting, setSubmitting] = useState(false);
 
     const q = SURVEY_QUESTIONS[idx];
     const total = SURVEY_QUESTIONS.length;
@@ -20,6 +21,8 @@ export default function SurveyPage() {
 
     const handleNext = () => {
         if (selected === null) return;
+        if (submitting) return;
+        if (isLast) setSubmitting(true);
         // Log only when advancing — this way changing the pick in
         // place doesn't create multiple events for the same question.
         logEvent("survey", {
@@ -91,9 +94,10 @@ export default function SurveyPage() {
                         <button
                             type="button"
                             onClick={handleNext}
-                            className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                            disabled={submitting}
+                            className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)] disabled:opacity-60 disabled:cursor-wait"
                         >
-                            {isLast ? "Finish" : "Next"}
+                            {isLast ? (submitting ? "Finishing…" : "Finish") : "Next"}
                             <span aria-hidden className="text-xl">→</span>
                         </button>
                     </motion.div>

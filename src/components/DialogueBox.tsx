@@ -61,7 +61,7 @@ export function DialogueBox({
                 }}
             />
 
-            {/* Continue caret , blinking when the line is finished. */}
+            {/* Continue caret, blinking when the line is finished. */}
             {complete && !children && (
                 <span
                     aria-hidden

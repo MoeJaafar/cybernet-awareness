@@ -20,7 +20,7 @@ import type {
  *   3. The sender line and subject are hover-inspectable if the
  *      scenario author set hotspots on them.
  *
- * The component is styled to match Gmail's dark mode , Roboto font,
+ * The component is styled to match Gmail's dark mode, Roboto font,
  * #202124 background, blue #8ab4f8 links, the recognisable toolbar.
  * This is a deliberate aesthetic jump from the surrounding noir game
  * because the point of the scene is "this looks like your real inbox."
@@ -163,7 +163,7 @@ export function EmailMockup({
                     {/* Inspection hint, only when hotspots exist. */}
                     {(email.hotspots ?? []).length > 0 && (
                         <p className="mt-3 text-[14px] text-[color:var(--gmail-text-dim)] italic">
-                            tip: hover underlined parts to inspect without
+                            tip: click underlined parts to inspect without
                             clicking. the link in the body is a real link.
                         </p>
                     )}
@@ -192,7 +192,7 @@ export function EmailMockup({
     );
 }
 
-/** Subject , clickable hotspot if configured. */
+/** Subject, clickable hotspot if configured. */
 function InspectableSubject({
     children,
     hotspot,

@@ -6,7 +6,7 @@ import { createNarratorAudio } from "@/lib/audio-settings";
 
 /**
  * Centered-screen typed narrative. Used for outcome / debrief / quiz
- * beats , anywhere the story speaks directly to the player rather than
+ * beats, anywhere the story speaks directly to the player rather than
  * happening on an interactive surface.
  *
  * `lines` is played in sequence. Each line types out, holds, fades to
@@ -45,7 +45,7 @@ export function TypedNarrative({
      */
     const [phase, setPhase] = useState<"type" | "wait" | "done">("type");
 
-    // Audio playback , fires when lineIndex changes. Held in a ref so
+    // Audio playback, fires when lineIndex changes. Held in a ref so
     // a new audioPaths reference (from parent render) doesn't restart
     // playback; only actual beat changes do.
     const audioPathsRef = useRef(audioPaths);
@@ -80,7 +80,7 @@ export function TypedNarrative({
         return () => window.clearTimeout(t);
     }, [lineIndex, charIndex, phase, lines]);
 
-    // Advance handler , click anywhere (see outer handler below) or
+    // Advance handler, click anywhere (see outer handler below) or
     // Enter/Space/ArrowRight. Two behaviours:
     //   - during "type": skip to end of current line
     //   - during "wait": move on to the next line, or finish

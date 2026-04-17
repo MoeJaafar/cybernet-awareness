@@ -122,7 +122,7 @@ export interface Choice {
 }
 
 /**
- * Quiz scene , single multi-choice question with try-again on wrong
+ * Quiz scene, single multi-choice question with try-again on wrong
  * answers. Used at the end of a debrief to test the takeaway.
  */
 export interface QuizScene extends SceneVisuals {
@@ -173,7 +173,7 @@ export interface PasswordOption {
      */
     label: string;
     /**
-     * Subjective strength bucket used for visual representation ,
+     * Subjective strength bucket used for visual representation,
      * drives the strength bar. 1..5 where 5 is strongest.
      */
     strength: 1 | 2 | 3 | 4 | 5;
@@ -191,7 +191,7 @@ export interface EmailMock {
     fromName?: string;
     /** Extracted link preview shown as a chip in the body. If
      *  `trapsTo` is set, clicking the link advances directly to that
-     *  scene , usually an outcome scene. The link becomes a real
+     *  scene, usually an outcome scene. The link becomes a real
      *  in-world trap instead of just a decoration. */
     link?: { label: string; url: string; trapsTo?: SceneId };
     /** Inspectable red-flag hotspots. When present, the mock renders

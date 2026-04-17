@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 
 /**
- * Hidden participant counter. Not linked from anywhere , visit
+ * Hidden participant counter. Not linked from anywhere, visit
  * /stats directly. No auth (anyone who knows the URL can see the
  * counts), but only aggregate numbers are exposed, not row data.
  */

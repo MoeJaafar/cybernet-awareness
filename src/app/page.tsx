@@ -6,7 +6,7 @@ import { startBgMusic } from "@/components/BgMusic";
 import { getMusicVolume } from "@/lib/audio-settings";
 
 /**
- * Entrance , CyberNet splash. First thing every visitor sees.
+ * Entrance, CyberNet splash. First thing every visitor sees.
  * Tap to begin starts background music and routes to consent.
  */
 export default function Home() {

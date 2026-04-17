@@ -1,7 +1,7 @@
 /**
  * Post-game engagement and perception survey. Likert 1–5 scale.
  * Covers perceived usefulness, ease of use, realism, self-efficacy,
- * and behavioural intention , aligned with TAM and TPB constructs
+ * and behavioural intention, aligned with TAM and TPB constructs
  * cited in the thesis literature review.
  */
 
@@ -44,18 +44,18 @@ export const SURVEY_QUESTIONS: SurveyQuestion[] = [
         id: "efficacy-1",
         construct: "self_efficacy",
         statement:
-            "I feel more confident recognising phishing emails after playing.",
+            "I feel more confident recognising cybersecurity threats after playing.",
     },
     {
         id: "intent-1",
         construct: "behavioural_intention",
         statement:
-            "I would change my behaviour at work based on what I learned.",
+            "I intend to apply what I learned to my everyday online behaviour.",
     },
     {
         id: "intent-2",
         construct: "behavioural_intention",
-        statement: "I would recommend this game to a colleague.",
+        statement: "I would recommend this game to someone else.",
     },
 ];
 

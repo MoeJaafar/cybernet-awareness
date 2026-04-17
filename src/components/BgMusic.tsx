@@ -9,7 +9,7 @@ let _bgStarted = false;
 function tryPlay(src: string, volume: number) {
     if (_bgStarted) return;
     // Lock IMMEDIATELY to prevent concurrent calls from each creating
-    // their own Audio , on mobile, a tap can fire several handlers in
+    // their own Audio, on mobile, a tap can fire several handlers in
     // the same tick, and without this lock we'd get doubled playback.
     _bgStarted = true;
     const audio = new Audio(src);
@@ -21,7 +21,7 @@ function tryPlay(src: string, volume: number) {
             _bgAudio = audio;
         })
         .catch(() => {
-            // Autoplay was blocked , release the lock so the next user
+            // Autoplay was blocked, release the lock so the next user
             // gesture can retry.
             _bgStarted = false;
         });

@@ -2,17 +2,16 @@
 
 import { useEffect } from "react";
 import { motion } from "motion/react";
-import { useSession } from "@/lib/session";
 
 const STORAGE_KEY = "cybernet_session_id";
 
 export default function DonePage() {
-    const { logEvent } = useSession();
-
+    // session_end is logged at the end of the survey. Here we just
+    // clear the localStorage so the next participant on this browser
+    // starts fresh from /.
     useEffect(() => {
-        logEvent("session_end");
         localStorage.removeItem(STORAGE_KEY);
-    }, [logEvent]);
+    }, []);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">

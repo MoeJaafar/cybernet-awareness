@@ -4,10 +4,10 @@ import { motion } from "motion/react";
 
 /**
  * iOS-style Wi-Fi settings screen rendered inside a phone frame. The
- * network list IS the decision , tapping a row advances the scenario.
+ * network list IS the decision, tapping a row advances the scenario.
  * One entry is deliberately tempting (open, full bars, no lock), one
  * is the legitimate venue network (captive portal hint), and one is
- * "Mobile Data" , turning Wi-Fi off entirely.
+ * "Mobile Data", turning Wi-Fi off entirely.
  */
 
 export interface WiFiNetwork {
@@ -63,7 +63,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                         </div>
                     </div>
 
-                    {/* Settings screen , fixed height so phone doesn't resize between choices. */}
+                    {/* Settings screen, fixed height so phone doesn't resize between choices. */}
                     <div className="px-0 pt-3 pb-4 flex flex-col h-[525px] bg-[#0a0a0b]">
                         {/* Header with "< Settings" back arrow + centered "Wi-Fi" title. */}
                         <div className="px-4 pb-3 flex items-center">

@@ -6,7 +6,7 @@ import type { PasswordFormMock, PasswordOption, SceneId } from "@/lib/types";
  * Password-change form. Presented like a real corporate password
  * reset screen (top system banner, list of options with strength
  * bars). Each option is a button that advances the scenario to its
- * `nextId` , so clicking "use this password" IS the decision.
+ * `nextId`, so clicking "use this password" IS the decision.
  */
 export function PasswordForm({
     form,
@@ -17,7 +17,7 @@ export function PasswordForm({
 }) {
     return (
         <div className="border border-[color:var(--gmail-border)] bg-[color:var(--gmail-bg)] rounded-lg overflow-hidden shadow-[0_24px_64px_-16px_rgba(0,0,0,0.6)]">
-            {/* System banner , mock Windows/Outlook style. */}
+            {/* System banner, mock Windows/Outlook style. */}
             <div className="px-5 py-3 bg-[color:var(--color-signal-red)]/12 border-b border-[color:var(--color-signal-red)]/40 flex items-center gap-3">
                 <svg
                     width="18"
@@ -76,7 +76,7 @@ export function PasswordForm({
 }
 
 /**
- * Single option row. Deliberately hides strength/trade-off cues , the
+ * Single option row. Deliberately hides strength/trade-off cues, the
  * player should evaluate the password as they see it, not be told
  * which one is strong. Feedback comes after the pick, in the outcome
  * narrative.

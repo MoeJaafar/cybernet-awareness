@@ -30,10 +30,22 @@ export function KnowledgeTest({
     const [questions] = useState<KnowledgeQuestion[]>(() => shuffleQuestions(seed));
     const [idx, setIdx] = useState(0);
     const [answers, setAnswers] = useState<Record<number, Answer>>({});
+    const [submitting, setSubmitting] = useState(false);
     const answersRef = useRef(answers);
+    const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     useEffect(() => {
         answersRef.current = answers;
     }, [answers]);
+
+    // Jumping to a specific question via the nav panel cancels any
+    // pending auto-advance so we don't override the user's intent.
+    const jumpTo = (i: number) => {
+        if (autoAdvanceRef.current) {
+            clearTimeout(autoAdvanceRef.current);
+            autoAdvanceRef.current = null;
+        }
+        setIdx(i);
+    };
 
     const q = questions[idx];
     const total = questions.length;
@@ -56,12 +68,13 @@ export function KnowledgeTest({
             [idx]: { ...prev[idx], confidence: val },
         }));
         // Auto-advance to the next unanswered question after a short
-        // delay so the user sees their selection register.
-        setTimeout(() => {
+        // delay so the user sees their selection register. The timer
+        // is stored in a ref so manual nav can cancel it.
+        if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+        autoAdvanceRef.current = setTimeout(() => {
+            autoAdvanceRef.current = null;
             const latest = answersRef.current;
             setIdx((currentIdx) => {
-                // Find the next question after currentIdx that isn't
-                // yet answered. Wrap around to catch any earlier ones.
                 for (let step = 1; step < total; step++) {
                     const candidate = (currentIdx + step) % total;
                     if (latest[candidate]?.key === undefined) {
@@ -74,6 +87,8 @@ export function KnowledgeTest({
     };
 
     const handleSubmit = () => {
+        if (submitting || !allAnswered) return;
+        setSubmitting(true);
         let totalCorrect = 0;
         let totalConfidentCorrect = 0;
         let totalConfidentWrong = 0;
@@ -192,7 +207,7 @@ export function KnowledgeTest({
                     </div>
                 </motion.div>
 
-                {/* Nav + submit , inline on the page, scrolls with it */}
+                {/* Nav + submit, inline on the page, scrolls with it */}
                 <div className="flex flex-col gap-3 pt-2">
                     <div className="flex flex-wrap gap-1.5">
                         {questions.map((_, i) => {
@@ -210,7 +225,7 @@ export function KnowledgeTest({
                                 <button
                                     key={i}
                                     type="button"
-                                    onClick={() => setIdx(i)}
+                                    onClick={() => jumpTo(i)}
                                     className={`w-7 h-7 sm:w-9 sm:h-9 border ${border} ${bg} type-mono text-[10px] sm:text-[11px] tabular-nums transition-colors hover:border-[color:var(--color-amber)] ${
                                         active
                                             ? "text-[color:var(--color-amber)]"
@@ -239,9 +254,10 @@ export function KnowledgeTest({
                             <button
                                 type="button"
                                 onClick={handleSubmit}
-                                className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                                disabled={submitting}
+                                className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)] disabled:opacity-60 disabled:cursor-wait"
                             >
-                                {nextLabel}
+                                {submitting ? "Saving…" : nextLabel}
                                 <span aria-hidden className="text-xl">→</span>
                             </button>
                         </motion.div>

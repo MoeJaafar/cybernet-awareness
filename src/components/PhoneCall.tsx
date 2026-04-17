@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { createNarratorAudio } from "@/lib/audio-settings";
 
 /**
- * Phone-call mock. The phone screen is just a visual , caller info,
+ * Phone-call mock. The phone screen is just a visual, caller info,
  * accept button, call timer, mute/speaker/hangup. Subtitles and
  * decision options render BELOW the phone in normal page flow so the
  * phone never resizes.
@@ -47,7 +47,7 @@ export function PhoneCall({
         return () => clearInterval(id);
     }, [phase]);
 
-    // Ringtone during the ringing phase , loops until the player
+    // Ringtone during the ringing phase, loops until the player
     // accepts. If autoplay is blocked (browser may have demoted the
     // earlier gesture after minutes of quiz-taking), any next
     // click/keypress will kick it off.
@@ -81,7 +81,7 @@ export function PhoneCall({
         };
     }, [phase]);
 
-    // Audio playback , flips `audioEnded` when the clip finishes (or
+    // Audio playback, flips `audioEnded` when the clip finishes (or
     // fails to start). The typewriter/hold effect waits on this flag
     // before advancing, so the subtitle line stays visible until the
     // audio has fully played out.
@@ -90,7 +90,7 @@ export function PhoneCall({
         const line = lines[lineIndex];
         setAudioEnded(false);
         if (!line?.audio) {
-            // No audio , don't block advancement on audio.
+            // No audio, don't block advancement on audio.
             setAudioEnded(true);
             return;
         }
@@ -141,7 +141,7 @@ export function PhoneCall({
                 <div className="rounded-[40px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
                     {/* Status bar. */}
                     <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[14px] text-white/60">
-                        <span>9:12</span>
+                        <span>3:42</span>
                         <div className="flex items-center gap-1.5">
                             <span>5G</span>
                             <svg width="14" height="10" viewBox="0 0 14 10" fill="white" opacity="0.6">
@@ -151,7 +151,7 @@ export function PhoneCall({
                         </div>
                     </div>
 
-                    {/* Call content , fixed height. */}
+                    {/* Call content, fixed height. */}
                     <div className="px-8 pt-8 pb-5 flex flex-col items-center h-[500px]">
                         {/* Avatar. */}
                         <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[color:var(--color-amber)]/40 to-[color:var(--color-amber)]/10 border border-white/10 flex items-center justify-center mb-3">
