@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { SURVEY_QUESTIONS, LIKERT_LABELS } from "@/lib/instruments/survey";
@@ -14,6 +14,11 @@ export default function SurveyPage() {
     const [idx, setIdx] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
     const [submitting, setSubmitting] = useState(false);
+    // Track which question indexes have already had their event
+    // logged so a rapid double-click on Next can't log twice.
+    const loggedRef = useRef<Set<number>>(new Set());
+    // Throttle the Next handler so the same tick can't fire twice.
+    const navigatingRef = useRef(false);
 
     const q = SURVEY_QUESTIONS[idx];
     const total = SURVEY_QUESTIONS.length;
@@ -22,14 +27,19 @@ export default function SurveyPage() {
     const handleNext = () => {
         if (selected === null) return;
         if (submitting) return;
+        if (navigatingRef.current) return;
+        navigatingRef.current = true;
         if (isLast) setSubmitting(true);
-        // Log only when advancing — this way changing the pick in
-        // place doesn't create multiple events for the same question.
-        logEvent("survey", {
-            questionId: q.id,
-            construct: q.construct,
-            value: selected,
-        });
+        // Log only once per question, even if Next is tapped twice
+        // in the same tick.
+        if (!loggedRef.current.has(idx)) {
+            loggedRef.current.add(idx);
+            logEvent("survey", {
+                questionId: q.id,
+                construct: q.construct,
+                value: selected,
+            });
+        }
         if (isLast) {
             logEvent("session_end");
             router.push("/done");
@@ -37,6 +47,10 @@ export default function SurveyPage() {
         }
         setSelected(null);
         setIdx((i) => i + 1);
+        // Release the throttle after this tick's state has flushed.
+        setTimeout(() => {
+            navigatingRef.current = false;
+        }, 0);
     };
 
     return (

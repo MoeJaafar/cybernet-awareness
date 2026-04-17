@@ -73,13 +73,15 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                                         "linear-gradient(to bottom, rgba(255,255,255,0.06), transparent 40%)",
                                 }}
                             />
-                            {/* Paper label. */}
+                            {/* Paper label. Font is px-fixed so the scaled-down
+                             *  stick on mobile stays legible — it ends up ~11px
+                             *  effective at scale-[0.85], safe to read. */}
                             <div className="absolute inset-y-2 left-2 right-5 bg-[#efe7d4] border border-[#c4b995] flex items-center justify-center px-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
                                 <span
                                     className="text-center text-[#3a2f1a] tracking-wide leading-tight"
                                     style={{
                                         fontFamily: "var(--font-mono)",
-                                        fontSize: "10px",
+                                        fontSize: "13px",
                                         fontWeight: 600,
                                     }}
                                 >

@@ -229,13 +229,17 @@ body {
     transform: scaleX(1);
 }
 
-/* Focus ring , amber glow, never the default blue halo. */
+/* Focus ring. A three-ring pattern so it's visible on both dark
+ * (ink) and bright (amber) backgrounds: inner bone contrasts with
+ * amber fills, outer amber contrasts with ink fills, ink gap
+ * between separates the rings. */
 *:focus-visible {
     outline: none;
     box-shadow:
-        0 0 0 1px var(--ink-deeper),
-        0 0 0 2.5px var(--amber),
-        0 0 32px var(--amber-glow);
+        0 0 0 2px var(--bone),
+        0 0 0 4px var(--ink-deeper),
+        0 0 0 6px var(--amber),
+        0 0 24px var(--amber-glow);
     border-radius: 4px;
 }
 

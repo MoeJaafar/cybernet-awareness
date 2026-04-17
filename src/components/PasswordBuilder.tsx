@@ -91,7 +91,7 @@ export function PasswordBuilder({
                 </div>
 
                 <div
-                    role="radiogroup"
+                    role="group"
                     aria-label="Password options"
                     className="flex flex-col gap-2"
                 >
@@ -99,8 +99,6 @@ export function PasswordBuilder({
                         <motion.button
                             key={c.password}
                             type="button"
-                            role="radio"
-                            aria-checked={false}
                             onClick={() => onSubmit({ password: c.password })}
                             initial={{ opacity: 0, y: 6 }}
                             animate={{ opacity: 1, y: 0 }}

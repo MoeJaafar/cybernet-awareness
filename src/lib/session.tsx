@@ -58,12 +58,27 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const logEvent = useCallback(
         (type: string, payload?: Record<string, unknown>) => {
             const sid = idRef.current;
-            if (!sid) return;
+            if (!sid) {
+                console.warn(
+                    `[session] logEvent("${type}") called without an active session; event dropped`,
+                );
+                return;
+            }
             fetch("/api/event", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ sessionId: sid, type, payload }),
-            }).catch(() => {});
+            })
+                .then((r) => {
+                    if (!r.ok) {
+                        console.warn(
+                            `[session] event "${type}" failed: ${r.status}`,
+                        );
+                    }
+                })
+                .catch((err) => {
+                    console.warn(`[session] event "${type}" network error`, err);
+                });
         },
         [],
     );
