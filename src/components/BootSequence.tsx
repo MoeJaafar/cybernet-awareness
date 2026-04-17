@@ -118,7 +118,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-                        className="type-display text-[color:var(--color-bone)] text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight group-hover:text-[color:var(--color-amber)] transition-colors"
+                        className="type-display logo-cycle text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight"
                     >
                         CyberNet
                     </motion.h1>

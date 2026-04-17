@@ -253,6 +253,17 @@ body {
 }
 .amber-flicker { animation: amber-flicker 7s infinite; }
 
+/* Seamless colour cycle between bone and amber. Used by the
+ * entrance-page logo so the title drifts between warm and hot
+ * without ever stopping. */
+@keyframes logo-colour-cycle {
+    0%, 100% { color: var(--bone); }
+    50%      { color: var(--amber); }
+}
+.logo-cycle {
+    animation: logo-colour-cycle 7s ease-in-out infinite;
+}
+
 @keyframes scene-rise {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
