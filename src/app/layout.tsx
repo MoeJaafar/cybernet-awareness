@@ -52,7 +52,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-    title: "CyberNet — Could you spot the attack?",
+    title: "CyberNet",
     description:
         "A web-based cybersecurity awareness game. Short scenarios where you face everyday attacks — phishing, USB drops, vishing, password pressure — and see what would have happened next.",
     openGraph: {
