@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 import type { SceneId } from "@/lib/types";
 
 /**
- * Interactive password fortress — the player types freely into a real
+ * Interactive password fortress , the player types freely into a real
  * input. A fortress wall reacts in real time: it grows with length,
  * shifts color with estimated crack time, and a live "time to crack"
- * counter updates on every keystroke. No "weak / strong" labels — the
+ * counter updates on every keystroke. No "weak / strong" labels , the
  * wall and the number speak for themselves.
  */
 
@@ -197,7 +197,7 @@ const COMMON_PASSWORDS = new Set([
 
 function analyzePassword(password: string): PasswordStats {
     if (password.length === 0) {
-        return { crackSeconds: 0, crackLabel: "—", wallPercent: 0, wallColor: "#3c4043" };
+        return { crackSeconds: 0, crackLabel: ",", wallPercent: 0, wallColor: "#3c4043" };
     }
 
     // Check common passwords first.

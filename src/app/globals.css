@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 /*
- * CYBERNET — Investigative-Noir design tokens.
+ * CYBERNET , Investigative-Noir design tokens.
  *
  * Aesthetic: moody prestige-TV cybersecurity thriller.
- * - Warm ink base (not cool blue) — feels like a lamp on a late-
+ * - Warm ink base (not cool blue) , feels like a lamp on a late-
  *   night desk, not a datacenter.
  * - Bone-cream text for warmth and readability on ink.
  * - CRT-phosphor AMBER as the primary interactive signal. Generic
@@ -22,7 +22,7 @@
     --ink-raised:        #1a1716;
     --ink-higher:        #221e1c;
 
-    /* Text hierarchy — warm, not cool. */
+    /* Text hierarchy , warm, not cool. */
     --bone:              #ede4d3;
     --bone-dim:          #b8ab96;
     --bone-muted:        #726857;
@@ -46,11 +46,11 @@
     --edge-subtle:       #2a2623;
     --edge-prominent:    #403a32;
 
-    /* Fonts — plumbed by next/font in layout.tsx. */
+    /* Fonts , plumbed by next/font in layout.tsx. */
     --font-display: var(--font-instrument-serif), Georgia, serif;
     --font-body:    var(--font-newsreader), Georgia, serif;
     --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
-    /* Gmail mock font — Roboto is the free equivalent of Google Sans. */
+    /* Gmail mock font , Roboto is the free equivalent of Google Sans. */
     --font-gmail:   var(--font-roboto), "Segoe UI", Arial, sans-serif;
 
     /* Gmail dark-mode palette (approximate). */
@@ -107,7 +107,7 @@ html, body {
 
 body {
     background: var(--ink-base);
-    /* Ambient atmosphere — warm under-glow from bottom + cooler hint top. */
+    /* Ambient atmosphere , warm under-glow from bottom + cooler hint top. */
     background-image:
         radial-gradient(ellipse 100% 80% at 50% 110%, rgba(255, 153, 51, 0.06), transparent 60%),
         radial-gradient(ellipse 80% 60% at 20% -20%, rgba(105, 144, 168, 0.05), transparent 70%);
@@ -132,7 +132,7 @@ body {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.89 0 0 0 0 0.82 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Faint vertical scanlines — CRT reference, not heavy. */
+/* Faint vertical scanlines , CRT reference, not heavy. */
 .atmos-scanlines {
     position: fixed;
     inset: 0;
@@ -219,7 +219,7 @@ body {
     transform: scaleX(1);
 }
 
-/* Focus ring — amber glow, never the default blue halo. */
+/* Focus ring , amber glow, never the default blue halo. */
 *:focus-visible {
     outline: none;
     box-shadow:

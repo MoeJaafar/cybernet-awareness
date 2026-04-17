@@ -41,7 +41,7 @@ export default function DonePage() {
                 />
 
                 <p className="type-mono text-[color:var(--color-bone-muted)]">
-                    CyberNet — a cybersecurity awareness game
+                    CyberNet, a cybersecurity awareness game
                 </p>
             </motion.div>
         </div>

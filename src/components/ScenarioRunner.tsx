@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { getNarratorVolume } from "@/lib/audio-settings";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
 import { EmailMockup } from "./EmailMockup";
-// StatusBar removed — "this is not a website, it's an experience."
+// StatusBar removed , "this is not a website, it's an experience."
 import { Stage } from "./Stage";
 import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
@@ -93,7 +93,7 @@ export function ScenarioRunner({
         sceneWithMock.mock !== undefined ||
         sceneWithMock.passwordForm !== undefined;
     // Special interactive scenes that use Workspace even without
-    // a mock or passwordForm — the custom component IS the surface.
+    // a mock or passwordForm , the custom component IS the surface.
     const isBuilderScene = scene.type === "decision" && scene.id === "build";
     const isPhoneScene = scene.type === "decision" && scene.id === "phone-ring";
     const isUsbScene = scene.type === "decision" && scene.id === "found-usb";
@@ -262,7 +262,7 @@ function NarrativeScene({
 }
 
 /**
- * Quiz options — renders beneath the typed prompt. Try-again cycle
+ * Quiz options , renders beneath the typed prompt. Try-again cycle
  * on wrong answers; on correct, shows continue.
  */
 function QuizOptions({
@@ -344,7 +344,7 @@ function QuizOptions({
                                 : "text-[color:var(--color-signal-red)]"
                         }`}
                     >
-                        {picked.correct ? "right" : "not quite — try again"}
+                        {picked.correct ? "right" : "not quite , try again"}
                     </p>
                     <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
                         {picked.feedback}
@@ -367,7 +367,7 @@ function QuizOptions({
 }
 
 /**
- * Workspace-style scene — the email mock takes centre stage, with a
+ * Workspace-style scene , the email mock takes centre stage, with a
  * slim narrator ribbon above it and no portrait/dialogue chrome.
  * Used for stimulus and decision scenes where the player's focus is
  * on an interactive on-screen surface.
@@ -664,7 +664,7 @@ function QuizPanel({
                                 : "text-[color:var(--color-signal-red)]"
                         }`}
                     >
-                        {picked.correct ? "right" : "not quite — try again"}
+                        {picked.correct ? "right" : "not quite , try again"}
                     </p>
                     <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
                         {picked.feedback}
@@ -688,7 +688,7 @@ function QuizPanel({
 }
 
 /**
- * Decision row — letter index, label, sweeping amber underline on
+ * Decision row , letter index, label, sweeping amber underline on
  * hover, and a micro-caption hinting that a consequence follows.
  */
 function ChoiceRow({

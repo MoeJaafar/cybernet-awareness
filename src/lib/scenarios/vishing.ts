@@ -1,20 +1,20 @@
 import type { Scenario } from "@/lib/types";
 
 /**
- * Scenario 3 — Vishing (voice phishing).
+ * Scenario 3 , Vishing (voice phishing).
  *
  * A caller claiming to be from IT asks for the player's credentials
  * to "fix a VPN issue." The phone call plays out with subtitles and
  * optional AI-gen audio. After the caller's pitch, three choices:
- *   A — give the password (breach)
- *   B — ask the caller to verify their identity (contained)
- *   C — hang up and call IT back on the official number (contained)
+ *   A , give the password (breach)
+ *   B , ask the caller to verify their identity (contained)
+ *   C , hang up and call IT back on the official number (contained)
  */
 export const vishing: Scenario = {
     id: "vishing-helpdesk",
     title: "A call from Microsoft Support",
     concept:
-        "Vishing — voice-based social engineering, pretexting, and why tech companies never call you to ask for your password.",
+        "Vishing , voice-based social engineering, pretexting, and why tech companies never call you to ask for your password.",
     setup: "",
     startSceneId: "phone-ring",
     scenes: {
@@ -35,7 +35,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                'You gave your password. The caller thanked you warmly and hung up. Within ten minutes someone logged into your Microsoft account from an IP abroad. Your emails, OneDrive, Teams — all accessible. Microsoft will never call to ask for your password. Not ever. If someone does, it\'s not Microsoft.',
+                'You gave your password. The caller thanked you warmly and hung up. Within ten minutes someone logged into your Microsoft account from an IP abroad. Your emails, OneDrive, Teams , all accessible. Microsoft will never call to ask for your password. Not ever. If someone does, it\'s not Microsoft.',
             nextId: "debrief",
         },
         "outcome-asked-verify": {
@@ -44,7 +44,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                'You asked for their employee ID and said you\'d call Microsoft back on the number from their website. There was a pause. They stammered something about "system limitations" and hung up. Real support agents can verify their identity. Scammers can\'t — that\'s how you know.',
+                'You asked for their employee ID and said you\'d call Microsoft back on the number from their website. There was a pause. They stammered something about "system limitations" and hung up. Real support agents can verify their identity. Scammers can\'t , that\'s how you know.',
             nextId: "debrief",
         },
         "outcome-hung-up": {
@@ -53,7 +53,7 @@ export const vishing: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You hung up and went to microsoft.com/support. The real Microsoft confirmed they never call customers to ask for passwords. The attack failed because you didn't trust an incoming call. Outbound verification — looking up the number yourself — is the simplest defence against vishing.",
+                "You hung up and went to microsoft.com/support. The real Microsoft confirmed they never call customers to ask for passwords. The attack failed because you didn't trust an incoming call. Outbound verification , looking up the number yourself , is the simplest defence against vishing.",
             nextId: "debrief",
         },
         "debrief": {
@@ -61,9 +61,9 @@ export const vishing: Scenario = {
             id: "debrief",
             speaker: "the takeaway",
             takeaway:
-                "Microsoft, Apple, Google — none of them will ever call you to ask for your password. If someone does, it's a scam.",
+                "Microsoft, Apple, Google , none of them will ever call you to ask for your password. If someone does, it's a scam.",
             lesson:
-                "Vishing works because the caller controls the narrative — they manufacture urgency, authority, and helpfulness in a single minute. Breaking the script — asking for verification, calling back on a known number — collapses the pretence. The scammer has no answer for that.",
+                "Vishing works because the caller controls the narrative , they manufacture urgency, authority, and helpfulness in a single minute. Breaking the script , asking for verification, calling back on a known number , collapses the pretence. The scammer has no answer for that.",
             nextId: "quiz",
         },
         "quiz": {
@@ -74,7 +74,7 @@ export const vishing: Scenario = {
                 "Someone calls claiming to be from Microsoft and asks for your password to fix an urgent issue. What should you do?",
             options: [
                 {
-                    label: "Give the password — they said it's urgent.",
+                    label: "Give the password , they said it's urgent.",
                     correct: false,
                     feedback:
                         "Urgency is the attacker's tool, not a reason to comply. Real IT never needs your password.",
@@ -84,7 +84,7 @@ export const vishing: Scenario = {
                         "Hang up and check microsoft.com/support for the real contact number.",
                     correct: true,
                     feedback:
-                        "Right. Looking up the number yourself — outbound verification — is the one move a scammer can't survive.",
+                        "Right. Looking up the number yourself , outbound verification , is the one move a scammer can't survive.",
                 },
                 {
                     label:

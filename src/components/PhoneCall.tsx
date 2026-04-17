@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { getNarratorVolume } from "@/lib/audio-settings";
 
 /**
- * Phone-call mock. The phone screen is just a visual — caller info,
+ * Phone-call mock. The phone screen is just a visual , caller info,
  * accept button, call timer, mute/speaker/hangup. Subtitles and
  * decision options render BELOW the phone in normal page flow so the
  * phone never resizes.
@@ -47,7 +47,7 @@ export function PhoneCall({
         return () => clearInterval(id);
     }, [phase]);
 
-    // Ringtone during the ringing phase — loops until the player
+    // Ringtone during the ringing phase , loops until the player
     // accepts. If autoplay is blocked (browser may have demoted the
     // earlier gesture after minutes of quiz-taking), any next
     // click/keypress will kick it off.
@@ -81,7 +81,7 @@ export function PhoneCall({
         };
     }, [phase]);
 
-    // Audio playback — flips `audioEnded` when the clip finishes (or
+    // Audio playback , flips `audioEnded` when the clip finishes (or
     // fails to start). The typewriter/hold effect waits on this flag
     // before advancing, so the subtitle line stays visible until the
     // audio has fully played out.
@@ -90,7 +90,7 @@ export function PhoneCall({
         const line = lines[lineIndex];
         setAudioEnded(false);
         if (!line?.audio) {
-            // No audio — don't block advancement on audio.
+            // No audio , don't block advancement on audio.
             setAudioEnded(true);
             return;
         }
@@ -116,7 +116,7 @@ export function PhoneCall({
         if (linePhase === "type") {
             if (charIndex >= line.text.length) { setLinePhase("hold"); return; }
             const prev = line.text[charIndex - 1] ?? "";
-            const delay = prev === "." ? 400 : prev === "," ? 200 : prev === "—" ? 260 : (line.speed ?? 32);
+            const delay = prev === "." ? 400 : prev === "," ? 220 : (line.speed ?? 32);
             const t = setTimeout(() => setCharIndex((c) => c + 1), delay);
             return () => clearTimeout(t);
         }
@@ -153,7 +153,7 @@ export function PhoneCall({
                         </div>
                     </div>
 
-                    {/* Call content — fixed height. */}
+                    {/* Call content , fixed height. */}
                     <div className="px-8 pt-8 pb-5 flex flex-col items-center h-[500px]">
                         {/* Avatar. */}
                         <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[color:var(--color-amber)]/40 to-[color:var(--color-amber)]/10 border border-white/10 flex items-center justify-center mb-3">

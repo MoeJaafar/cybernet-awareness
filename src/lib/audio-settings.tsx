@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 
 /**
- * Global audio volume settings — two independent channels:
+ * Global audio volume settings , two independent channels:
  *   • music      (background track)
  *   • narrator   (all speech: typed beats, boot, caller, quiz feedback)
  *
@@ -12,7 +12,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
  * current volume without needing context access.
  */
 
-// Module-level mirrors — read by audio-playing code via getters.
+// Module-level mirrors , read by audio-playing code via getters.
 let _musicVol = 0.10;
 let _narratorVol = 1.0;
 

@@ -61,7 +61,7 @@ export function DialogueBox({
                 }}
             />
 
-            {/* Continue caret — blinking when the line is finished. */}
+            {/* Continue caret , blinking when the line is finished. */}
             {complete && !children && (
                 <span
                     aria-hidden
@@ -85,7 +85,7 @@ export function DialogueBox({
  *   default    18 ms
  *   after ','  120 ms
  *   after '.'  260 ms
- *   after '—'  180 ms
+ *   after ','  180 ms
  */
 function useTypewriter(text: string, instant: boolean): string {
     const [n, setN] = useState(instant ? text.length : 0);
@@ -106,12 +106,10 @@ function useTypewriter(text: string, instant: boolean): string {
             prev === "."
                 ? 260
                 : prev === ","
-                  ? 120
-                  : prev === "—"
-                    ? 180
-                    : prev === "\n"
-                      ? 260
-                      : 18;
+                  ? 150
+                  : prev === "\n"
+                    ? 260
+                    : 18;
         const id = window.setTimeout(() => setN((k) => k + 1), delay);
         return () => window.clearTimeout(id);
     }, [n, text, instant]);

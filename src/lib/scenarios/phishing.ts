@@ -1,7 +1,7 @@
 import type { Scenario } from "@/lib/types";
 
 /**
- * Scenario 1 — Spear phishing email impersonating IT.
+ * Scenario 1 , Spear phishing email impersonating IT.
  *
  * End-to-end structure per docs/PHISHING.md:
  *   setup  →  stimulus (arrival)
@@ -19,7 +19,7 @@ export const phishing: Scenario = {
     id: "phishing-it-helpdesk",
     title: "Urgent: account verification required",
     concept:
-        "Spear phishing — recognising urgency, mismatched senders, and look-alike domains.",
+        "Spear phishing , recognising urgency, mismatched senders, and look-alike domains.",
     setup:
         "You're at your desk. Five emails are waiting this morning. Three are meeting invites, one is payroll, and one is asking you to act fast.",
     startSceneId: "show-email",
@@ -48,7 +48,7 @@ export const phishing: Scenario = {
                     {
                         target: "from",
                         caption:
-                            "Sender domain is portal-secure-verify.com — your real IT team sends from your own work domain, not a look-alike.",
+                            "Sender domain is portal-secure-verify.com , your real IT team sends from your own work domain, not a look-alike.",
                     },
                     {
                         target: "subject",
@@ -117,7 +117,7 @@ export const phishing: Scenario = {
             takeaway:
                 "Spear phishing leans on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:
-                "Three signals were in plain sight — a look-alike sender domain, an artificial 24-hour deadline, and a request IT would never make. When two of those three are present, treat the email as malicious by default.",
+                "Three signals were in plain sight , a look-alike sender domain, an artificial 24-hour deadline, and a request IT would never make. When two of those three are present, treat the email as malicious by default.",
             nextId: "quiz",
         },
         "quiz": {
@@ -137,13 +137,13 @@ export const phishing: Scenario = {
                     label: "The sender's domain didn't match your company's real IT domain.",
                     correct: true,
                     feedback:
-                        "Exactly. The domain shows in the inbox — visible before you open, before you read, before you're ever tempted to click.",
+                        "Exactly. The domain shows in the inbox , visible before you open, before you read, before you're ever tempted to click.",
                 },
                 {
                     label: "The request to re-verify the account.",
                     correct: false,
                     feedback:
-                        "An unusual request is a red flag, but only after opening. The domain mismatch is the earliest warning — visible at the inbox level.",
+                        "An unusual request is a red flag, but only after opening. The domain mismatch is the earliest warning , visible at the inbox level.",
                 },
             ],
             nextId: "done",
@@ -152,7 +152,7 @@ export const phishing: Scenario = {
 };
 
 /*
- * Note on the final `nextId: "done"` — the quiz is the last scene,
+ * Note on the final `nextId: "done"` , the quiz is the last scene,
  * and "done" doesn't resolve to anything in the scenes map. The
  * runner treats that as "show the return-to-queue button," which
  * the QuizPanel handles natively via onAdvance -> router.push('/').

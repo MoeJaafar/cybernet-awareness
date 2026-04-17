@@ -6,7 +6,7 @@ import { startBgMusic } from "@/components/BgMusic";
 import { getMusicVolume } from "@/lib/audio-settings";
 
 /**
- * Entrance — CyberNet splash. First thing every visitor sees.
+ * Entrance , CyberNet splash. First thing every visitor sees.
  * Tap to begin starts background music and routes to consent.
  */
 export default function Home() {
@@ -60,7 +60,7 @@ export default function Home() {
                     transition={{ duration: 1, delay: 0.9 }}
                 >
                     Five short scenarios. A phishing email, a suspicious call,
-                    a USB on the floor. You make the choices — each outcome
+                    a USB on the floor. You make the choices, and each outcome
                     shows you what an attacker would have done with the one you
                     picked.
                 </motion.p>

@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 /**
- * Workspace surface — used when the scene IS the screen: a Gmail
+ * Workspace surface , used when the scene IS the screen: a Gmail
  * mock, a password form, a phone call. No character portraits, no
  * background image, no staged dialogue dock. Just a calm dark page
  * with a small narrator ribbon above the interactive content.

@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 
 /**
- * USB-drop stimulus. A single focus object — a thumb drive on a
- * floor/desk surface — with a tantalising label printed on it.
+ * USB-drop stimulus. A single focus object , a thumb drive on a
+ * floor/desk surface , with a tantalising label printed on it.
  * Choices render below in the decision row pattern.
  *
  * No interactive states on the drive itself. The whole decision
@@ -51,7 +51,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                     className="relative"
                 >
-                    {/* USB body — side view. */}
+                    {/* USB body , side view. */}
                     <div className="flex items-center drop-shadow-[0_10px_24px_rgba(0,0,0,0.55)]">
                         {/* Connector shell. */}
                         <div className="relative h-11 w-16 flex items-center justify-center">
@@ -86,7 +86,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                                     {label}
                                 </span>
                             </div>
-                            {/* LED activity dot (dim — not plugged in). */}
+                            {/* LED activity dot (dim , not plugged in). */}
                             <div className="absolute right-1.5 top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-[color:var(--color-amber)]/30" />
                             {/* Lanyard hole. */}
                             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 h-3 w-3 rounded-full bg-[color:var(--color-ink-deep)] border border-[#2c2d30]" />

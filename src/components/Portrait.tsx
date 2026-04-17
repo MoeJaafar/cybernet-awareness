@@ -1,6 +1,6 @@
 /**
  * Character portrait. Accepts a role + expression and picks the SVG
- * from /public/art/characters. SVGs are plain <img> elements — we
+ * from /public/art/characters. SVGs are plain <img> elements , we
  * want them crisp on any DPI and we don't need to style their
  * internals.
  */

@@ -10,13 +10,13 @@ import { getNarratorVolume } from "@/lib/audio-settings";
  * caller via onDone.
  *
  * The intro is gated behind a "tap to begin" overlay so the user has
- * made a gesture before any audio plays — this is the only reliable
+ * made a gesture before any audio plays , this is the only reliable
  * way to unblock browser autoplay for the rest of the session.
  */
 
 type StoryLine = {
     text: string;
-    /** ms per character — default 42. */
+    /** ms per character , default 42. */
     speed?: number;
     /** ms to hold the finished line before fading out. */
     hold?: number;
@@ -35,7 +35,7 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     const [charIndex, setCharIndex] = useState(0);
     const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
 
-    // Audio — one mp3 per line. Only plays once the user has armed
+    // Audio , one mp3 per line. Only plays once the user has armed
     // the intro with a click (required for browser autoplay policies).
     useEffect(() => {
         if (lineIndex >= SCRIPT.length) return;
@@ -69,10 +69,8 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                 prev === "."
                     ? 380
                     : prev === ","
-                      ? 180
-                      : prev === "—"
-                        ? 220
-                        : line.speed ?? 42;
+                      ? 200
+                      : line.speed ?? 42;
             const t = window.setTimeout(() => setCharIndex((c) => c + 1), delay);
             return () => window.clearTimeout(t);
         }

@@ -1,19 +1,19 @@
 import type { Scenario } from "@/lib/types";
 
 /**
- * Scenario 5 — Public Wi-Fi.
+ * Scenario 5 , Public Wi-Fi.
  *
  * Player is at a café with a deadline. Three networks in range:
- *   A — open "Cafe_Free_WiFi"  (breach — evil twin / rogue AP)
- *   B — the café's real guest network with captive portal  (partial —
+ *   A , open "Cafe_Free_WiFi"  (breach , evil twin / rogue AP)
+ *   B , the café's real guest network with captive portal  (partial ,
  *       legit but shared, metadata sniff + targeted follow-up)
- *   C — tether from own phone  (contained)
+ *   C , tether from own phone  (contained)
  */
 export const publicWiFi: Scenario = {
     id: "public-wifi",
     title: "Three Wi-Fi networks in range",
     concept:
-        "Public Wi-Fi threats — evil twin access points, sniffing on shared networks, and why your own tether or a VPN is the defence.",
+        "Public Wi-Fi threats , evil twin access points, sniffing on shared networks, and why your own tether or a VPN is the defence.",
     setup: "",
     startSceneId: "choose-wifi",
     scenes: {
@@ -41,7 +41,7 @@ export const publicWiFi: Scenario = {
             speaker: "what happened next",
             attackerWon: true,
             narration:
-                "You connect to Brew_Guest and get to work. The network is real — the café's own. But you share it with every other customer. HTTPS hides contents, but anyone on the network sees every domain you visit. Across a week of coffee breaks they profile you precisely enough to spear-phish from a vendor you use. Even real public Wi-Fi is untrusted infrastructure.",
+                "You connect to Brew_Guest and get to work. The network is real , the café's own. But you share it with every other customer. HTTPS hides contents, but anyone on the network sees every domain you visit. Across a week of coffee breaks they profile you precisely enough to spear-phish from a vendor you use. Even real public Wi-Fi is untrusted infrastructure.",
             nextId: "debrief",
         },
         "outcome-tether": {
@@ -50,7 +50,7 @@ export const publicWiFi: Scenario = {
             speaker: "what happened next",
             attackerWon: false,
             narration:
-                "You tether the laptop to your phone's hotspot. Slower, but yours — encrypted to your carrier, not shared with the café. You finish the report without exposing a packet to the local network. For sensitive work, your own tether is the simplest defence. A company VPN over café Wi-Fi is second-best.",
+                "You tether the laptop to your phone's hotspot. Slower, but yours , encrypted to your carrier, not shared with the café. You finish the report without exposing a packet to the local network. For sensitive work, your own tether is the simplest defence. A company VPN over café Wi-Fi is second-best.",
             nextId: "debrief",
         },
 
@@ -59,9 +59,9 @@ export const publicWiFi: Scenario = {
             id: "debrief",
             speaker: "the takeaway",
             takeaway:
-                "Open, unknown networks are untrusted infrastructure. Your own tether — or a VPN — is the cost of working on them.",
+                "Open, unknown networks are untrusted infrastructure. Your own tether , or a VPN , is the cost of working on them.",
             lesson:
-                "Two threats ride on public Wi-Fi. First, the evil twin — an attacker-run access point broadcasts a familiar name, captures your traffic, then hands you the Internet so nothing feels wrong. Second, the sniff on legitimate networks — even real café Wi-Fi is a shared medium where anyone can profile your traffic. HTTPS hides content, but metadata — which services, when, how long — still leaks. Don't send work traffic over any network you wouldn't trust. Tether off your phone, or run a VPN.",
+                "Two threats ride on public Wi-Fi. First, the evil twin , an attacker-run access point broadcasts a familiar name, captures your traffic, then hands you the Internet so nothing feels wrong. Second, the sniff on legitimate networks , even real café Wi-Fi is a shared medium where anyone can profile your traffic. HTTPS hides content, but metadata , which services, when, how long , still leaks. Don't send work traffic over any network you wouldn't trust. Tether off your phone, or run a VPN.",
             nextId: "quiz",
         },
 
@@ -73,10 +73,10 @@ export const publicWiFi: Scenario = {
                 "You're in an airport and need to send a confidential document. Which option is safest?",
             options: [
                 {
-                    label: 'Connect to "Airport_Free_WiFi" — it\'s free and available everywhere.',
+                    label: 'Connect to "Airport_Free_WiFi" , it\'s free and available everywhere.',
                     correct: false,
                     feedback:
-                        "An open network with a generic name is classic evil-twin bait. Anyone can broadcast that SSID — you can't verify it's actually the airport's.",
+                        "An open network with a generic name is classic evil-twin bait. Anyone can broadcast that SSID , you can't verify it's actually the airport's.",
                 },
                 {
                     label: "Connect to the airline's lounge Wi-Fi after showing your boarding pass.",

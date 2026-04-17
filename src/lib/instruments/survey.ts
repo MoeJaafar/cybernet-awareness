@@ -1,7 +1,7 @@
 /**
  * Post-game engagement and perception survey. Likert 1–5 scale.
  * Covers perceived usefulness, ease of use, realism, self-efficacy,
- * and behavioural intention — aligned with TAM and TPB constructs
+ * and behavioural intention , aligned with TAM and TPB constructs
  * cited in the thesis literature review.
  */
 

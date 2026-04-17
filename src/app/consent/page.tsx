@@ -43,7 +43,7 @@ export default function ConsentPage() {
                         You will answer a brief knowledge quiz, play through
                         five interactive scenarios, answer the same quiz again,
                         and complete a short feedback survey. Your responses are
-                        recorded anonymously — no names, emails, or identifying
+                        recorded anonymously: no names, emails, or identifying
                         information are collected.
                     </p>
                     <p>
@@ -64,7 +64,7 @@ export default function ConsentPage() {
                         onClick={handleAgree}
                         className="self-start inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                     >
-                        I agree — begin
+                        I agree, begin
                         <span aria-hidden className="text-xl">→</span>
                     </button>
                 </div>

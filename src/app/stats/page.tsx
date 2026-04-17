@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 
 /**
- * Hidden participant counter. Not linked from anywhere — visit
+ * Hidden participant counter. Not linked from anywhere , visit
  * /stats directly. No auth (anyone who knows the URL can see the
  * counts), but only aggregate numbers are exposed, not row data.
  */
@@ -90,11 +90,11 @@ export default function StatsPage() {
                         <Row label="completed (reached done page)" value={stats.completed} />
                         <Row
                             label="avg pre-test accuracy"
-                            value={stats.avgPreAccuracy === null ? "—" : `${stats.avgPreAccuracy}%`}
+                            value={stats.avgPreAccuracy === null ? "-" : `${stats.avgPreAccuracy}%`}
                         />
                         <Row
                             label="avg post-test accuracy"
-                            value={stats.avgPostAccuracy === null ? "—" : `${stats.avgPostAccuracy}%`}
+                            value={stats.avgPostAccuracy === null ? "-" : `${stats.avgPostAccuracy}%`}
                         />
                         {stats.avgPreAccuracy !== null && stats.avgPostAccuracy !== null && (
                             <Row

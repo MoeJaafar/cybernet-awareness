@@ -192,7 +192,7 @@ export function KnowledgeTest({
                     </div>
                 </motion.div>
 
-                {/* Nav + submit — inline on the page, scrolls with it */}
+                {/* Nav + submit , inline on the page, scrolls with it */}
                 <div className="flex flex-col gap-3 pt-2">
                     <div className="flex flex-wrap gap-1.5">
                         {questions.map((_, i) => {

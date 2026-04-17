@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /**
- * Top bar. The "you" indicator sits here — player is an ordinary
+ * Top bar. The "you" indicator sits here , player is an ordinary
  * university employee, not an analyst, so the metrics reflect
  * *attacks survived* and *close calls*, not analyst-flavoured
  * things like "trust score."
