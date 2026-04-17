@@ -1,15 +1,12 @@
 /**
- * Pre-test and post-test knowledge questions. 10 scenario-based
- * vignettes, 2 per concept. Each presents a realistic situation and
- * tests applied judgment — not terminology recall.
+ * Pre/post-test — 10 scenario-based questions where the intuitive
+ * answer is WRONG. Each exploits a real misconception that unaware
+ * people hold, so the pre-test catches genuine gaps and the
+ * post-test measures whether the game shifted understanding.
  *
- * Design principles:
- *   - Wrong answers are PLAUSIBLE (not strawmen)
- *   - Right answer requires the same judgment the game teaches
- *   - Questions don't duplicate the in-game quizzes (different
- *     scenarios, different framing)
- *   - Pre/post use the same questions; post-test reverses the order
- *     to reduce position-memory effects
+ * Design: wrong answers represent COMMON BELIEFS, not strawmen.
+ * An unaware person should gravitate to the wrong option. An aware
+ * person recognises why the surface signal is misleading.
  */
 
 export interface KnowledgeQuestion {
@@ -25,18 +22,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "phish-1",
         concept: "phishing",
         prompt:
-            'You get an email from "IT Department" with the subject "Immediate action required: verify your account." The sender address is support@portal-verify-secure.com. Your company\'s domain is @acmecorp.com. What\'s your first move?',
+            'A website shows a padlock icon and "https://" in the address bar. What does this guarantee?',
         options: [
             {
-                label: "Click the verification link — IT said it's urgent.",
+                label: "The website is legitimate and safe to enter your credentials.",
                 correct: false,
             },
             {
-                label: "Check whether the sender domain matches your company's before doing anything else.",
+                label: "Your connection is encrypted, but the site itself could still be a phishing page.",
                 correct: true,
             },
             {
-                label: "Forward it to your colleagues so they're aware too.",
+                label: "The website has been verified as trustworthy by your browser.",
                 correct: false,
             },
         ],
@@ -45,19 +42,19 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "phish-2",
         concept: "phishing",
         prompt:
-            "You spot a suspicious email and delete it. A colleague asks if you reported it to IT. You didn't. Does it matter?",
+            "You receive an urgent email from your CEO asking you to wire funds immediately. The sender address looks correct at a glance. What's the MOST reliable way to verify it?",
         options: [
             {
-                label: "No — deleting it solved the problem for you.",
+                label: "Check the email for spelling or grammar mistakes.",
                 correct: false,
             },
             {
-                label: "Yes — the same email may be targeting others, and IT can block the whole campaign.",
+                label: "Look carefully at the full sender address for subtle domain misspellings.",
+                correct: false,
+            },
+            {
+                label: "Call the CEO on a phone number you already have — not one from the email.",
                 correct: true,
-            },
-            {
-                label: "No — IT probably already knows about it.",
-                correct: false,
             },
         ],
     },
@@ -67,18 +64,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "pw-1",
         concept: "password",
         prompt:
-            'Your company requires a new password. You\'re choosing between "Tr0ub4d0r!" (10 characters, mixed symbols) and "correct horse battery staple" (28 characters, plain words). Which is stronger against a real attacker?',
+            "Which password would take the LONGEST to crack?",
         options: [
             {
-                label: "Tr0ub4d0r! — it has symbols and number substitutions.",
+                label: '"Tr0ub4d0r&3" — 11 characters with symbols and number substitutions.',
                 correct: false,
             },
             {
-                label: "correct horse battery staple — length matters more than symbol tricks.",
+                label: '"skyline toast bicycle river" — 26 characters, four plain words.',
                 correct: true,
             },
             {
-                label: "They're about equally strong.",
+                label: '"aX9$kL2!" — 8 characters, fully random.',
                 correct: false,
             },
         ],
@@ -87,18 +84,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "pw-2",
         concept: "password",
         prompt:
-            'A colleague\'s password is "Summer2026!". They say it meets policy — uppercase, number, symbol. Is it safe?',
+            'Your company\'s password policy requires uppercase, a number, and a symbol. A colleague sets "January2026!" and says it\'s compliant. Is it secure?',
         options: [
             {
-                label: "Yes — it meets all the complexity requirements.",
+                label: "Yes — it meets every requirement in the policy.",
                 correct: false,
             },
             {
-                label: "No — it's a common seasonal pattern that cracking tools try first.",
+                label: "No — it follows a month-year-symbol pattern that cracking tools try within seconds.",
                 correct: true,
             },
             {
-                label: "Yes — adding the exclamation mark makes it unpredictable.",
+                label: "Yes — 12 characters with mixed types is above average.",
                 correct: false,
             },
         ],
@@ -109,18 +106,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "vish-1",
         concept: "vishing",
         prompt:
-            'Your phone rings. The caller says they\'re from your bank\'s fraud department and need your account number to "freeze suspicious activity." They sound professional and urgent. What do you do?',
+            "A caller claiming to be from your internet provider reads your full name, address, and account number. Does this confirm they're legitimate?",
         options: [
             {
-                label: "Give the account number — they're trying to protect you.",
+                label: "Yes — only your real provider would have those details.",
                 correct: false,
             },
             {
-                label: "Hang up, find your bank's real phone number, and call them yourself.",
+                label: "No — personal details are widely available from data breaches and public records.",
                 correct: true,
             },
             {
-                label: "Ask the caller to prove they're from the bank by telling you your balance.",
+                label: "Probably — scammers wouldn't have that level of detail.",
                 correct: false,
             },
         ],
@@ -129,18 +126,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "vish-2",
         concept: "vishing",
         prompt:
-            'A caller claiming to be tech support asks you to install remote-access software so they can "fix a virus." They read you your IP address as proof they\'re legitimate. What does this prove?',
+            'A "tech support" caller asks you to install remote-access software to "fix a virus." They read your IP address to prove they\'re real. What does this prove?',
         options: [
             {
-                label: "They're genuine — they know your IP address.",
+                label: "They have access to your network, so they're likely genuine.",
                 correct: false,
             },
             {
-                label: "Nothing — IP addresses are easy to look up and don't verify identity.",
+                label: "Nothing — your public IP address is trivial to look up.",
                 correct: true,
             },
             {
-                label: "They're probably genuine but you should ask for their employee ID first.",
+                label: "They're probably real, but you should confirm their employee ID.",
                 correct: false,
             },
         ],
@@ -151,18 +148,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "usb-1",
         concept: "usb",
         prompt:
-            'You find a USB stick in the office kitchen labelled "Wedding Photos." A colleague suggests plugging it into an old spare laptop that\'s "not connected to anything important." Is this safe?',
+            "You plug a USB stick into your computer but don't open any files on it. Can it still infect your machine?",
         options: [
             {
-                label: "Yes — a disconnected laptop can't infect the network.",
+                label: "No — malware requires you to open or run an infected file.",
                 correct: false,
             },
             {
-                label: "No — the payload runs the moment it's plugged in, regardless of what the laptop is connected to.",
+                label: "Yes — some USB devices execute code automatically the moment they're plugged in.",
                 correct: true,
             },
             {
-                label: "Yes — if it's just photos, it can't contain malware.",
+                label: "No — your antivirus would block any threat before it could run.",
                 correct: false,
             },
         ],
@@ -171,18 +168,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "usb-2",
         concept: "usb",
         prompt:
-            "Three USB sticks are found around your office building in one morning. What does this pattern suggest?",
+            'You find a USB stick labelled "Wedding Photos" in the office kitchen. A colleague suggests plugging it into a spare laptop that\'s "not connected to anything important." Is this safe?',
         options: [
             {
-                label: "Someone had a bad day and lost their collection.",
+                label: "Yes — an isolated laptop can't spread infection to the network.",
                 correct: false,
             },
             {
-                label: "It's likely a deliberate drop — someone is targeting your building.",
+                label: "No — the payload captures data from that machine regardless of network connection, and the label is likely bait.",
                 correct: true,
             },
             {
-                label: "It's a coincidence — USB sticks are commonly lost.",
+                label: "Yes — personal files like photos can't contain executable malware.",
                 correct: false,
             },
         ],
@@ -193,18 +190,18 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "wifi-1",
         concept: "wifi",
         prompt:
-            'You\'re working at a café and need to send a report. You see two networks: "CoffeeShop_Free" (open, no password) and "CoffeeShop_Guest" (password on the wall). Which is safer?',
+            "You're at a café using their official, password-protected Wi-Fi. The password is printed on the wall. Is your traffic private from other customers?",
         options: [
             {
-                label: "CoffeeShop_Free — it has the café's name so it must be theirs.",
+                label: "Yes — the password encrypts your connection and keeps it private.",
                 correct: false,
             },
             {
-                label: "CoffeeShop_Guest is better, but both are still shared public networks you shouldn't trust with sensitive work.",
+                label: "No — everyone using the same password shares the encryption key, so others can still intercept traffic.",
                 correct: true,
             },
             {
-                label: "Either is fine — HTTPS protects everything anyway.",
+                label: "Yes — each device gets its own encrypted channel once connected.",
                 correct: false,
             },
         ],
@@ -213,25 +210,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "wifi-2",
         concept: "wifi",
         prompt:
-            "Your phone has 5G signal but you notice free airport Wi-Fi is available. You need to send a confidential file. Which connection should you use?",
+            'You open an incognito / private browsing window before using airport Wi-Fi. What does this protect?',
         options: [
             {
-                label: "The airport Wi-Fi — it's faster and free.",
+                label: "It prevents other people on the network from seeing what you browse.",
                 correct: false,
             },
             {
-                label: "Your phone's 5G — it's encrypted to your carrier and not shared with strangers.",
+                label: "It only prevents your own browser from saving local history — the network can still see your traffic.",
                 correct: true,
             },
             {
-                label: "Either — modern encryption makes both equally safe.",
+                label: "It provides roughly the same protection as a VPN.",
                 correct: false,
             },
         ],
     },
 ];
 
-/** Deterministic shuffle based on a seed string (pre vs post). */
 export function shuffleQuestions(
     seed: "pre" | "post",
 ): KnowledgeQuestion[] {
