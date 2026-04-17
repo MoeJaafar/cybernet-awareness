@@ -1,8 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "motion/react";
+import { useSession } from "@/lib/session";
+
+const STORAGE_KEY = "cybernet_session_id";
 
 export default function DonePage() {
+    const { logEvent } = useSession();
+
+    useEffect(() => {
+        logEvent("session_end");
+        localStorage.removeItem(STORAGE_KEY);
+    }, [logEvent]);
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
             <motion.div

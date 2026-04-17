@@ -4,18 +4,14 @@ import {
     createContext,
     useCallback,
     useContext,
+    useEffect,
     useRef,
     useState,
     type ReactNode,
 } from "react";
 import { getSupabase } from "./supabase";
 
-/**
- * Study session context. A session is created on /consent and its ID
- * threads through the entire play-through so every event (pretest
- * answers, in-game choices, posttest answers, survey) links back to
- * one participant.
- */
+const STORAGE_KEY = "cybernet_session_id";
 
 type SessionCtx = {
     sessionId: string | null;
@@ -33,6 +29,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     const [sessionId, setSessionId] = useState<string | null>(null);
     const idRef = useRef<string | null>(null);
 
+    // Restore session from localStorage on mount.
+    useEffect(() => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            idRef.current = stored;
+            setSessionId(stored);
+        }
+    }, []);
+
     const startSession = useCallback(async (): Promise<string> => {
         if (idRef.current) return idRef.current;
         const sb = getSupabase();
@@ -42,9 +47,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             .insert({})
             .select("id")
             .single();
-        if (error || !data) throw new Error(error?.message ?? "session insert failed");
+        if (error || !data)
+            throw new Error(error?.message ?? "session insert failed");
         idRef.current = data.id;
         setSessionId(data.id);
+        localStorage.setItem(STORAGE_KEY, data.id);
         return data.id;
     }, []);
 

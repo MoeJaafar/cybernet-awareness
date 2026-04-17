@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { SURVEY_QUESTIONS, LIKERT_LABELS } from "@/lib/instruments/survey";
 import { useSession } from "@/lib/session";
+import { useRequireSession } from "@/lib/require-session";
 
 export default function SurveyPage() {
+    useRequireSession();
     const router = useRouter();
     const { logEvent } = useSession();
     const [idx, setIdx] = useState(0);
