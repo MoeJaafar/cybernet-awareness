@@ -37,6 +37,7 @@ export function PhoneCall({
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [linePhase, setLinePhase] = useState<"type" | "hold">("type");
+    const [audioEnded, setAudioEnded] = useState(false);
     const [elapsed, setElapsed] = useState(0);
 
     // Call timer.
@@ -59,7 +60,34 @@ export function PhoneCall({
         };
     }, [phase]);
 
-    // Subtitle typewriter.
+    // Audio playback — flips `audioEnded` when the clip finishes (or
+    // fails to start). The typewriter/hold effect waits on this flag
+    // before advancing, so the subtitle line stays visible until the
+    // audio has fully played out.
+    useEffect(() => {
+        if (phase !== "connected") return;
+        const line = lines[lineIndex];
+        setAudioEnded(false);
+        if (!line?.audio) {
+            // No audio — don't block advancement on audio.
+            setAudioEnded(true);
+            return;
+        }
+        const audio = new Audio(line.audio);
+        audio.volume = getNarratorVolume();
+        const handleEnded = () => setAudioEnded(true);
+        audio.addEventListener("ended", handleEnded);
+        audio.play().catch(() => setAudioEnded(true));
+        return () => {
+            audio.removeEventListener("ended", handleEnded);
+            audio.pause();
+            audio.currentTime = 0;
+        };
+    }, [phase, lineIndex, lines]);
+
+    // Subtitle typewriter. Types at its own pace; on "hold" it waits
+    // for BOTH the minimum hold time AND the audio to end before
+    // advancing, whichever is later.
     useEffect(() => {
         if (phase !== "connected") return;
         if (lineIndex >= lines.length) { setPhase("deciding"); return; }
@@ -72,25 +100,16 @@ export function PhoneCall({
             return () => clearTimeout(t);
         }
         if (linePhase === "hold") {
+            // Only advance once the audio has finished playing.
+            if (!audioEnded) return;
             const t = setTimeout(() => {
                 setLineIndex((i) => i + 1);
                 setCharIndex(0);
                 setLinePhase("type");
-            }, line.hold ?? 800);
+            }, line.hold ?? 600);
             return () => clearTimeout(t);
         }
-    }, [phase, lineIndex, charIndex, linePhase, lines]);
-
-    // Audio playback.
-    useEffect(() => {
-        if (phase !== "connected") return;
-        const line = lines[lineIndex];
-        if (!line?.audio) return;
-        const audio = new Audio(line.audio);
-        audio.volume = getNarratorVolume();
-        audio.play().catch(() => {});
-        return () => { audio.pause(); audio.currentTime = 0; };
-    }, [phase, lineIndex, lines]);
+    }, [phase, lineIndex, charIndex, linePhase, lines, audioEnded]);
 
     const currentLine = lines[lineIndex];
     const subtitle = currentLine?.text.slice(0, charIndex) ?? "";
