@@ -269,20 +269,20 @@ export function TypedNarrative({
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <span
-                            className="type-mono text-[color:var(--color-bone-muted)]"
+                            className="type-mono text-[color:var(--color-amber)]"
                             style={{
-                                animation: "pulse-dot 1.6s ease-in-out infinite",
+                                animation: "soft-pulse 1.8s ease-in-out infinite",
                             }}
                         >
                             click to continue
                         </span>
                         <span
                             aria-hidden
-                            className="h-px w-8 bg-[color:var(--color-bone-muted)]"
+                            className="h-px w-8 bg-[color:var(--color-amber)]/60"
                         ></span>
                         <span
                             aria-hidden
-                            className="type-mono text-[color:var(--color-bone-muted)]"
+                            className="type-mono text-[color:var(--color-amber)]"
                         >
                             ↵
                         </span>

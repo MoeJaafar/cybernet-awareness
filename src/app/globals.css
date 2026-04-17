@@ -253,6 +253,13 @@ body {
     0%, 100% { opacity: 1; transform: scale(1); }
     50%      { opacity: 0.35; transform: scale(0.85); }
 }
+
+/* Soft pulse for "click to continue" hints. Stays legible at all
+ * times — just a gentle attention cue, not a fade-out. */
+@keyframes soft-pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.75; }
+}
 .dot-live {
     animation: pulse-dot 2.2s ease-in-out infinite;
 }
