@@ -29,65 +29,71 @@ export default function ConsentPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10">
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-2xl w-full flex flex-col gap-8"
-            >
-                <div className="flex items-center gap-3">
-                    <span className="h-px w-10 bg-[color:var(--color-amber)]" />
-                    <span className="type-mono text-[color:var(--color-amber)]">
-                        informed consent
-                    </span>
-                </div>
+        <div className="min-h-[100dvh] flex flex-col">
+            <div className="flex-1 px-4 sm:px-6 py-6 sm:py-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-2xl w-full mx-auto flex flex-col gap-5 sm:gap-8"
+                >
+                    <div className="flex items-center gap-3">
+                        <span className="h-px w-10 bg-[color:var(--color-amber)]" />
+                        <span className="type-mono text-[color:var(--color-amber)]">
+                            informed consent
+                        </span>
+                    </div>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[28px] sm:text-[48px] leading-tight">
-                    Before we begin
-                </h1>
+                    <h1 className="type-display text-[color:var(--color-bone)] text-[26px] sm:text-[48px] leading-tight">
+                        Before we begin
+                    </h1>
 
-                <div className="type-body text-[color:var(--color-bone-dim)] text-[18px] leading-relaxed flex flex-col gap-4">
-                    <p>
-                        You are about to play a short cybersecurity awareness
-                        game as part of a bachelor&rsquo;s thesis study. The
-                        session takes approximately 20 minutes.
-                    </p>
-                    <p>
-                        You will answer a brief knowledge quiz, play through
-                        five interactive scenarios, answer the same quiz again,
-                        and complete a short feedback survey. No directly
-                        identifying information (name, email, IP address) is
-                        collected. Each session is linked only by a random
-                        identifier so pre- and post-test answers can be paired
-                        for analysis.
-                    </p>
-                    <p>
-                        Participation is voluntary. You may stop at any time by
-                        closing the browser tab; partial data collected up to
-                        that point may be retained for analysis. Because
-                        sessions are anonymous, data cannot be retrieved or
-                        deleted after submission. Data will be stored for up to
-                        two years after thesis submission, used for academic
-                        analysis only, and not shared with third parties.
-                    </p>
-                    <p>
-                        Questions about the study can be sent to&nbsp;
-                        <a
-                            href="mailto:m.jaafar@innopolis.university"
-                            className="text-[color:var(--color-amber)] underline underline-offset-2 hover:brightness-110"
-                        >
-                            m.jaafar@innopolis.university
-                        </a>
-                        .
-                    </p>
-                </div>
+                    <div className="type-body text-[color:var(--color-bone-dim)] text-[15px] sm:text-[18px] leading-relaxed flex flex-col gap-3 sm:gap-4">
+                        <p>
+                            You are about to play a short cybersecurity awareness
+                            game as part of a bachelor&rsquo;s thesis study. The
+                            session takes approximately 20 minutes.
+                        </p>
+                        <p>
+                            You will answer a brief knowledge quiz, play through
+                            five interactive scenarios, answer the same quiz again,
+                            and complete a short feedback survey. No directly
+                            identifying information (name, email, IP address) is
+                            collected. Each session is linked only by a random
+                            identifier so pre- and post-test answers can be paired
+                            for analysis.
+                        </p>
+                        <p>
+                            Participation is voluntary. You may stop at any time by
+                            closing the browser tab; partial data collected up to
+                            that point may be retained for analysis. Because
+                            sessions are anonymous, data cannot be retrieved or
+                            deleted after submission. Data will be stored for up to
+                            two years after thesis submission, used for academic
+                            analysis only, and not shared with third parties.
+                        </p>
+                        <p>
+                            Questions about the study can be sent to&nbsp;
+                            <a
+                                href="mailto:m.jaafar@innopolis.university"
+                                className="text-[color:var(--color-amber)] underline underline-offset-2 hover:brightness-110 break-all"
+                            >
+                                m.jaafar@innopolis.university
+                            </a>
+                            .
+                        </p>
+                    </div>
 
-                <div className="border-t border-[color:var(--color-edge-subtle)] pt-6 flex flex-col gap-4">
-                    <p className="type-body text-[color:var(--color-bone)] text-[18px]">
-                        By clicking below, you confirm that you have read the
+                    <p className="type-body text-[color:var(--color-bone)] text-[15px] sm:text-[18px] border-t border-[color:var(--color-edge-subtle)] pt-5 sm:pt-6">
+                        By tapping below, you confirm that you have read the
                         above and agree to participate.
                     </p>
+                </motion.div>
+            </div>
+
+            {/* Sticky bottom CTA */}
+            <div className="sticky bottom-0 z-30 px-4 sm:px-6 pt-6 pb-4 bg-gradient-to-t from-[color:var(--color-ink-base)] via-[color:var(--color-ink-base)]/95 to-transparent">
+                <div className="max-w-2xl w-full mx-auto flex flex-col gap-2">
                     <button
                         type="button"
                         onClick={handleAgree}
@@ -104,7 +110,7 @@ export default function ConsentPage() {
                         </p>
                     )}
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

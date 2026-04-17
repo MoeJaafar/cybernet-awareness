@@ -76,12 +76,13 @@ export default function DemographicsPage() {
         answers.selfRating !== undefined;
 
     return (
-        <div className="min-h-screen flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10">
+        <div className="min-h-[100dvh] flex flex-col">
+            <div className="flex-1 px-4 sm:px-6 py-6 sm:py-10">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="max-w-2xl w-full flex flex-col gap-8"
+                className="max-w-2xl w-full mx-auto flex flex-col gap-5 sm:gap-8"
             >
                 <div className="flex items-center gap-3">
                     <span className="h-px w-10 bg-[color:var(--color-amber)]" />
@@ -176,7 +177,12 @@ export default function DemographicsPage() {
                     </div>
                 </div>
 
-                <div className="border-t border-[color:var(--color-edge-subtle)] pt-6 flex flex-col gap-3">
+            </motion.div>
+            </div>
+
+            {/* Sticky bottom CTA */}
+            <div className="sticky bottom-0 z-30 px-4 sm:px-6 pt-6 pb-4 bg-gradient-to-t from-[color:var(--color-ink-base)] via-[color:var(--color-ink-base)]/95 to-transparent">
+                <div className="max-w-2xl w-full mx-auto flex flex-col gap-2">
                     <button
                         type="button"
                         onClick={handleSubmit}
@@ -187,12 +193,12 @@ export default function DemographicsPage() {
                         <span aria-hidden className="text-xl">→</span>
                     </button>
                     {!anyAnswered && (
-                        <p className="type-mono text-[color:var(--color-bone-ghost)]">
+                        <p className="type-mono text-[color:var(--color-bone-ghost)] text-[11px] sm:text-xs">
                             leave everything blank to skip
                         </p>
                     )}
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

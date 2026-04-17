@@ -53,83 +53,91 @@ export default function SurveyPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10">
-            <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="max-w-2xl w-full flex flex-col gap-8"
-            >
-                <div className="flex items-center justify-between">
-                    <span className="type-mono text-[color:var(--color-amber)]">
-                        feedback survey
-                    </span>
-                    <span className="type-mono text-[color:var(--color-bone-muted)] tabular-nums">
-                        {idx + 1} / {total}
-                    </span>
-                </div>
-
-                <p className="type-ui text-[color:var(--color-bone)] text-[22px] leading-relaxed">
-                    {q.statement}
-                </p>
-
-                <div
-                    role="radiogroup"
-                    aria-label="Agreement scale"
-                    className="flex gap-2"
+        <div className="min-h-[100dvh] flex flex-col">
+            <div className="flex-1 px-4 sm:px-6 py-6 sm:py-10">
+                <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="max-w-2xl w-full mx-auto flex flex-col gap-5 sm:gap-8"
                 >
-                    {LIKERT_LABELS.map((label, i) => {
-                        const value = i + 1;
-                        const isSelected = selected === value;
-                        const baseClass = isSelected
-                            ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
-                            : "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] hover:bg-[color:var(--color-ink-higher)]";
-                        return (
-                            <button
-                                key={value}
-                                type="button"
-                                role="radio"
-                                aria-checked={isSelected}
-                                aria-label={label}
-                                onClick={() => setSelected(value)}
-                                className={`flex-1 flex flex-col items-center gap-2 border ${baseClass} py-4 px-2 transition-all`}
-                            >
-                                <span className="type-display text-2xl text-[color:var(--color-bone)]">
-                                    {value}
-                                </span>
-                                <span className="type-mono text-[color:var(--color-bone-muted)] text-center leading-tight" style={{ fontSize: "9px" }}>
-                                    {label}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
+                    <div className="flex items-center justify-between">
+                        <span className="type-mono text-[color:var(--color-amber)]">
+                            feedback survey
+                        </span>
+                        <span className="type-mono text-[color:var(--color-bone-muted)] tabular-nums">
+                            {idx + 1} / {total}
+                        </span>
+                    </div>
 
-                {selected !== null && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
+                    <p className="type-ui text-[color:var(--color-bone)] text-[18px] sm:text-[22px] leading-relaxed">
+                        {q.statement}
+                    </p>
+
+                    <div
+                        role="radiogroup"
+                        aria-label="Agreement scale"
+                        className="flex gap-1.5 sm:gap-2"
                     >
-                        <button
+                        {LIKERT_LABELS.map((label, i) => {
+                            const value = i + 1;
+                            const isSelected = selected === value;
+                            const baseClass = isSelected
+                                ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
+                                : "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] hover:bg-[color:var(--color-ink-higher)]";
+                            return (
+                                <button
+                                    key={value}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={isSelected}
+                                    aria-label={label}
+                                    onClick={() => setSelected(value)}
+                                    className={`flex-1 flex flex-col items-center gap-1 sm:gap-2 border ${baseClass} py-3 sm:py-4 px-1 sm:px-2 transition-all`}
+                                >
+                                    <span className="type-display text-xl sm:text-2xl text-[color:var(--color-bone)]">
+                                        {value}
+                                    </span>
+                                    <span className="type-mono text-[color:var(--color-bone-muted)] text-center leading-tight" style={{ fontSize: "9px" }}>
+                                        {label}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    <div className="w-full h-0.5 bg-[color:var(--color-bone-ghost)] rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-[color:var(--color-amber)] transition-all duration-300"
+                            style={{ width: `${((idx + (selected !== null ? 1 : 0)) / total) * 100}%` }}
+                        />
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Sticky bottom CTA */}
+            <div className="sticky bottom-0 z-30 px-4 sm:px-6 pt-6 pb-4 bg-gradient-to-t from-[color:var(--color-ink-base)] via-[color:var(--color-ink-base)]/95 to-transparent">
+                <div className="max-w-2xl w-full mx-auto min-h-[56px] flex items-center">
+                    {selected !== null ? (
+                        <motion.button
                             type="button"
                             onClick={handleNext}
                             disabled={submitting}
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
                             className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)] disabled:opacity-60 disabled:cursor-wait"
                         >
                             {isLast ? (submitting ? "Finishing…" : "Finish") : "Next"}
                             <span aria-hidden className="text-xl">→</span>
-                        </button>
-                    </motion.div>
-                )}
-
-                <div className="w-full h-0.5 bg-[color:var(--color-bone-ghost)] rounded-full overflow-hidden">
-                    <div
-                        className="h-full bg-[color:var(--color-amber)] transition-all duration-300"
-                        style={{ width: `${((idx + (selected !== null ? 1 : 0)) / total) * 100}%` }}
-                    />
+                        </motion.button>
+                    ) : (
+                        <p className="type-mono text-[color:var(--color-bone-muted)] text-[12px] sm:text-sm">
+                            pick a value to continue
+                        </p>
+                    )}
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }
