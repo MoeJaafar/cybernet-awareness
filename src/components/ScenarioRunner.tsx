@@ -702,12 +702,12 @@ function ChoiceRow({
         <button
             type="button"
             onClick={onClick}
-            className="group text-left border-b border-[color:var(--color-edge-subtle)] py-5 px-2 flex items-start gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
+            className="group text-left border-b border-[color:var(--color-edge-subtle)] py-3.5 sm:py-5 px-2 flex items-start gap-3 sm:gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
         >
-            <span className="type-display text-2xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors w-8 shrink-0 mt-0.5 tabular-nums">
+            <span className="type-display text-xl sm:text-2xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 sm:w-8 shrink-0 mt-0.5 tabular-nums">
                 {letter}
             </span>
-            <span className="type-body text-[17px] sm:text-[18px] text-[color:var(--color-bone)] leading-snug flex-1 group-hover:text-[color:var(--color-bone)]">
+            <span className="type-body text-[15px] sm:text-[18px] text-[color:var(--color-bone)] leading-snug flex-1 group-hover:text-[color:var(--color-bone)]">
                 {label}
             </span>
             <span

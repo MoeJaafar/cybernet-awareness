@@ -152,7 +152,7 @@ export function TypedNarrative({
 
     return (
         <div
-            className={`min-h-screen w-full ${toneBg} flex flex-col px-6 relative ${
+            className={`min-h-screen w-full ${toneBg} flex flex-col px-4 sm:px-6 relative ${
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
@@ -183,7 +183,7 @@ export function TypedNarrative({
             />
 
             {/* Top section: speaker label. Fixed position at top. */}
-            <div className="relative pt-12 pb-4 max-w-3xl w-full mx-auto">
+            <div className="relative pt-6 sm:pt-12 pb-2 sm:pb-4 max-w-3xl w-full mx-auto">
                 {speaker && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -204,8 +204,10 @@ export function TypedNarrative({
                 )}
             </div>
 
-            {/* Middle section: typed text. Takes remaining space, centered vertically. */}
-            <div className="relative flex-1 flex items-center max-w-3xl w-full mx-auto">
+            {/* Middle section: typed text. On desktop vertically centers in
+             *  the remaining space; on mobile anchors to the top so the
+             *  choices below don't land off-screen. */}
+            <div className="relative flex-1 flex items-start sm:items-center pt-2 sm:pt-0 max-w-3xl w-full mx-auto">
 
                 <AnimatePresence mode="wait">
                     {lineIndex < lines.length && (
@@ -228,8 +230,8 @@ export function TypedNarrative({
                                 aria-hidden
                                 className={`type-body leading-[1.35] invisible text-left ${
                                     useEmphasis
-                                        ? "type-display-italic text-[45px] sm:text-[65px] lg:text-[80px] leading-[1.1]"
-                                        : "text-[32px] sm:text-[48px] lg:text-[55px]"
+                                        ? "type-display-italic text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
+                                        : "text-[22px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {current}
@@ -240,8 +242,8 @@ export function TypedNarrative({
                             <p
                                 className={`type-body leading-[1.35] absolute inset-0 text-left ${
                                     useEmphasis
-                                        ? "type-display-italic text-[color:var(--color-amber)] text-[45px] sm:text-[65px] lg:text-[80px] leading-[1.1]"
-                                        : "text-[color:var(--color-bone)] text-[32px] sm:text-[48px] lg:text-[55px]"
+                                        ? "type-display-italic text-[color:var(--color-amber)] text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
+                                        : "text-[color:var(--color-bone)] text-[22px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {visible}
@@ -268,7 +270,7 @@ export function TypedNarrative({
             {/* Bottom dock: continue hint / CTA / quiz options.
              *  Always takes space (min-h) so nothing shifts above. */}
             <div
-                className="relative max-w-3xl w-full mx-auto pb-12 pt-6 min-h-[175px] flex flex-col justify-end"
+                className="relative max-w-3xl w-full mx-auto pb-8 sm:pb-12 pt-4 sm:pt-6 min-h-[120px] sm:min-h-[175px] flex flex-col justify-end"
                 onClick={(e) => e.stopPropagation()}
             >
                 {phase === "wait" && (

@@ -36,12 +36,12 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "phish-2",
         concept: "phishing",
         prompt:
-            "An urgent email from your CEO asks you to wire money to a new vendor. The sender address looks correct. What's the most effective way to verify it?",
+            "You get an urgent message that looks like it's from a close family member, asking you to send money right away because of an emergency. The name and sender details look correct. What's the best way to verify it?",
         options: [
-            { key: "a", label: "Call the CEO on a phone number you already have, not one from the email.", correct: true },
-            { key: "b", label: "Look for spelling and grammar mistakes in the email body.", correct: false },
-            { key: "c", label: "Check whether the email was sent from inside the company network.", correct: false },
-            { key: "d", label: "Reply to the email and ask if they really sent it.", correct: false },
+            { key: "a", label: "Call or message the person on a number you already have saved, not one from the message.", correct: true },
+            { key: "b", label: "Look for spelling and grammar mistakes in the message.", correct: false },
+            { key: "c", label: "Check whether the message came from their usual email or phone.", correct: false },
+            { key: "d", label: "Reply to the message and ask if they really sent it.", correct: false },
         ],
     },
 
@@ -62,12 +62,12 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "pw-2",
         concept: "password",
         prompt:
-            'Your colleague sets "March2026!" as their password and says it meets company policy. How would you assess it?',
+            'A friend sets "March2026!" as their password and says the website accepted it, so it must be safe. How would you assess it?',
         options: [
-            { key: "a", label: "It meets policy, so the system would block it if it were weak.", correct: false },
-            { key: "b", label: "The length and mixed characters make it reasonably secure.", correct: false },
+            { key: "a", label: "If the website accepts it, it must meet the strength requirements.", correct: false },
+            { key: "b", label: "The length and mix of letters, numbers, and a symbol make it reasonably secure.", correct: false },
             { key: "c", label: "Adding another symbol at the end would make it strong enough.", correct: false },
-            { key: "d", label: "It's a month-year pattern, and cracking tools try those combinations early.", correct: true },
+            { key: "d", label: "Month-and-year patterns are among the first combinations attackers try.", correct: true },
         ],
     },
 
@@ -88,12 +88,12 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "vish-2",
         concept: "vishing",
         prompt:
-            'A caller says they\'re from tech support and reads your IP address to prove they can "see your system." What does this demonstrate?',
+            'A caller says they\'re from Microsoft support and reads back details like your operating system and that "we\'ve detected errors on your computer." What does this actually demonstrate?',
         options: [
-            { key: "a", label: "They have remote access to your device and are likely genuine.", correct: false },
-            { key: "b", label: "Your public IP address is easy to look up, so it proves nothing about their identity.", correct: true },
-            { key: "c", label: "Your network has been compromised and they detected the issue.", correct: false },
-            { key: "d", label: "Only your internet provider could know your IP, so they're credible.", correct: false },
+            { key: "a", label: "They must have access to your device, so they're likely genuine.", correct: false },
+            { key: "b", label: "Details like your operating system can be guessed or gathered without seeing your computer, so this proves nothing.", correct: true },
+            { key: "c", label: "Your computer has been compromised and they detected the issue.", correct: false },
+            { key: "d", label: "Only Microsoft could detect errors from afar, so they're credible.", correct: false },
         ],
     },
 
@@ -102,24 +102,24 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "usb-1",
         concept: "usb",
         prompt:
-            'You plug a USB stick into your laptop but don\'t open any files. A colleague says "you\'re fine as long as you didn\'t run anything." Is that accurate?',
+            'You plug a USB stick into your laptop but don\'t open any files. A friend tells you "you\'re fine as long as you didn\'t open anything." Is that right?',
         options: [
-            { key: "a", label: "Yes, malware needs you to double-click a file before it can execute.", correct: false },
-            { key: "b", label: "Yes, the operating system scans USB devices on insert and blocks threats.", correct: false },
-            { key: "c", label: "Yes, as long as autorun is disabled in your settings, nothing can execute.", correct: false },
-            { key: "d", label: "No, some USB devices execute code the moment they're plugged in, before any file is opened.", correct: true },
+            { key: "a", label: "Yes, a harmful program needs you to double-click a file before it can do anything.", correct: false },
+            { key: "b", label: "Yes, the computer scans USB sticks the moment they're plugged in and blocks anything bad.", correct: false },
+            { key: "c", label: "Yes, as long as autorun is switched off in your settings, nothing can happen on its own.", correct: false },
+            { key: "d", label: "No, some USB devices can launch a hidden program the moment they're plugged in, before you open anything.", correct: true },
         ],
     },
     {
         id: "usb-2",
         concept: "usb",
         prompt:
-            'You find a USB stick labelled "Bonuses 2026" near the printer. A colleague suggests checking it on a spare laptop that\'s offline. Is this a safe approach?',
+            'You find a USB stick labelled "Holiday photos 2026" in a shared area. A friend suggests checking it on an old spare laptop that\'s not connected to the internet. Is this a safe approach?',
         options: [
-            { key: "a", label: "No, the payload runs locally regardless of network, and the label is likely bait.", correct: true },
-            { key: "b", label: "Yes, without a network connection any malware is contained to that machine.", correct: false },
-            { key: "c", label: "Yes, a spare laptop has nothing valuable on it, so there's no risk.", correct: false },
-            { key: "d", label: "Yes, as long as antivirus is up to date on the spare laptop.", correct: false },
+            { key: "a", label: "No, any hidden program on the stick would still run on that laptop whether it's online or not, and the label is likely bait.", correct: true },
+            { key: "b", label: "Yes, without an internet connection anything harmful is trapped on that one machine.", correct: false },
+            { key: "c", label: "Yes, a spare laptop has nothing valuable on it, so there's no real risk.", correct: false },
+            { key: "d", label: "Yes, as long as the antivirus on the spare laptop is up to date.", correct: false },
         ],
     },
 
@@ -140,12 +140,12 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "wifi-2",
         concept: "wifi",
         prompt:
-            "You need to send a confidential report from a café. You can use the café's password-protected Wi-Fi or tether to your phone's 5G. Which is more secure, and why?",
+            "You're in a café and want to log into your bank account. You can connect to the café's password-protected Wi-Fi, or use your phone's mobile data. Which is more secure, and why?",
         options: [
-            { key: "a", label: "The café Wi-Fi, because the password encrypts each user's connection separately.", correct: false },
-            { key: "b", label: "Either is fine, because HTTPS protects the file regardless of the network.", correct: false },
-            { key: "c", label: "The café Wi-Fi, because a known network is safer than a cellular connection.", correct: false },
-            { key: "d", label: "Your phone's 5G, because it's encrypted to your carrier and not shared with the café.", correct: true },
+            { key: "a", label: "The café Wi-Fi, because the password gives each person their own protected channel.", correct: false },
+            { key: "b", label: "Either is fine, because banking sites are encrypted no matter which network you use.", correct: false },
+            { key: "c", label: "The café Wi-Fi, because a familiar café is safer than a mobile connection.", correct: false },
+            { key: "d", label: "Your phone's mobile data, because the connection is between your phone and your mobile network, not shared with other people in the café.", correct: true },
         ],
     },
 
@@ -154,23 +154,23 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         id: "gen-1",
         concept: "general",
         prompt:
-            "You have two-factor authentication on your email. A phishing site captures your password and your 2FA code in real time. What happens?",
+            "You have the extra verification step turned on for your email (a code sent to your phone in addition to your password). A fake website captures both your password and the code in real time as you type them. What happens?",
         options: [
-            { key: "a", label: "The attacker can use the code before it expires and access your account.", correct: true },
-            { key: "b", label: "The attacker is blocked because 2FA codes can only be used from your own device.", correct: false },
-            { key: "c", label: "Your email provider detects the unusual login and blocks it automatically.", correct: false },
-            { key: "d", label: "The code is tied to your browser session, so it won't work for the attacker.", correct: false },
+            { key: "a", label: "The attacker can use the code before it expires and get into your account.", correct: true },
+            { key: "b", label: "The attacker is blocked because the code only works from your own device.", correct: false },
+            { key: "c", label: "Your email provider spots the unusual login and blocks it automatically.", correct: false },
+            { key: "d", label: "The code is tied to your browser, so it won't work for the attacker.", correct: false },
         ],
     },
     {
         id: "gen-2",
         concept: "general",
         prompt:
-            'A software update notification says "critical security patch." You\'re in the middle of a project. What\'s the practical risk of postponing it?',
+            'A software update pops up labelled "important security update." You\'re in the middle of something. What\'s the real risk of putting it off for a few days?',
         options: [
-            { key: "a", label: "Minimal, because security patches mostly address rare, theoretical vulnerabilities.", correct: false },
-            { key: "b", label: "The patch likely fixes a known flaw that attackers may already be exploiting.", correct: true },
-            { key: "c", label: "Low risk, because your antivirus covers the gap until you get around to updating.", correct: false },
+            { key: "a", label: "Minimal, because security updates mostly fix rare problems that never come up in real life.", correct: false },
+            { key: "b", label: "The update likely fixes a flaw that attackers are already using to get into devices.", correct: true },
+            { key: "c", label: "Low risk, because your antivirus covers the gap until you update.", correct: false },
             { key: "d", label: "No risk as long as you avoid suspicious websites until you update.", correct: false },
         ],
     },
