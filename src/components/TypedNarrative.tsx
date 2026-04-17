@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { getNarratorVolume } from "@/lib/audio-settings";
+import { createNarratorAudio } from "@/lib/audio-settings";
 
 /**
  * Centered-screen typed narrative. Used for outcome / debrief / quiz
@@ -53,13 +53,9 @@ export function TypedNarrative({
     useEffect(() => {
         const path = audioPathsRef.current?.[lineIndex];
         if (!path) return;
-        const audio = new Audio(path);
-        audio.volume = getNarratorVolume();
+        const { audio, release } = createNarratorAudio(path);
         audio.play().catch(() => {});
-        return () => {
-            audio.pause();
-            audio.currentTime = 0;
-        };
+        return release;
     }, [lineIndex]);
 
     // Typewriter drive: only active during "type". When the line

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { getNarratorVolume } from "@/lib/audio-settings";
+import { createNarratorAudio } from "@/lib/audio-settings";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
 import { EmailMockup } from "./EmailMockup";
 // StatusBar removed , "this is not a website, it's an experience."
@@ -279,21 +279,22 @@ function QuizOptions({
     // Holds the currently-playing feedback clip so retries can stop
     // the previous one before starting a new one, and unmount stops
     // anything still in flight.
-    const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+    const currentReleaseRef = useRef<(() => void) | null>(null);
 
     const handlePick = (i: number) => {
         setPickedIdx(i);
-        currentAudioRef.current?.pause();
-        const audio = new Audio(feedbackAudioPath(scenarioId, scene.id, i));
-        audio.volume = getNarratorVolume();
-        currentAudioRef.current = audio;
+        currentReleaseRef.current?.();
+        const { audio, release } = createNarratorAudio(
+            feedbackAudioPath(scenarioId, scene.id, i),
+        );
+        currentReleaseRef.current = release;
         audio.play().catch(() => {});
     };
 
     useEffect(() => {
         return () => {
-            currentAudioRef.current?.pause();
-            currentAudioRef.current = null;
+            currentReleaseRef.current?.();
+            currentReleaseRef.current = null;
         };
     }, []);
 

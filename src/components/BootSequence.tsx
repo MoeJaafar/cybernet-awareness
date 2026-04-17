@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { getNarratorVolume } from "@/lib/audio-settings";
+import { createNarratorAudio } from "@/lib/audio-settings";
 
 /**
  * Opening story beat. Types out one line of prose at a time, fades
@@ -40,13 +40,9 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     useEffect(() => {
         if (lineIndex >= SCRIPT.length) return;
         const n = String(lineIndex + 1).padStart(2, "0");
-        const audio = new Audio(`/audio/boot/${n}.mp3`);
-        audio.volume = getNarratorVolume();
+        const { audio, release } = createNarratorAudio(`/audio/boot/${n}.mp3`);
         audio.play().catch(() => {});
-        return () => {
-            audio.pause();
-            audio.currentTime = 0;
-        };
+        return release;
     }, [lineIndex]);
 
     useEffect(() => {

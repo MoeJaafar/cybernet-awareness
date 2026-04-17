@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { getNarratorVolume } from "@/lib/audio-settings";
+import { createNarratorAudio } from "@/lib/audio-settings";
 
 /**
  * Phone-call mock. The phone screen is just a visual , caller info,
@@ -53,9 +53,10 @@ export function PhoneCall({
     // click/keypress will kick it off.
     useEffect(() => {
         if (phase !== "ringing") return;
-        const audio = new Audio("/audio/iphone_ringtone_origin.mp3");
-        audio.loop = true;
-        audio.volume = getNarratorVolume() * 0.7;
+        const { audio, release } = createNarratorAudio(
+            "/audio/iphone_ringtone_origin.mp3",
+            { loop: true, multiplier: 0.7 },
+        );
 
         let retryBound = false;
         const retry = () => {
@@ -76,8 +77,7 @@ export function PhoneCall({
                 document.removeEventListener("click", retry);
                 document.removeEventListener("keydown", retry);
             }
-            audio.pause();
-            audio.currentTime = 0;
+            release();
         };
     }, [phase]);
 
@@ -94,15 +94,13 @@ export function PhoneCall({
             setAudioEnded(true);
             return;
         }
-        const audio = new Audio(line.audio);
-        audio.volume = getNarratorVolume();
+        const { audio, release } = createNarratorAudio(line.audio);
         const handleEnded = () => setAudioEnded(true);
         audio.addEventListener("ended", handleEnded);
         audio.play().catch(() => setAudioEnded(true));
         return () => {
             audio.removeEventListener("ended", handleEnded);
-            audio.pause();
-            audio.currentTime = 0;
+            release();
         };
     }, [phase, lineIndex, lines]);
 
