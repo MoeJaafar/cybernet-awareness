@@ -47,14 +47,35 @@ export function PhoneCall({
         return () => clearInterval(id);
     }, [phase]);
 
-    // Ringtone during the ringing phase — loops until the player accepts.
+    // Ringtone during the ringing phase — loops until the player
+    // accepts. If autoplay is blocked (browser may have demoted the
+    // earlier gesture after minutes of quiz-taking), any next
+    // click/keypress will kick it off.
     useEffect(() => {
         if (phase !== "ringing") return;
         const audio = new Audio("/audio/iphone_ringtone_origin.mp3");
         audio.loop = true;
         audio.volume = getNarratorVolume() * 0.7;
-        audio.play().catch(() => {});
+
+        let retryBound = false;
+        const retry = () => {
+            audio.play().catch(() => {});
+            document.removeEventListener("click", retry);
+            document.removeEventListener("keydown", retry);
+            retryBound = false;
+        };
+
+        audio.play().catch(() => {
+            document.addEventListener("click", retry);
+            document.addEventListener("keydown", retry);
+            retryBound = true;
+        });
+
         return () => {
+            if (retryBound) {
+                document.removeEventListener("click", retry);
+                document.removeEventListener("keydown", retry);
+            }
             audio.pause();
             audio.currentTime = 0;
         };
