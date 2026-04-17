@@ -56,7 +56,7 @@ export default function PosttestPage() {
                 </div>
 
                 <p className="type-body text-[color:var(--color-bone)] text-[22px] leading-relaxed">
-                    &ldquo;{q.statement}&rdquo;
+                    {q.statement}
                 </p>
 
                 <div className="flex gap-3">
@@ -90,7 +90,7 @@ export default function PosttestPage() {
                         <span className="type-mono text-[color:var(--color-bone-muted)]">
                             how confident are you?
                         </span>
-                        <div className="flex gap-2">
+                        <div className="flex gap-3">
                             {CONFIDENCE_LABELS.map((label, i) => {
                                 const val = i + 1;
                                 const selected = confidence === val;
@@ -105,14 +105,9 @@ export default function PosttestPage() {
                                         type="button"
                                         onClick={() => setConfidence(val)}
                                         disabled={confidence !== null}
-                                        className={`flex-1 flex flex-col items-center gap-2 border ${borderClass} py-3 px-1 transition-all disabled:cursor-default`}
+                                        className={`flex-1 border ${borderClass} py-4 type-display text-lg text-[color:var(--color-bone)] transition-all disabled:cursor-default`}
                                     >
-                                        <span className="type-display text-xl text-[color:var(--color-bone)]">
-                                            {val}
-                                        </span>
-                                        <span className="type-mono text-[color:var(--color-bone-muted)] text-center leading-tight" style={{ fontSize: "8px" }}>
-                                            {label}
-                                        </span>
+                                        {label}
                                     </button>
                                 );
                             })}

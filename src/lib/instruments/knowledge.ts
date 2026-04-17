@@ -175,13 +175,7 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
     },
 ];
 
-export const CONFIDENCE_LABELS = [
-    "Guessing",
-    "Not very sure",
-    "Somewhat sure",
-    "Fairly sure",
-    "Very sure",
-] as const;
+export const CONFIDENCE_LABELS = ["Not sure", "Sure"] as const;
 
 export function shuffleStatements(
     seed: "pre" | "post",
