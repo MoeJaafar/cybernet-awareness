@@ -47,11 +47,13 @@
     --edge-prominent:    #403a32;
 
     /* Fonts , plumbed by next/font in layout.tsx. */
-    --font-display: var(--font-instrument-serif), Georgia, serif;
-    --font-body:    var(--font-dm-sans), system-ui, sans-serif;
-    --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
+    --font-display:  var(--font-instrument-serif), Georgia, serif;
+    --font-body:     var(--font-dm-sans), system-ui, sans-serif;
+    --font-mono:     var(--font-jetbrains-mono), ui-monospace, monospace;
+    /* Bebas Neue , narrator voice on typed-narration surfaces. */
+    --font-narrator: var(--font-bebas-neue), "Bebas Neue", "Arial Narrow", Impact, sans-serif;
     /* Gmail mock font , Roboto is the free equivalent of Google Sans. */
-    --font-gmail:   var(--font-roboto), "Segoe UI", Arial, sans-serif;
+    --font-gmail:    var(--font-roboto), "Segoe UI", Arial, sans-serif;
 
     /* Gmail dark-mode palette (approximate). */
     --gmail-bg:           #202124;
@@ -281,6 +283,26 @@ body {
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--bone-muted);
+}
+
+/* Narrator voice: Bebas Neue. Used on the TypedNarrative typed lines
+ * and on the BootSequence intro. Condensed display face, reads as a
+ * cinematic narration caption rather than body copy. Slight letter
+ * spacing softens the tight default tracking. */
+.type-narrator {
+    font-family: var(--font-narrator);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+}
+
+/* Alias to match the class name the caller might paste from Google
+ * Fonts documentation. */
+.bebas-neue-regular {
+    font-family: var(--font-narrator);
+    font-weight: 400;
+    font-style: normal;
 }
 
 .type-mono-live {

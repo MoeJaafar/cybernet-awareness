@@ -229,10 +229,10 @@ export function TypedNarrative({
                              */}
                             <p
                                 aria-hidden
-                                className={`type-body leading-[1.35] invisible text-left ${
+                                className={`invisible text-left ${
                                     useEmphasis
                                         ? "type-display-italic text-[24px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
-                                        : "text-[19px] sm:text-[48px] lg:text-[55px]"
+                                        : "type-narrator text-[28px] sm:text-[60px] lg:text-[72px] leading-[1.05]"
                                 }`}
                             >
                                 {current}
@@ -241,10 +241,10 @@ export function TypedNarrative({
                              *  so characters grow left-to-right rather
                              *  than the middle sliding outward. */}
                             <p
-                                className={`type-body leading-[1.35] absolute inset-0 text-left ${
+                                className={`absolute inset-0 text-left ${
                                     useEmphasis
                                         ? "type-display-italic text-[color:var(--color-amber)] text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
-                                        : "text-[color:var(--color-bone)] text-[19px] sm:text-[48px] lg:text-[55px]"
+                                        : "type-narrator text-[color:var(--color-bone)] text-[28px] sm:text-[60px] lg:text-[72px] leading-[1.05]"
                                 }`}
                             >
                                 {visible}

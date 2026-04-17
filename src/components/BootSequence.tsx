@@ -114,20 +114,20 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
                             {/* Ghost paragraph reserves final wrapped height. */}
                             <p
                                 aria-hidden
-                                className={`type-body leading-[1.3] text-left invisible ${
+                                className={`text-left invisible ${
                                     current.emphasis
                                         ? "type-display-italic text-[34px] sm:text-[80px] lg:text-[100px] leading-[1.1]"
-                                        : "text-[28px] sm:text-[60px] lg:text-[75px]"
+                                        : "type-narrator text-[32px] sm:text-[72px] lg:text-[90px] leading-[1.05]"
                                 }`}
                             >
                                 {current.text}
                             </p>
                             {/* Typed overlay, writes left-to-right. */}
                             <p
-                                className={`type-body leading-[1.3] text-left absolute inset-0 ${
+                                className={`text-left absolute inset-0 ${
                                     current.emphasis
                                         ? "type-display-italic text-[color:var(--color-amber)] text-[50px] sm:text-[80px] lg:text-[100px] leading-[1.1]"
-                                        : "text-[color:var(--color-bone)] text-[28px] sm:text-[60px] lg:text-[75px]"
+                                        : "type-narrator text-[color:var(--color-bone)] text-[32px] sm:text-[72px] lg:text-[90px] leading-[1.05]"
                                 }`}
                             >
                                 {visible}

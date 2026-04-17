@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto, DM_Sans } from "next/font/google";
+import { Instrument_Serif, Newsreader, JetBrains_Mono, Roboto, DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 import { AudioSettingsProvider } from "@/lib/audio-settings";
 import { SessionProvider } from "@/lib/session";
@@ -60,6 +60,16 @@ const dmSans = DM_Sans({
     display: "swap",
 });
 
+// Bebas Neue for the narrator voice: cinematic condensed display face,
+// used exclusively on the typed-narration surfaces (outcome beats,
+// debrief lessons, boot intro).
+const bebasNeue = Bebas_Neue({
+    subsets: ["latin"],
+    weight: "400",
+    variable: "--font-bebas-neue",
+    display: "swap",
+});
+
 export const metadata: Metadata = {
     title: "CyberNet",
     description:
@@ -85,7 +95,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable} ${dmSans.variable}`}
+            className={`${instrumentSerif.variable} ${newsreader.variable} ${jetbrainsMono.variable} ${roboto.variable} ${dmSans.variable} ${bebasNeue.variable}`}
         >
             <body className="min-h-screen">
                 <SessionProvider>
