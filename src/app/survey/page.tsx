@@ -61,7 +61,11 @@ export default function SurveyPage() {
                     &ldquo;{q.statement}&rdquo;
                 </p>
 
-                <div className="flex gap-2">
+                <div
+                    role="radiogroup"
+                    aria-label="Agreement scale"
+                    className="flex gap-2"
+                >
                     {LIKERT_LABELS.map((label, i) => {
                         const value = i + 1;
                         const isSelected = selected === value;
@@ -72,6 +76,9 @@ export default function SurveyPage() {
                             <button
                                 key={value}
                                 type="button"
+                                role="radio"
+                                aria-checked={isSelected}
+                                aria-label={label}
                                 onClick={() => setSelected(value)}
                                 className={`flex-1 flex flex-col items-center gap-2 border ${baseClass} py-4 px-2 transition-all`}
                             >

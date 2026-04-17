@@ -65,16 +65,18 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
 
                     {/* Settings screen, fixed height so phone doesn't resize between choices. */}
                     <div className="px-0 pt-3 pb-4 flex flex-col h-[525px] bg-[#0a0a0b]">
-                        {/* Header with "< Settings" back arrow + centered "Wi-Fi" title. */}
-                        <div className="px-4 pb-3 flex items-center">
-                            <span className="text-[#0a84ff] text-[16px] flex items-center gap-0.5" style={{ fontFamily: "var(--font-gmail)" }}>
+                        {/* Header with "< Settings" back arrow + centered "Wi-Fi" title.
+                         *  Uses absolute centering on the title so the header
+                         *  stays symmetrical regardless of "Settings" width. */}
+                        <div className="relative px-4 pb-3 flex items-center">
+                            <span className="text-[#0a84ff] text-[16px] flex items-center gap-0.5 relative z-10" style={{ fontFamily: "var(--font-gmail)" }}>
                                 <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
                                     <path d="M8 2 3 7l5 5" stroke="#0a84ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                                 Settings
                             </span>
                             <span
-                                className="flex-1 text-center text-white text-[19px] font-semibold -ml-[90px]"
+                                className="absolute inset-x-0 text-center text-white text-[19px] font-semibold pointer-events-none"
                                 style={{ fontFamily: "var(--font-gmail)" }}
                             >
                                 Wi-Fi

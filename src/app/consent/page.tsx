@@ -50,21 +50,36 @@ export default function ConsentPage() {
                 <div className="type-body text-[color:var(--color-bone-dim)] text-[18px] leading-relaxed flex flex-col gap-4">
                     <p>
                         You are about to play a short cybersecurity awareness
-                        game as part of a bachelor&rsquo;s thesis research
-                        study. The session takes approximately 20 minutes.
+                        game as part of a bachelor&rsquo;s thesis study. The
+                        session takes approximately 20 minutes.
                     </p>
                     <p>
                         You will answer a brief knowledge quiz, play through
                         five interactive scenarios, answer the same quiz again,
-                        and complete a short feedback survey. Your responses are
-                        recorded anonymously: no names, emails, or identifying
-                        information are collected.
+                        and complete a short feedback survey. No directly
+                        identifying information (name, email, IP address) is
+                        collected. Each session is linked only by a random
+                        identifier so pre- and post-test answers can be paired
+                        for analysis.
                     </p>
                     <p>
                         Participation is voluntary. You may stop at any time by
-                        closing the browser tab. Your data will only be used for
-                        academic analysis in the thesis and will not be shared
-                        with third parties.
+                        closing the browser tab; partial data collected up to
+                        that point may be retained for analysis. Because
+                        sessions are anonymous, data cannot be retrieved or
+                        deleted after submission. Data will be stored for up to
+                        two years after thesis submission, used for academic
+                        analysis only, and not shared with third parties.
+                    </p>
+                    <p>
+                        Questions about the study can be sent to&nbsp;
+                        <a
+                            href="mailto:atheriononline@gmail.com"
+                            className="text-[color:var(--color-amber)] underline underline-offset-2 hover:brightness-110"
+                        >
+                            atheriononline@gmail.com
+                        </a>
+                        .
                     </p>
                 </div>
 

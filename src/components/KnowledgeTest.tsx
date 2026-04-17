@@ -150,7 +150,11 @@ export function KnowledgeTest({
                     </p>
 
                     {/* 4 options */}
-                    <div className="flex flex-col gap-2">
+                    <div
+                        role="radiogroup"
+                        aria-label="Answer options"
+                        className="flex flex-col gap-2"
+                    >
                         {q.options.map((opt) => {
                             const selected = current?.key === opt.key;
                             const borderClass = selected
@@ -160,6 +164,8 @@ export function KnowledgeTest({
                                 <button
                                     key={opt.key}
                                     type="button"
+                                    role="radio"
+                                    aria-checked={selected}
                                     onClick={() => pickOption(opt.key)}
                                     className={`group text-left border ${borderClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-3 py-3 sm:px-5 sm:py-4 transition-all`}
                                 >
@@ -182,10 +188,14 @@ export function KnowledgeTest({
 
                     {/* Optional confidence */}
                     <div className={`flex flex-col gap-2 sm:gap-3 transition-opacity ${hasAnswer ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                        <span className="type-mono text-[color:var(--color-bone-muted)]">
+                        <span id="confidence-label" className="type-mono text-[color:var(--color-bone-muted)]">
                             how confident? (optional)
                         </span>
-                        <div className="flex gap-2 sm:gap-3">
+                        <div
+                            role="radiogroup"
+                            aria-labelledby="confidence-label"
+                            className="flex gap-2 sm:gap-3"
+                        >
                             {CONFIDENCE_LABELS.map((label, i) => {
                                 const val = i + 1;
                                 const selected = current?.confidence === val;
@@ -196,6 +206,8 @@ export function KnowledgeTest({
                                     <button
                                         key={val}
                                         type="button"
+                                        role="radio"
+                                        aria-checked={selected}
                                         onClick={() => pickConfidence(val)}
                                         className={`flex-1 border ${borderClass} py-2.5 sm:py-3 type-ui text-sm sm:text-base font-medium text-[color:var(--color-bone)] transition-all`}
                                     >
@@ -209,7 +221,10 @@ export function KnowledgeTest({
 
                 {/* Nav + submit, inline on the page, scrolls with it */}
                 <div className="flex flex-col gap-3 pt-2">
-                    <div className="flex flex-wrap gap-1.5">
+                    <nav
+                        aria-label="Question navigation"
+                        className="flex flex-wrap gap-1.5"
+                    >
                         {questions.map((_, i) => {
                             const done = answers[i]?.key !== undefined;
                             const active = i === idx;
@@ -226,6 +241,8 @@ export function KnowledgeTest({
                                     key={i}
                                     type="button"
                                     onClick={() => jumpTo(i)}
+                                    aria-label={`Question ${i + 1}${done ? ", answered" : ", unanswered"}`}
+                                    aria-current={active ? "true" : undefined}
                                     className={`w-7 h-7 sm:w-9 sm:h-9 border ${border} ${bg} type-mono text-[10px] sm:text-[11px] tabular-nums transition-colors hover:border-[color:var(--color-amber)] ${
                                         active
                                             ? "text-[color:var(--color-amber)]"
@@ -238,7 +255,7 @@ export function KnowledgeTest({
                                 </button>
                             );
                         })}
-                    </div>
+                    </nav>
 
                     {!allAnswered && (
                         <p className="type-mono text-[color:var(--color-bone-muted)]">

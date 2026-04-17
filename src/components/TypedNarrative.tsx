@@ -156,6 +156,16 @@ export function TypedNarrative({
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
+            onKeyDown={
+                phase === "done"
+                    ? undefined
+                    : (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              advance();
+                          }
+                      }
+            }
             role={phase === "done" ? undefined : "button"}
             tabIndex={phase === "done" ? undefined : 0}
             aria-label={

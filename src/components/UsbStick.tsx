@@ -49,7 +49,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                     initial={{ opacity: 0, y: 6, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative"
+                    className="relative origin-center scale-[0.85] sm:scale-100"
                 >
                     {/* USB body, side view. */}
                     <div className="flex items-center drop-shadow-[0_10px_24px_rgba(0,0,0,0.55)]">

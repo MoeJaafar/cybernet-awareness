@@ -78,9 +78,9 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
         prompt:
             "Your phone rings. The caller knows your full name, address, and the last four digits of your account. They ask you to verify your password for security. What's the best response?",
         options: [
-            { key: "a", label: "Hang up and call the organisation back on a number from their official website.", correct: true },
-            { key: "b", label: "They know enough details that they're most likely legitimate.", correct: false },
-            { key: "c", label: "Ask them for their employee ID and continue if they provide one.", correct: false },
+            { key: "a", label: "They know enough details that they're most likely legitimate.", correct: false },
+            { key: "b", label: "Ask them for their employee ID and continue if they provide one.", correct: false },
+            { key: "c", label: "Hang up and call the organisation back on a number from their official website.", correct: true },
             { key: "d", label: "Give only part of your password as a compromise.", correct: false },
         ],
     },
@@ -181,8 +181,8 @@ export const KNOWLEDGE_QUESTIONS: KnowledgeQuestion[] = [
             'You keep getting spam from the same sender. You reply "STOP" without clicking any links. What\'s the likely result?',
         options: [
             { key: "a", label: "The sender removes you from their list within a few days.", correct: false },
-            { key: "b", label: "You've confirmed your address is active, which may increase the spam you receive.", correct: true },
-            { key: "c", label: "Nothing changes, because the reply goes to an unmonitored inbox.", correct: false },
+            { key: "b", label: "Nothing changes, because the reply goes to an unmonitored inbox.", correct: false },
+            { key: "c", label: "You've confirmed your address is active, which may increase the spam you receive.", correct: true },
             { key: "d", label: "Your email provider flags the thread and blocks future messages from that sender.", correct: false },
         ],
     },
