@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 /**
@@ -17,12 +17,16 @@ export type NarrativeTone = "default" | "breach" | "contained" | "takeaway";
 
 export function TypedNarrative({
     lines,
+    audioPaths,
     tone = "default",
     speaker,
     children,
     finalEmphasis = false,
 }: {
     lines: string[];
+    /** One audio URL per beat, aligned to `lines`. Missing entries
+     *  render silently. Plays when the beat starts typing. */
+    audioPaths?: (string | undefined)[];
     tone?: NarrativeTone;
     speaker?: string;
     /** Revealed after the last line is typed. */
@@ -39,6 +43,22 @@ export function TypedNarrative({
      *   done : every line is shown, CTA children revealed
      */
     const [phase, setPhase] = useState<"type" | "wait" | "done">("type");
+
+    // Audio playback — fires when lineIndex changes. Held in a ref so
+    // a new audioPaths reference (from parent render) doesn't restart
+    // playback; only actual beat changes do.
+    const audioPathsRef = useRef(audioPaths);
+    audioPathsRef.current = audioPaths;
+    useEffect(() => {
+        const path = audioPathsRef.current?.[lineIndex];
+        if (!path) return;
+        const audio = new Audio(path);
+        audio.play().catch(() => {});
+        return () => {
+            audio.pause();
+            audio.currentTime = 0;
+        };
+    }, [lineIndex]);
 
     // Typewriter drive: only active during "type". When the line
     // finishes, move to "wait" (player click advances) instead of

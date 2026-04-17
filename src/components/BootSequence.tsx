@@ -35,6 +35,19 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     const [charIndex, setCharIndex] = useState(0);
     const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
 
+    // Audio — one mp3 per line. First-line autoplay may be blocked on
+    // a cold visit (no prior user gesture); we swallow the rejection.
+    useEffect(() => {
+        if (lineIndex >= SCRIPT.length) return;
+        const n = String(lineIndex + 1).padStart(2, "0");
+        const audio = new Audio(`/audio/boot/${n}.mp3`);
+        audio.play().catch(() => {});
+        return () => {
+            audio.pause();
+            audio.currentTime = 0;
+        };
+    }, [lineIndex]);
+
     useEffect(() => {
         if (phase === "done") {
             const t = window.setTimeout(onDone, 400);

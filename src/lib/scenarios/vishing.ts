@@ -112,16 +112,19 @@ export const vishingCallConfig = {
             text: "Hello, this is David from Microsoft Support. We're calling because our system has detected suspicious activity on your Microsoft account.",
             speed: 32,
             hold: 900,
+            audio: "/audio/vishing-helpdesk/caller-01.mp3",
         },
         {
             text: "Someone may have accessed your account from an unrecognised device. We need to verify your identity to secure it before any data is compromised.",
             speed: 30,
             hold: 900,
+            audio: "/audio/vishing-helpdesk/caller-02.mp3",
         },
         {
             text: "Could you please confirm the email address and password associated with your Microsoft account so we can run a security check?",
             speed: 32,
             hold: 600,
+            audio: "/audio/vishing-helpdesk/caller-03.mp3",
         },
     ],
     choices: [

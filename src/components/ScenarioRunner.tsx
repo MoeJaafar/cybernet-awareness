@@ -11,6 +11,7 @@ import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
 import { Workspace } from "./Workspace";
 import { TypedNarrative, splitBeats } from "./TypedNarrative";
+import { buildBeatAudioPaths, feedbackAudioPath } from "@/lib/audio-paths";
 import { PasswordForm } from "./PasswordForm";
 import { PasswordBuilder, evaluatePassword } from "./PasswordBuilder";
 import { PhoneCall } from "./PhoneCall";
@@ -116,7 +117,12 @@ export function ScenarioRunner({
                     {usesWorkspace ? (
                         <WorkspaceScene scene={scene} onAdvance={goTo} />
                     ) : usesNarrative ? (
-                        <NarrativeScene scene={scene} onAdvance={goTo} nextScenarioId={nextScenarioId} />
+                        <NarrativeScene
+                            scenarioId={scenario.id}
+                            scene={scene}
+                            onAdvance={goTo}
+                            nextScenarioId={nextScenarioId}
+                        />
                     ) : (
                         <Stage
                             sceneKey={scene.id}
@@ -138,14 +144,18 @@ export function ScenarioRunner({
  * quiz / portrait-less stimulus+decision scenes.
  */
 function NarrativeScene({
+    scenarioId,
     scene,
     onAdvance,
     nextScenarioId,
 }: {
+    scenarioId: string;
     scene: Scene;
     onAdvance: (next: SceneId) => void;
     nextScenarioId?: string;
 }) {
+    const audioPaths = buildBeatAudioPaths(scenarioId, scene);
+
     switch (scene.type) {
         case "stimulus":
             return (
@@ -186,6 +196,7 @@ function NarrativeScene({
                     tone={tone}
                     speaker={scene.speaker ?? (scene.attackerWon ? "breach" : "contained")}
                     lines={splitBeats(scene.narration)}
+                    audioPaths={audioPaths}
                 >
                     <PrimaryButton
                         label="View the takeaway"
@@ -203,6 +214,7 @@ function NarrativeScene({
                     tone="takeaway"
                     speaker={scene.speaker ?? "the takeaway"}
                     lines={[scene.takeaway, ...lessonBeats]}
+                    audioPaths={audioPaths}
                     finalEmphasis={false}
                 >
                     {scene.nextId ? (
@@ -228,8 +240,13 @@ function NarrativeScene({
                 <TypedNarrative
                     speaker={scene.speaker ?? "one last check"}
                     lines={[scene.prompt]}
+                    audioPaths={audioPaths}
                 >
-                    <QuizOptions scene={scene} nextScenarioId={nextScenarioId} />
+                    <QuizOptions
+                        scenarioId={scenarioId}
+                        scene={scene}
+                        nextScenarioId={nextScenarioId}
+                    />
                 </TypedNarrative>
             );
     }
@@ -241,14 +258,22 @@ function NarrativeScene({
  * on wrong answers; on correct, shows continue.
  */
 function QuizOptions({
+    scenarioId,
     scene,
     nextScenarioId,
 }: {
+    scenarioId: string;
     scene: import("@/lib/types").QuizScene;
     nextScenarioId?: string;
 }) {
     const [pickedIdx, setPickedIdx] = useState<number | null>(null);
     const picked = pickedIdx === null ? null : scene.options[pickedIdx];
+
+    const handlePick = (i: number) => {
+        setPickedIdx(i);
+        const audio = new Audio(feedbackAudioPath(scenarioId, scene.id, i));
+        audio.play().catch(() => {});
+    };
 
     return (
         <div className="w-full max-w-2xl flex flex-col gap-3">
@@ -264,7 +289,7 @@ function QuizOptions({
                         <button
                             key={opt.label}
                             type="button"
-                            onClick={() => setPickedIdx(i)}
+                            onClick={() => handlePick(i)}
                             disabled={picked?.correct}
                             className={`group text-left border ${colourClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
                         >
