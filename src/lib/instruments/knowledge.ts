@@ -1,7 +1,11 @@
 /**
  * Pre/post-test — 15 True/False statements with optional confidence.
- * 10 concept-aligned (2 per game scenario) + 5 general awareness
- * (untaught controls for contrast analysis).
+ * 10 concept-aligned + 5 general controls.
+ *
+ * No absolute qualifiers ("always," "never," "completely,"
+ * "guarantees") — those telegraph the answer. Uses soft qualifiers
+ * ("reliable," "reasonable," "meaningful") and action-based
+ * scenarios that sound plausible either way.
  */
 
 export interface KnowledgeStatement {
@@ -17,15 +21,15 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "phish-1",
         concept: "phishing",
         statement:
-            "A padlock icon in the browser address bar guarantees the website is legitimate.",
+            "Checking for a padlock icon in the address bar is a reliable way to tell if a website is legitimate.",
         answer: false,
     },
     {
         id: "phish-2",
         concept: "phishing",
         statement:
-            "Phishing emails can come from addresses that look nearly identical to a real company's domain.",
-        answer: true,
+            "An email that contains your full name and company details is unlikely to be a phishing attempt.",
+        answer: false,
     },
 
     // ── Password (2) ──────────────────────────────────────────
@@ -33,14 +37,14 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "pw-1",
         concept: "password",
         statement:
-            "A long passphrase of random common words is harder to crack than a short password with special characters.",
+            "Four random common words typed together make a stronger password than a shorter mix of symbols and numbers.",
         answer: true,
     },
     {
         id: "pw-2",
         concept: "password",
         statement:
-            "A password that meets your company's complexity policy is always secure enough.",
+            "A password that meets your company's complexity requirements is strong enough to resist a targeted attack.",
         answer: false,
     },
 
@@ -49,14 +53,14 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "vish-1",
         concept: "vishing",
         statement:
-            "If a caller already knows your personal details, they are most likely who they claim to be.",
+            "If a caller can confirm your account number and address, it's reasonable to trust their identity.",
         answer: false,
     },
     {
         id: "vish-2",
         concept: "vishing",
         statement:
-            "Legitimate organisations may call you, but will never ask for your password over the phone.",
+            "A real bank may ask you to confirm your name or date of birth over the phone, but should not ask for your password.",
         answer: true,
     },
 
@@ -65,14 +69,14 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "usb-1",
         concept: "usb",
         statement:
-            "A USB device can compromise your computer without you opening any files on it.",
+            "A USB device can run code on your computer the moment it's plugged in, without you opening any files.",
         answer: true,
     },
     {
         id: "usb-2",
         concept: "usb",
         statement:
-            "Plugging an unknown USB into a computer that isn't connected to the internet is a safe way to check its contents.",
+            "Checking an unknown USB on a spare computer that isn't on the network is a reasonable precaution.",
         answer: false,
     },
 
@@ -81,14 +85,14 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "wifi-1",
         concept: "wifi",
         statement:
-            "Using incognito mode on public Wi-Fi prevents other people on the network from seeing your traffic.",
+            "Switching to incognito mode before using public Wi-Fi adds meaningful protection to your browsing.",
         answer: false,
     },
     {
         id: "wifi-2",
         concept: "wifi",
         statement:
-            "On public Wi-Fi, a VPN hides your traffic from other users on the same network.",
+            "Connecting your laptop to your phone's mobile data instead of café Wi-Fi keeps your traffic off the local network.",
         answer: true,
     },
 
@@ -97,36 +101,36 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "gen-1",
         concept: "general",
         statement:
-            "Two-factor authentication makes your account completely immune to being compromised.",
+            "Two-factor authentication stops an attacker from accessing your account even if they have your password.",
         answer: false,
     },
     {
         id: "gen-2",
         concept: "general",
         statement:
-            "Software updates often patch security vulnerabilities that attackers are already exploiting.",
+            "Installing software updates promptly is one of the most effective security practices available.",
         answer: true,
     },
     {
         id: "gen-3",
         concept: "general",
         statement:
-            'Replying "unsubscribe" to a suspicious email is a safe way to stop receiving it.',
+            "Replying to a spam email to ask them to stop is harmless as long as you don't click any links.",
         answer: false,
     },
     {
         id: "gen-4",
         concept: "general",
         statement:
-            "Opening a malicious email attachment can give an attacker full access to your computer.",
-        answer: true,
+            "If your antivirus doesn't flag a downloaded file, it's safe to open.",
+        answer: false,
     },
     {
         id: "gen-5",
         concept: "general",
         statement:
-            "Antivirus software catches all types of malware before they can cause damage.",
-        answer: false,
+            "Information you post publicly on social media can be used to make phishing attacks against you more convincing.",
+        answer: true,
     },
 ];
 

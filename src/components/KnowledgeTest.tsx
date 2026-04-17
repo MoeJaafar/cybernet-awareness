@@ -126,7 +126,7 @@ export function KnowledgeTest({
                                         key={String(val)}
                                         type="button"
                                         onClick={() => setAnswer(val)}
-                                        className={`flex-1 border ${borderClass} py-4 type-display text-xl text-[color:var(--color-bone)] transition-all`}
+                                        className={`flex-1 border ${borderClass} py-4 type-body text-xl font-medium text-[color:var(--color-bone)] transition-all`}
                                     >
                                         {val ? "True" : "False"}
                                     </button>
@@ -151,7 +151,7 @@ export function KnowledgeTest({
                                             key={val}
                                             type="button"
                                             onClick={() => setConfidence(val)}
-                                            className={`flex-1 border ${borderClass} py-4 type-display text-lg text-[color:var(--color-bone)] transition-all`}
+                                            className={`flex-1 border ${borderClass} py-4 type-body text-lg font-medium text-[color:var(--color-bone)] transition-all`}
                                         >
                                             {label}
                                         </button>
