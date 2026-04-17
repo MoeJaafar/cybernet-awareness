@@ -48,7 +48,7 @@
 
     /* Fonts , plumbed by next/font in layout.tsx. */
     --font-display: var(--font-instrument-serif), Georgia, serif;
-    --font-body:    var(--font-newsreader), Georgia, serif;
+    --font-body:    var(--font-dm-sans), system-ui, sans-serif;
     --font-mono:    var(--font-jetbrains-mono), ui-monospace, monospace;
     /* Gmail mock font , Roboto is the free equivalent of Google Sans. */
     --font-gmail:   var(--font-roboto), "Segoe UI", Arial, sans-serif;
