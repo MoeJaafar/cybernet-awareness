@@ -64,14 +64,16 @@ export const phishing: Scenario = {
             },
             choices: [
                 {
-                    label: "Report spam",
-                    nextId: "outcome-reported",
-                    location: "toolbar-report",
+                    label: "Click the link in the email and verify your account.",
+                    nextId: "outcome-clicked",
                 },
                 {
-                    label: "Delete",
+                    label: "Report the email to IT as a phishing attempt.",
+                    nextId: "outcome-reported",
+                },
+                {
+                    label: "Delete the email and move on.",
                     nextId: "outcome-deleted",
-                    location: "toolbar-delete",
                 },
             ],
         },
