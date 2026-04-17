@@ -2,80 +2,97 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { useSession } from "@/lib/session";
 import { startBgMusic } from "@/components/BgMusic";
 import { getMusicVolume } from "@/lib/audio-settings";
 
 /**
- * Landing page = informed consent. Every participant starts here.
- * Agreeing creates a Supabase session and advances to the pre-test.
+ * Entrance — CyberNet splash. First thing every visitor sees.
+ * Tap to begin starts background music and routes to consent.
  */
 export default function Home() {
     const router = useRouter();
-    const { startSession, logEvent } = useSession();
 
-    const handleAgree = async () => {
+    const handleTap = () => {
         startBgMusic("/audio/bg-music.mp3", getMusicVolume());
-        await startSession();
-        logEvent("consent");
-        router.push("/pretest");
+        router.push("/consent");
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-2xl w-full flex flex-col gap-8"
-            >
-                <div className="flex items-center gap-3">
-                    <span className="h-px w-10 bg-[color:var(--color-amber)]" />
-                    <span className="type-mono text-[color:var(--color-amber)]">
-                        informed consent
-                    </span>
-                </div>
+        <button
+            type="button"
+            onClick={handleTap}
+            className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"
+            aria-label="Begin"
+        >
+            <div className="max-w-2xl w-full flex flex-col items-center gap-8">
+                <motion.div
+                    className="flex items-center gap-3 type-mono text-[color:var(--color-bone-muted)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.9 }}
+                >
+                    <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                    <span>a cybersecurity awareness game</span>
+                    <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
+                </motion.div>
 
-                <h1 className="type-display text-[color:var(--color-bone)] text-[36px] sm:text-[48px] leading-tight">
-                    Before we begin
-                </h1>
+                <motion.h1
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+                    className="type-display logo-cycle text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight"
+                >
+                    CyberNet
+                </motion.h1>
 
-                <div className="type-body text-[color:var(--color-bone-dim)] text-[18px] leading-relaxed flex flex-col gap-4">
-                    <p>
-                        You are about to play a short cybersecurity awareness
-                        game as part of a bachelor&rsquo;s thesis research
-                        study. The session takes approximately 20 minutes.
-                    </p>
-                    <p>
-                        You will answer a brief knowledge quiz, play through
-                        five interactive scenarios, answer the same quiz again,
-                        and complete a short feedback survey. Your responses are
-                        recorded anonymously — no names, emails, or identifying
-                        information are collected.
-                    </p>
-                    <p>
-                        Participation is voluntary. You may stop at any time by
-                        closing the browser tab. Your data will only be used for
-                        academic analysis in the thesis and will not be shared
-                        with third parties.
-                    </p>
-                </div>
+                <motion.span
+                    aria-hidden
+                    className="block h-px w-24 bg-[color:var(--color-amber)]/60"
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={{ opacity: 1, scaleX: 1 }}
+                    transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+                />
 
-                <div className="border-t border-[color:var(--color-edge-subtle)] pt-6 flex flex-col gap-4">
-                    <p className="type-body text-[color:var(--color-bone)] text-[18px]">
-                        By clicking below, you confirm that you have read the
-                        above and agree to participate.
-                    </p>
-                    <button
-                        type="button"
-                        onClick={handleAgree}
-                        className="self-start inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                <motion.p
+                    className="type-body text-[color:var(--color-bone-dim)] text-[20px] sm:text-[24px] leading-relaxed max-w-xl"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.9 }}
+                >
+                    Five short scenarios. A phishing email, a suspicious call,
+                    a USB on the floor. You make the choices — each outcome
+                    shows you what an attacker would have done with the one you
+                    picked.
+                </motion.p>
+
+                <motion.div
+                    className="flex items-center gap-4 type-mono text-[color:var(--color-bone-muted)] pt-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.9, delay: 1.2 }}
+                >
+                    <span>5 scenarios</span>
+                    <span aria-hidden>·</span>
+                    <span>~20 minutes</span>
+                    <span aria-hidden>·</span>
+                    <span>audio on</span>
+                </motion.div>
+
+                <motion.div
+                    className="flex items-center gap-3 pt-10 group-hover:text-[color:var(--color-amber)] transition-colors"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.9, delay: 1.6 }}
+                >
+                    <span
+                        className="type-mono"
+                        style={{ animation: "pulse-dot 2.2s ease-in-out infinite" }}
                     >
-                        I agree — begin
-                        <span aria-hidden className="text-xl">→</span>
-                    </button>
-                </div>
-            </motion.div>
-        </div>
+                        tap to begin
+                    </span>
+                    <span aria-hidden className="type-mono">↵</span>
+                </motion.div>
+            </div>
+        </button>
     );
 }

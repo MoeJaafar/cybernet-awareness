@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { startBgMusic } from "./BgMusic";
-import { getNarratorVolume, getMusicVolume } from "@/lib/audio-settings";
+import { getNarratorVolume } from "@/lib/audio-settings";
 
 /**
  * Opening story beat. Types out one line of prose at a time, fades
@@ -32,7 +31,6 @@ const SCRIPT: StoryLine[] = [
 ];
 
 export function BootSequence({ onDone }: { onDone: () => void }) {
-    const [armed, setArmed] = useState(false);
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     const [phase, setPhase] = useState<"type" | "hold" | "done">("type");
@@ -40,7 +38,6 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     // Audio — one mp3 per line. Only plays once the user has armed
     // the intro with a click (required for browser autoplay policies).
     useEffect(() => {
-        if (!armed) return;
         if (lineIndex >= SCRIPT.length) return;
         const n = String(lineIndex + 1).padStart(2, "0");
         const audio = new Audio(`/audio/boot/${n}.mp3`);
@@ -50,10 +47,9 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             audio.pause();
             audio.currentTime = 0;
         };
-    }, [armed, lineIndex]);
+    }, [lineIndex]);
 
     useEffect(() => {
-        if (!armed) return;
         if (phase === "done") {
             const t = window.setTimeout(onDone, 400);
             return () => window.clearTimeout(t);
@@ -88,101 +84,11 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
             }, line.hold ?? 900);
             return () => window.clearTimeout(t);
         }
-    }, [armed, lineIndex, charIndex, phase, onDone]);
+    }, [lineIndex, charIndex, phase, onDone]);
 
     const current = SCRIPT[lineIndex];
     const visible = current?.text.slice(0, charIndex) ?? "";
     const isTyping = phase === "type" && charIndex < (current?.text.length ?? 0);
-
-    // Tap-to-begin overlay — the one and only user gesture we need.
-    if (!armed) {
-        return (
-            <button
-                type="button"
-                onClick={() => {
-                    startBgMusic("/audio/bg-music.mp3", getMusicVolume());
-                    setArmed(true);
-                }}
-                className="min-h-screen w-full flex flex-col items-center justify-center px-6 relative cursor-pointer group text-center"
-                aria-label="Begin"
-            >
-                <div className="max-w-2xl w-full flex flex-col items-center gap-8">
-                    {/* Small above-title marker line. */}
-                    <motion.div
-                        className="flex items-center gap-3 type-mono text-[color:var(--color-bone-muted)]"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.9 }}
-                    >
-                        <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
-                        <span>a cybersecurity awareness game</span>
-                        <span className="h-px w-10 bg-[color:var(--color-bone-ghost)]"></span>
-                    </motion.div>
-
-                    {/* Title — large, serif, tight. Amber on hover. */}
-                    <motion.h1
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-                        className="type-display logo-cycle text-[72px] sm:text-[110px] lg:text-[140px] leading-[0.9] tracking-tight"
-                    >
-                        CyberNet
-                    </motion.h1>
-
-                    {/* Thin amber accent line. */}
-                    <motion.span
-                        aria-hidden
-                        className="block h-px w-24 bg-[color:var(--color-amber)]/60"
-                        initial={{ opacity: 0, scaleX: 0 }}
-                        animate={{ opacity: 1, scaleX: 1 }}
-                        transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
-                    />
-
-                    {/* Description. Serif body, restrained width. */}
-                    <motion.p
-                        className="type-body text-[color:var(--color-bone-dim)] text-[20px] sm:text-[24px] leading-relaxed max-w-xl"
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1, delay: 0.9 }}
-                    >
-                        Five short scenarios. A phishing email, a suspicious call, a USB on the floor. You make the choices — each outcome shows you what an attacker would have done with the one you picked.
-                    </motion.p>
-
-                    {/* Meta strip — duration + style. */}
-                    <motion.div
-                        className="flex items-center gap-4 type-mono text-[color:var(--color-bone-muted)] pt-2"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.9, delay: 1.2 }}
-                    >
-                        <span>5 scenarios</span>
-                        <span aria-hidden>·</span>
-                        <span>~20 minutes</span>
-                        <span aria-hidden>·</span>
-                        <span>audio on</span>
-                    </motion.div>
-
-                    {/* Tap CTA. */}
-                    <motion.div
-                        className="flex items-center gap-3 pt-10 group-hover:text-[color:var(--color-amber)] transition-colors"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.9, delay: 1.6 }}
-                    >
-                        <span
-                            className="type-mono"
-                            style={{ animation: "pulse-dot 2.2s ease-in-out infinite" }}
-                        >
-                            tap to begin
-                        </span>
-                        <span aria-hidden className="type-mono">
-                            ↵
-                        </span>
-                    </motion.div>
-                </div>
-            </button>
-        );
-    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
