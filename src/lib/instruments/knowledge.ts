@@ -1,17 +1,7 @@
 /**
- * Pre/post-test — 20 True/False statements with a confidence rating.
- *
- * Format per item:
- *   1. Read the statement
- *   2. Pick True or False
- *   3. Rate confidence 1–5 (Guessing → Very sure)
- *
- * Composite score = accuracy × confidence. Captures calibration:
- * overconfident-wrong = low awareness, uncertain-correct = partial.
- *
- * Mix: ~10 directly on the 5 game topics + ~10 on broader
- * cybersecurity awareness. Roughly half TRUE, half FALSE to prevent
- * response-set bias.
+ * Pre/post-test — 15 True/False statements with optional confidence.
+ * 10 concept-aligned (2 per game scenario) + 5 general awareness
+ * (untaught controls for contrast analysis).
  */
 
 export interface KnowledgeStatement {
@@ -22,7 +12,7 @@ export interface KnowledgeStatement {
 }
 
 export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
-    // ── Phishing ──────────────────────────────────────────────
+    // ── Phishing (2) ──────────────────────────────────────────
     {
         id: "phish-1",
         concept: "phishing",
@@ -38,7 +28,7 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         answer: true,
     },
 
-    // ── Password ──────────────────────────────────────────────
+    // ── Password (2) ──────────────────────────────────────────
     {
         id: "pw-1",
         concept: "password",
@@ -50,11 +40,11 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "pw-2",
         concept: "password",
         statement:
-            "A password manager that generates random passwords for each site is more secure than memorising a few strong ones.",
-        answer: true,
+            "A password that meets your company's complexity policy is always secure enough.",
+        answer: false,
     },
 
-    // ── Vishing ───────────────────────────────────────────────
+    // ── Vishing (2) ───────────────────────────────────────────
     {
         id: "vish-1",
         concept: "vishing",
@@ -70,7 +60,7 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         answer: true,
     },
 
-    // ── USB / Physical ────────────────────────────────────────
+    // ── USB (2) ───────────────────────────────────────────────
     {
         id: "usb-1",
         concept: "usb",
@@ -86,7 +76,7 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         answer: false,
     },
 
-    // ── Public Wi-Fi ──────────────────────────────────────────
+    // ── Public Wi-Fi (2) ──────────────────────────────────────
     {
         id: "wifi-1",
         concept: "wifi",
@@ -102,7 +92,7 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         answer: true,
     },
 
-    // ── General awareness ─────────────────────────────────────
+    // ── General awareness controls (5) ────────────────────────
     {
         id: "gen-1",
         concept: "general",
@@ -121,53 +111,18 @@ export const KNOWLEDGE_STATEMENTS: KnowledgeStatement[] = [
         id: "gen-3",
         concept: "general",
         statement:
-            "An email from a colleague you know personally is always safe to open, including attachments.",
+            'Replying "unsubscribe" to a suspicious email is a safe way to stop receiving it.',
         answer: false,
     },
     {
         id: "gen-4",
         concept: "general",
         statement:
-            'Replying "unsubscribe" to a suspicious email is a safe way to stop receiving it.',
-        answer: false,
-    },
-    {
-        id: "gen-5",
-        concept: "general",
-        statement:
-            "Your employer can see your browsing activity when you're connected to the company VPN.",
-        answer: true,
-    },
-    {
-        id: "gen-6",
-        concept: "general",
-        statement:
             "Opening a malicious email attachment can give an attacker full access to your computer.",
         answer: true,
     },
     {
-        id: "gen-7",
-        concept: "general",
-        statement:
-            "Public social media profiles cannot be used by attackers to craft targeted attacks against you.",
-        answer: false,
-    },
-    {
-        id: "gen-8",
-        concept: "general",
-        statement:
-            "Sensitive data you share in a work chat or email may still be recoverable even after you delete the message.",
-        answer: true,
-    },
-    {
-        id: "gen-9",
-        concept: "general",
-        statement:
-            "A strong password alone is enough to protect an account, even without two-factor authentication.",
-        answer: false,
-    },
-    {
-        id: "gen-10",
+        id: "gen-5",
         concept: "general",
         statement:
             "Antivirus software catches all types of malware before they can cause damage.",
