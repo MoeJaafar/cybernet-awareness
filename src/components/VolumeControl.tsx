@@ -102,7 +102,7 @@ function Slider({
                 value={pct}
                 onChange={(e) => onChange(Number(e.target.value) / 100)}
                 aria-label={`${label} volume`}
-                className={`w-full ${track} appearance-none bg-[color:var(--color-bone-ghost)] rounded-full outline-none cursor-pointer touch-none
+                className={`w-full ${track} appearance-none bg-[color:var(--color-bone-ghost)] rounded-full outline-none cursor-pointer
                     [&::-webkit-slider-thumb]:appearance-none
                     ${thumb}
                     [&::-webkit-slider-thumb]:rounded-full
