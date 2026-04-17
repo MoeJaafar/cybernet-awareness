@@ -152,7 +152,7 @@ export function TypedNarrative({
 
     return (
         <div
-            className={`min-h-screen w-full ${toneBg} flex flex-col px-4 sm:px-6 relative ${
+            className={`min-h-[100dvh] sm:min-h-screen w-full ${toneBg} flex flex-col px-4 sm:px-6 relative ${
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
@@ -183,7 +183,7 @@ export function TypedNarrative({
             />
 
             {/* Top section: speaker label. Fixed position at top. */}
-            <div className="relative pt-6 sm:pt-12 pb-2 sm:pb-4 max-w-3xl w-full mx-auto">
+            <div className="relative pt-4 sm:pt-12 pb-1 sm:pb-4 max-w-3xl w-full mx-auto">
                 {speaker && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -232,8 +232,8 @@ export function TypedNarrative({
                                 aria-hidden
                                 className={`type-body leading-[1.35] invisible text-left ${
                                     useEmphasis
-                                        ? "type-display-italic text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
-                                        : "text-[22px] sm:text-[48px] lg:text-[55px]"
+                                        ? "type-display-italic text-[24px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
+                                        : "text-[19px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {current}
@@ -245,7 +245,7 @@ export function TypedNarrative({
                                 className={`type-body leading-[1.35] absolute inset-0 text-left ${
                                     useEmphasis
                                         ? "type-display-italic text-[color:var(--color-amber)] text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
-                                        : "text-[color:var(--color-bone)] text-[22px] sm:text-[48px] lg:text-[55px]"
+                                        : "text-[color:var(--color-bone)] text-[19px] sm:text-[48px] lg:text-[55px]"
                                 }`}
                             >
                                 {visible}
@@ -274,7 +274,7 @@ export function TypedNarrative({
              *  change; on mobile the dock flows naturally after the
              *  typed text so there is no empty strip between them. */}
             <div
-                className="relative max-w-3xl w-full mx-auto pb-8 sm:pb-12 pt-4 sm:pt-6 sm:min-h-[175px] flex flex-col sm:justify-end"
+                className="relative max-w-3xl w-full mx-auto pb-6 sm:pb-12 pt-3 sm:pt-6 sm:min-h-[175px] flex flex-col sm:justify-end"
                 onClick={(e) => e.stopPropagation()}
             >
                 {phase === "wait" && (

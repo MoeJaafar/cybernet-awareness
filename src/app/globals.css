@@ -89,11 +89,21 @@
 
 html {
     background: var(--ink-deeper);
-    /* Bump base font-size from 16px → 20px (1.25×). Every rem-based
-     * Tailwind utility (font sizes, spacing, widths like max-w-*)
-     * scales with it. Fixed-px values in mocks (phone frame, email,
-     * usb, wifi) are bumped explicitly alongside. */
+    /* Bump base font-size from 16px → 20px (1.25×) on desktop. Every
+     * rem-based Tailwind utility (font sizes, spacing, widths like
+     * max-w-*) scales with it. Fixed-px values in mocks (phone frame,
+     * email, usb, wifi) are bumped explicitly alongside.
+     *
+     * On phones we drop back to 16px so the same utility classes
+     * produce tighter padding/type and more content fits per screen,
+     * without having to override every individual class. */
     font-size: 20px;
+}
+
+@media (max-width: 640px) {
+    html {
+        font-size: 16px;
+    }
 }
 
 html, body {
