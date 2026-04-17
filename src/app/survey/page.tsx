@@ -41,8 +41,7 @@ export default function SurveyPage() {
             });
         }
         if (isLast) {
-            logEvent("session_end");
-            router.push("/done");
+            router.push("/demographics");
             return;
         }
         setSelected(null);

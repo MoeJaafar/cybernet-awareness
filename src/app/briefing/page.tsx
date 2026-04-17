@@ -32,7 +32,7 @@ export default function BriefingPage() {
         {
             n: "04",
             title: "A short feedback survey",
-            note: "Eight quick questions about how the experience felt.",
+            note: "Eight quick questions about how the experience felt, plus a handful of optional background questions at the end.",
         },
     ];
 
@@ -52,7 +52,7 @@ export default function BriefingPage() {
                 </div>
 
                 <h1 className="type-display text-[color:var(--color-bone)] text-[36px] sm:text-[48px] leading-tight">
-                    Four short steps.
+                    How this works.
                 </h1>
 
                 <div className="flex flex-col gap-5">
