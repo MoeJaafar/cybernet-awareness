@@ -74,10 +74,10 @@ export default function ConsentPage() {
                     <p>
                         Questions about the study can be sent to&nbsp;
                         <a
-                            href="mailto:atheriononline@gmail.com"
+                            href="mailto:m.jaafar@innopolis.university"
                             className="text-[color:var(--color-amber)] underline underline-offset-2 hover:brightness-110"
                         >
-                            atheriononline@gmail.com
+                            m.jaafar@innopolis.university
                         </a>
                         .
                     </p>
