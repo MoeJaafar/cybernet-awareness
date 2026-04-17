@@ -168,12 +168,14 @@ async function generate(
                               similarity_boost: 0.7,
                               style: 0.4,
                               use_speaker_boost: true,
+                              speed: 0.95,
                           }
                         : {
                               stability: 0.5,
                               similarity_boost: 0.75,
                               style: 0.2,
                               use_speaker_boost: true,
+                              speed: 0.85,
                           },
             }),
         },
