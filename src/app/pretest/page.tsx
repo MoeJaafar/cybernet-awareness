@@ -30,7 +30,7 @@ export default function PretestPage() {
 
     const handleNext = () => {
         if (isLast) {
-            router.push("/");
+            router.push("/play");
             return;
         }
         setSelected(null);
