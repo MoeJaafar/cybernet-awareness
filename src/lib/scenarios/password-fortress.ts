@@ -25,9 +25,9 @@ export const passwordFortress: Scenario = {
         "build": {
             type: "decision",
             id: "build",
-            speaker: "your password expires today",
+            speaker: "password change required",
             prompt:
-                "IT is forcing a reset. Type a new password. You'll see how long it would take an attacker to crack it.",
+                "A website is asking you to change your password. Type a new one below, and you'll see how long it would take an attacker to crack it.",
             choices: [],
             // The PasswordBuilder component is wired in ScenarioRunner
             // when the scene id matches. evaluatePassword() maps the
