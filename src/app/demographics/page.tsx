@@ -18,7 +18,13 @@ type Answers = {
     gender?: string;
     role?: string;
     field?: string;
+    primaryLanguage?: string;
     training?: string;
+    passwordManager?: string;
+    twoFactor?: string;
+    phishingVictim?: string;
+    publicWifi?: string;
+    riskTolerance?: number;
     selfRating?: number;
 };
 
@@ -37,11 +43,45 @@ const FIELDS = [
     "No formal field",
     "Prefer not to say",
 ] as const;
+const PRIMARY_LANGUAGE = [
+    "English",
+    "Russian",
+    "Arabic",
+    "Italian",
+    "Spanish",
+    "Other",
+    "Prefer not to say",
+] as const;
 const TRAINING = [
     "None",
     "Informal (articles, videos, work emails)",
     "Formal course or module",
     "Certification (CompTIA, CEH, CISSP, etc.)",
+    "Prefer not to say",
+] as const;
+const PASSWORD_MANAGER = [
+    "Yes",
+    "No",
+    "Not sure what that means",
+    "Prefer not to say",
+] as const;
+const TWO_FACTOR = [
+    "None",
+    "Some accounts",
+    "Most or all accounts",
+    "Not sure what that means",
+    "Prefer not to say",
+] as const;
+const PHISHING_VICTIM = [
+    "Yes",
+    "No",
+    "Not sure",
+    "Prefer not to say",
+] as const;
+const PUBLIC_WIFI = [
+    "Never",
+    "Occasionally",
+    "Regularly",
     "Prefer not to say",
 ] as const;
 
@@ -72,7 +112,13 @@ export default function DemographicsPage() {
         answers.gender !== undefined ||
         answers.role !== undefined ||
         answers.field !== undefined ||
+        answers.primaryLanguage !== undefined ||
         answers.training !== undefined ||
+        answers.passwordManager !== undefined ||
+        answers.twoFactor !== undefined ||
+        answers.phishingVictim !== undefined ||
+        answers.publicWifi !== undefined ||
+        answers.riskTolerance !== undefined ||
         answers.selfRating !== undefined;
 
     return (
@@ -125,11 +171,87 @@ export default function DemographicsPage() {
                     onChange={(v) => set("field", v)}
                 />
                 <Section
+                    label="What language do you use day-to-day on your devices?"
+                    options={PRIMARY_LANGUAGE}
+                    value={answers.primaryLanguage}
+                    onChange={(v) => set("primaryLanguage", v)}
+                />
+                <Section
                     label="Prior cybersecurity training"
                     options={TRAINING}
                     value={answers.training}
                     onChange={(v) => set("training", v)}
                 />
+                <Section
+                    label="Do you use a password manager (1Password, Bitwarden, the one built into your browser, etc.)?"
+                    options={PASSWORD_MANAGER}
+                    value={answers.passwordManager}
+                    onChange={(v) => set("passwordManager", v)}
+                />
+                <Section
+                    label="Do you use two-factor authentication (codes from an app or SMS) on your accounts?"
+                    options={TWO_FACTOR}
+                    value={answers.twoFactor}
+                    onChange={(v) => set("twoFactor", v)}
+                />
+                <Section
+                    label="Have you ever been the target of a phishing or scam message that almost worked, or that did?"
+                    options={PHISHING_VICTIM}
+                    value={answers.phishingVictim}
+                    onChange={(v) => set("phishingVictim", v)}
+                />
+                <Section
+                    label="How often do you connect to public Wi-Fi in cafés, airports, or hotels?"
+                    options={PUBLIC_WIFI}
+                    value={answers.publicWifi}
+                    onChange={(v) => set("publicWifi", v)}
+                />
+
+                {/* Risk tolerance — 1–5 scale. */}
+                <div className="flex flex-col gap-3">
+                    <span
+                        id="risktolerance-label"
+                        className="type-mono text-[color:var(--color-bone-muted)]"
+                    >
+                        In everyday choices, how cautious or open-to-risk
+                        would you say you are?
+                    </span>
+                    <div
+                        role="radiogroup"
+                        aria-labelledby="risktolerance-label"
+                        className="flex gap-2"
+                    >
+                        {[1, 2, 3, 4, 5].map((n) => {
+                            const selected = answers.riskTolerance === n;
+                            const base = selected
+                                ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
+                                : "border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)]";
+                            return (
+                                <button
+                                    key={n}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={selected}
+                                    aria-label={`${n} — ${
+                                        n === 1
+                                            ? "very cautious"
+                                            : n === 5
+                                              ? "open to risk"
+                                              : ""
+                                    }`}
+                                    onClick={() => set("riskTolerance", n)}
+                                    className={`flex-1 border ${base} py-4 type-display text-xl text-[color:var(--color-bone)] transition-all`}
+                                >
+                                    {n}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <div className="flex justify-between type-mono text-[color:var(--color-bone-muted)]">
+                        <span>very cautious</span>
+                        <span>open to risk</span>
+                    </div>
+                </div>
 
                 {/* Self-rated awareness — 1–5 scale. */}
                 <div className="flex flex-col gap-3">
