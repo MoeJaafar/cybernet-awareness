@@ -66,16 +66,20 @@ export default function Home() {
                 </motion.p>
 
                 <motion.div
-                    className="flex items-center justify-center flex-wrap gap-x-3 gap-y-1 type-mono text-[color:var(--color-bone-muted)] pt-2"
+                    className="flex flex-col items-center gap-2 pt-2 type-mono text-[color:var(--color-bone-muted)]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.9, delay: 1.2 }}
                 >
-                    <span>5 scenarios</span>
-                    <span aria-hidden>·</span>
-                    <span>~20 minutes</span>
-                    <span aria-hidden>·</span>
-                    <span>audio on</span>
+                    <div className="flex items-center justify-center gap-3">
+                        <span>5 scenarios</span>
+                        <span aria-hidden>·</span>
+                        <span>~20 minutes</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-2 text-[color:var(--color-bone-ghost)]">
+                        <HeadphonesIcon />
+                        <span>headphones recommended for the best experience</span>
+                    </div>
                 </motion.div>
 
                 <motion.div
@@ -94,5 +98,25 @@ export default function Home() {
                 </motion.div>
             </div>
         </button>
+    );
+}
+
+function HeadphonesIcon() {
+    return (
+        <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+        >
+            <path d="M4 15v-3a8 8 0 0 1 16 0v3" />
+            <rect x="3" y="15" width="4" height="6" rx="1.2" />
+            <rect x="17" y="15" width="4" height="6" rx="1.2" />
+        </svg>
     );
 }
