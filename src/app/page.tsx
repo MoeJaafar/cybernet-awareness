@@ -76,7 +76,7 @@ export default function Home() {
                         <span aria-hidden>·</span>
                         <span>~20 minutes</span>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-[color:var(--color-bone-ghost)]">
+                    <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-1.5 sm:gap-2 text-[color:var(--color-bone-ghost)]">
                         <HeadphonesIcon />
                         <span>headphones recommended for the best experience</span>
                     </div>
