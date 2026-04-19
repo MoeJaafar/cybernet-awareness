@@ -4,6 +4,8 @@
 
 **Live demo:** <https://cybernet-awareness.vercel.app>
 
+![CyberNet landing page](screenshots/01-landing.png)
+
 CyberNet places the player inside five realistic attack scenarios — a phishing email, a password choice, a voice-phishing call, a dropped USB stick, and a public Wi-Fi decision — and walks them through each one as a short branched decision. After each choice, a scripted outcome explains what an attacker would have done with the decision the player made, followed by a narrated debrief that consolidates the underlying security concept.
 
 The app is wrapped in a research study flow (consent → pre-test → five scenarios → post-test → engagement survey → optional demographics → thank-you), so the same build serves as both a public playable demo and the instrument for the accompanying evaluation study.
@@ -11,10 +13,24 @@ The app is wrapped in a research study flow (consent → pre-test → five scena
 ## The five scenarios
 
 1. **Phishing — IT Helpdesk.** An inbox with a plausible IT-helpdesk message carrying inspectable hotspots on sender, subject, and link. Three decisions: click, report, or delete. The embedded link is itself a trap, so an accidental click routes to the compromised outcome.
+
+   ![Phishing scenario](screenshots/02-phishing.png)
+
 2. **Password — Pick your password.** Four candidate passwords are offered (leet-substituted dictionary word, three-word passphrase, short random string, memorable personal pattern). Each candidate routes to one of three outcomes teaching passphrase strength, dictionary-plus-substitution weakness, and name-plus-year predictability.
+
+   ![Password scenario](screenshots/03-password.png)
+
 3. **Vishing — Microsoft Support scam.** A three-phase phone call with a looping ringtone, scripted caller lines voiced by a distinct character, and typed subtitles synchronised to audio playback. Three decisions: comply, hang up and call back, or hang up without callback.
+
+   ![Vishing scenario](screenshots/04-vishing.png)
+
 4. **USB drop.** A found USB stick with a handwritten label. Three branches: plug it in, leave it in a shared area, or hand it to IT. Outcomes cover BadUSB, payloaded autorun, and credential-harvesting documents.
+
+   ![USB drop scenario](screenshots/05-usb.png)
+
 5. **Public Wi-Fi.** A mobile Wi-Fi settings screen with three networks: an open hotspot configured as an evil twin, a legitimate café network requiring a captive portal, and cellular tethering as a "don't connect" option. Outcomes consolidate the public-Wi-Fi trust model.
+
+   ![Public Wi-Fi scenario](screenshots/06-wifi.png)
 
 ## Design rationale
 
@@ -118,7 +134,7 @@ The accompanying user study is in progress at the time of publication. Empirical
 
 CyberNet is the prototype component of a bachelor's thesis at Innopolis University, 2026:
 
-> Jaafar, M. (2026). *Designing and Evaluating Serious Games to Improve Cybersecurity Awareness and Behaviour.* Bachelor's thesis, Innopolis University. Supervisor: Prof. Paolo Ciancarini.
+> Jaafar, M. (2026). *Motivation and Design of a Serious Game for Cybersecurity.* Bachelor's thesis, Innopolis University. Supervisor: Prof. Paolo Ciancarini.
 
 ## Licence
 
