@@ -1,134 +1,129 @@
 # CyberNet
 
-Web-based cybersecurity awareness game. Bachelor's thesis prototype, 2026.
+> A scenario-based web serious game for everyday cybersecurity awareness.
 
-## What this is
+**Live demo:** <https://cybernet-awareness.vercel.app>
 
-A scenario-based serious game where the player faces five realistic
-everyday cyberattacks — a phishing email, a password reset, a scam
-phone call, a dropped USB stick, and a public Wi-Fi decision. Each
-scenario unfolds through interactive choices; scripted outcomes
-explain what an attacker would have done with the choice the player
-made, then debrief the underlying security concept.
+CyberNet places the player inside five realistic attack scenarios — a phishing email, a password choice, a voice-phishing call, a dropped USB stick, and a public Wi-Fi decision — and walks them through each one as a short branched decision. After each choice, a scripted outcome explains what an attacker would have done with the decision the player made, followed by a narrated debrief that consolidates the underlying security concept.
 
-The game is wrapped in a research study flow: informed consent →
-pre-test (15 MCQ) → five scenarios → post-test → engagement survey →
-done. All events are logged to Supabase for paired pre/post analysis.
+The app is wrapped in a research study flow (consent → pre-test → five scenarios → post-test → engagement survey → optional demographics → thank-you), so the same build serves as both a public playable demo and the instrument for the accompanying evaluation study.
 
-## Stack
+## The five scenarios
 
-- Next.js 16 (App Router) + React 19 + TypeScript
-- Tailwind CSS 4
-- Motion (formerly Framer Motion)
-- Supabase (Postgres + REST) for event logging
-- ElevenLabs for AI-voiced narration (generated at dev time, shipped
-  as static mp3 assets)
-- Deployed on Vercel
+1. **Phishing — IT Helpdesk.** An inbox with a plausible IT-helpdesk message carrying inspectable hotspots on sender, subject, and link. Three decisions: click, report, or delete. The embedded link is itself a trap, so an accidental click routes to the compromised outcome.
+2. **Password — Pick your password.** Four candidate passwords are offered (leet-substituted dictionary word, three-word passphrase, short random string, memorable personal pattern). Each candidate routes to one of three outcomes teaching passphrase strength, dictionary-plus-substitution weakness, and name-plus-year predictability.
+3. **Vishing — Microsoft Support scam.** A three-phase phone call with a looping ringtone, scripted caller lines voiced by a distinct character, and typed subtitles synchronised to audio playback. Three decisions: comply, hang up and call back, or hang up without callback.
+4. **USB drop.** A found USB stick with a handwritten label. Three branches: plug it in, leave it in a shared area, or hand it to IT. Outcomes cover BadUSB, payloaded autorun, and credential-harvesting documents.
+5. **Public Wi-Fi.** A mobile Wi-Fi settings screen with three networks: an open hotspot configured as an evil twin, a legitimate café network requiring a captive portal, and cellular tethering as a "don't connect" option. Outcomes consolidate the public-Wi-Fi trust model.
 
-## Setup
+## Design rationale
+
+The design is grounded in three pedagogical frameworks:
+
+- **MDA** (Mechanics, Dynamics, Aesthetics) — maps concrete mechanics to the player's experience and to intended learning outcomes.
+- **MOTENS** — a cybersecurity-specific pedagogical model that ties threat scenarios to formative feedback and observable outcomes.
+- **Garris input–process–outcome loop** — situates the play-and-debrief loop as the mechanism by which engagement turns into learning.
+
+Six design principles shape the scenarios: embedded feedback at the scene level, progressive difficulty across the sequence, narrative immersion in plausible everyday moments, goal clarity (each decision shows exactly the information the player needs), bounded agency (three-to-four options per decision), and an explicit narrated debrief closing each scenario.
+
+## Tech stack
+
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS 4**
+- **Motion** (formerly Framer Motion)
+- **Supabase** (Postgres + REST) for anonymous session and event logging
+- **ElevenLabs** for pre-generated narration — generated at dev time, shipped as static mp3 assets, zero runtime API calls
+- Deployed on **Vercel**
+
+## Running locally
 
 ```bash
 npm install
-cp .env.local.example .env.local   # fill in Supabase keys
+cp .env.local.example .env.local   # fill in Supabase + ElevenLabs keys
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open <http://localhost:3000>.
 
 ### Environment variables
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon/public JWT |
-| `SUPABASE_SERVICE_ROLE_KEY` | Optional | Server-side event insertion |
-| `ELEVENLABS_API_KEY` | Dev only | Audio generation script |
-| `ELEVENLABS_NARRATOR_VOICE_ID` | Dev only | Narrator voice |
-| `ELEVENLABS_DAVID_VOICE_ID` | Dev only | Scam caller voice |
-
-### Audio generation
-
-Audio is pre-generated and committed as static assets. To regenerate:
-
-```bash
-npm run gen:audio -- --dry    # preview what would be generated
-npm run gen:audio             # generate missing mp3s
-npm run gen:audio -- --force  # regenerate everything
-```
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Supabase anon JWT |
+| `SUPABASE_SERVICE_ROLE_KEY` | optional | Server-side event insertion |
+| `ELEVENLABS_API_KEY` | dev only | Used by the audio-generation script |
+| `ELEVENLABS_NARRATOR_VOICE_ID` | dev only | Cinematic narrator voice |
+| `ELEVENLABS_DAVID_VOICE_ID` | dev only | Scam caller voice |
 
 ### Database
 
-Run `supabase/migrations/0001_initial.sql` in the Supabase SQL Editor
-to create the `sessions` and `events` tables.
+Run `supabase/migrations/0001_initial.sql` in the Supabase SQL Editor to create the `sessions` and `events` tables. Row-Level Security policies are configured for anonymous insert-only access, with a separate read-only role for analysis.
 
-## Study flow
+### Audio pipeline
 
-| Step | Route | What happens |
+Narration is pre-generated and committed as static assets. Regenerate with:
+
+```bash
+npm run gen:audio -- --dry     # preview what would be generated
+npm run gen:audio              # generate missing mp3s
+npm run gen:audio -- --force   # regenerate everything
+```
+
+## Study design
+
+A single-group, within-subjects, pre- and post-test quasi-experimental design. Each participant serves as their own control. This pattern is the modal design reported in recent scenario-based awareness work (see Steen 2021, Bitrián 2024, Le-Nye 2024).
+
+| Step | Route | Instrument |
 |---|---|---|
-| 1 | `/` | Entrance splash |
-| 2 | `/consent` | Informed consent, creates session |
-| 3 | `/pretest` | 15 MCQ knowledge questions |
-| 4 | `/play` | Boot intro → first scenario |
-| 5 | `/scenario/[id]` | Five chained scenarios |
-| 6 | `/posttest` | Same 15 MCQ, reversed order |
-| 7 | `/survey` | 8 Likert engagement questions |
-| 8 | `/done` | Thank you, session cleared |
+| 1 | `/` | Landing |
+| 2 | `/consent` | Informed consent, creates anonymous session |
+| 3 | `/briefing` | Framing of the four-step arc |
+| 4 | `/pretest` | 10-item multiple-choice knowledge test |
+| 5 | `/play` → `/scenario/[id]` | Boot intro + five scenarios |
+| 6 | `/posttest` | Same 10 items, presented in reverse order |
+| 7 | `/survey` | 11-item Likert engagement survey |
+| 8 | `/demographics` | Optional 12-item demographic form |
+| 9 | `/done` | Thank-you |
 
-## Scenarios
+### Data and privacy
 
-1. **Phishing** — Gmail dark-mode mock with clickable link trap and
-   inspection hotspots.
-2. **Password fortress** — free-typing input with live crack-time
-   counter and reactive wall visualisation.
-3. **Vishing** — phone-call mock with typed subtitles from a
-   Microsoft Support scam caller, then decision options.
-4. **USB drop** — physical USB stick on the floor with a tempting
-   label. Pick up, leave, or hand to IT.
-5. **Public Wi-Fi** — iOS-style Wi-Fi settings screen with an evil
-   twin, a legitimate café network, and a mobile-data tether option.
+- Sessions are keyed only by a random identifier. The application captures no names, no email addresses, and no IP addresses.
+- Data are stored in the EU Supabase region.
+- Retention: two years from the date of collection.
+- Participation is voluntary. Participants may stop at any time by closing the tab.
 
 ## Project layout
 
 ```
 src/
-  app/
-    page.tsx              Entrance splash
-    consent/              Informed consent
-    pretest/              Pre-test MCQ
-    play/                 Boot intro → scenarios
-    scenario/[id]/        Scenario runner
-    posttest/             Post-test MCQ
-    survey/               Engagement survey
-    done/                 Thank you
-    api/event/            Event logging endpoint
-  lib/
-    scenarios/            Scenario data (TS)
-    instruments/          Pre/post test + survey questions
-    beats.ts              Sentence splitter (shared with audio gen)
-    audio-paths.ts        Derive mp3 paths from scene IDs
-    session.tsx           Session context + localStorage persistence
-    supabase.ts           Supabase client
-    audio-settings.tsx    Volume context
-  components/
-    BootSequence.tsx      Opening typed intro
-    TypedNarrative.tsx    Typed prose with click-to-advance + audio
-    ScenarioRunner.tsx    Scene graph router
-    EmailMockup.tsx       Gmail dark-mode mock
-    PasswordBuilder.tsx   Free-typing password builder
-    PhoneCall.tsx         Phone-call mock with subtitles
-    UsbStick.tsx          USB stick visual
-    WiFiPicker.tsx        iOS Wi-Fi settings mock
-    KnowledgeTest.tsx     MCQ test component (pre + post)
-    BgMusic.tsx           Looping background music
-    VolumeControl.tsx     Music + narrator volume sliders
+  app/                 Next.js routes (one per study step)
+  lib/                 Scenario data, instruments, session state
+  components/          UI (scenarios, mocks, audio controls)
 scripts/
-  generate-audio.ts      ElevenLabs audio generation pipeline
+  generate-audio.ts    Dev-time ElevenLabs pipeline
 supabase/
-  migrations/            SQL schema
+  migrations/          Postgres schema + RLS policies
+  clear-data.sql       Utility to wipe collected data
 public/
-  audio/                 Generated mp3s (138 beats + ringtone + bg music)
-docs/
-  PLAN.md                Full product + study plan
-  AUDIO_SCRIPT.md        Audio generation docs
-  NEXT_SESSION.md        Session handoff for new Claude sessions
+  audio/               Pre-generated narration mp3s
+  art/                 SVG art assets
 ```
+
+## Status
+
+The accompanying user study is in progress at the time of publication. Empirical results (knowledge deltas, engagement, demographic breakdowns) will be reported in a subsequent update of the associated thesis.
+
+## Academic context
+
+CyberNet is the prototype component of a bachelor's thesis at Innopolis University, 2026:
+
+> Jaafar, M. (2026). *Designing and Evaluating Serious Games to Improve Cybersecurity Awareness and Behaviour.* Bachelor's thesis, Innopolis University. Supervisor: Prof. Paolo Ciancarini.
+
+## Licence
+
+MIT. See [`LICENSE`](LICENSE).
+
+## Acknowledgements
+
+Supervised by Prof. Paolo Ciancarini at Innopolis University. Narration generated via ElevenLabs. Data infrastructure by Supabase.
