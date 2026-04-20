@@ -229,7 +229,6 @@ scripts/
   generate-audio.ts    Dev-time ElevenLabs pipeline
 supabase/
   migrations/          Postgres schema + RLS policies
-  clear-data.sql       Utility to wipe collected data
 public/
   audio/               Pre-generated narration mp3s
   art/                 SVG art assets
