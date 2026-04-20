@@ -243,26 +243,26 @@ CyberNet is the prototype for a bachelor's thesis at Innopolis University (2026)
 
 ## References
 
-- Bitrián, P., Buil, I., Catalán, S., & Merli, D. (2024). Gamification in workforce training. *Journal of Business Research* 179, 114685.
-- Dagar, V., & Yadav, A. (2016). Constructivism: a paradigm for teaching and learning. *Arts and Social Sciences Journal* 7.
-- Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly* 13(3), 319–340.
-- Denning, T., Lerner, A., Shostack, A., & Kohno, T. (2013). Control-Alt-Hack: the design and evaluation of a card game for computer security awareness and education. *Proceedings of ACM CCS*, 915–928.
-- Dinet, J. (2016). Human factors and information security: impact of individual, social and culture environment. (Working paper.)
-- Garris, R., Ahlers, R., & Driskell, J. E. (2002). Games, motivation, and learning: a research and practice model. *Simulation & Gaming* 33(4), 441–467.
-- Gwenhure, A., & Rahayu, F. (2024). Gamification of cybersecurity awareness for non-IT professionals: a systematic literature review. *International Journal of Serious Games* 11, 83–99.
-- Hadlington, L. (2017). Human factors in cybersecurity; examining the link between internet addiction, impulsivity, attitudes towards cybersecurity, and risky cybersecurity behaviours. *Heliyon* 3.
-- Hart, S., Halak, B., & Sassone, V. (2021). MOTENS: a pedagogical design model for serious cyber games.
-- Henderson, N., Pallett, H., van der Linden, S., Montanarini, J., & Buckley, O. (2024). The disPHISHinformation game: creating a serious game to fight phishing using blended design approaches.
-- Irvine, C., Thompson, M. F., & Allen, K. (2005). CyberCIEGE: gaming for information assurance. *IEEE Security & Privacy* 3(3), 61–64.
-- Kassner, L., & Schönbohm, A. (2022). A serious game to improve phishing awareness. *Proceedings of ICISSP*, 109–117.
-- Kusuma, G. P., Wigati, E. K., Utomo, Y., & Suryapranata, L. K. P. (2018). Analysis of gamification models in education using MDA framework. *Procedia Computer Science* 135, 385–392.
-- Le-Nye, E., Yaacoub, C., & Possik, J. (2024). Evaluating phishing awareness strategies. *Procedia Computer Science* 251, 666–671.
-- Moumouh, C., García Berná, J., Chkouri, M. Y., & Fernández-Alemán, J. (2025). Serious games to improve privacy and security knowledge for professionals: a systematic literature review. *International Journal of Serious Games* 12, 3–24.
-- Ng, C. Y., & Hasan, M. K. B. (2025). Cybersecurity serious games development: a systematic review. *Computers & Security* 150, 104307.
-- Salameh, R., & Loh, C. (2022). Engagement and players' intended behaviors in a cybersecurity serious game. *International Journal of Gaming and Computer-Mediated Simulations* 14(1), 1–21.
-- Spatafora, A., Wagemann, M., Sandoval, C., Leisenberg, M., & Carvalho, C. (2024). An educational escape room game to develop cybersecurity skills. *Computers* 13(8), 205.
-- Steen, T., & Deeleman, J. (2021). Successful gamification of cybersecurity training. *Cyberpsychology, Behavior, and Social Networking* 24.
-- Wa Nkongolo, M. (2024). Infusing Morabaraba game design to develop a cybersecurity awareness game (CyberMoraba). *ICCWS* 19, 240–250.
+- Bitrián, P., Buil, I., Catalán, S., & Merli, D. (2024). Gamification in workforce training. *Journal of Business Research* 179, 114685. [doi:10.1016/j.jbusres.2024.114685](https://doi.org/10.1016/j.jbusres.2024.114685)
+- Dagar, V., & Yadav, A. (2016). Constructivism: a paradigm for teaching and learning. *Arts and Social Sciences Journal* 7. [Available on ResearchGate](https://www.researchgate.net/publication/308084623_Constructivism_A_Paradigm_for_Teaching_and_Learning).
+- Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly* 13(3), 319–340. [doi:10.2307/249008](https://doi.org/10.2307/249008)
+- Denning, T., Lerner, A., Shostack, A., & Kohno, T. (2013). Control-Alt-Hack: the design and evaluation of a card game for computer security awareness and education. *Proceedings of ACM CCS*, 915–928. [doi:10.1145/2508859.2516753](https://doi.org/10.1145/2508859.2516753)
+- Dinet, J. (2016). Human factors and information security: impact of individual, social and culture environment. (Working paper.) [doi:10.13140/RG.2.1.1172.4561](https://doi.org/10.13140/RG.2.1.1172.4561)
+- Garris, R., Ahlers, R., & Driskell, J. E. (2002). Games, motivation, and learning: a research and practice model. *Simulation & Gaming* 33(4), 441–467. [doi:10.1177/1046878102238607](https://doi.org/10.1177/1046878102238607)
+- Gwenhure, A., & Rahayu, F. (2024). Gamification of cybersecurity awareness for non-IT professionals: a systematic literature review. *International Journal of Serious Games* 11, 83–99. [doi:10.17083/ijsg.v11i1.719](https://doi.org/10.17083/ijsg.v11i1.719)
+- Hadlington, L. (2017). Human factors in cybersecurity; examining the link between internet addiction, impulsivity, attitudes towards cybersecurity, and risky cybersecurity behaviours. *Heliyon* 3. [doi:10.1016/j.heliyon.2017.e00346](https://doi.org/10.1016/j.heliyon.2017.e00346)
+- Hart, S., Halak, B., & Sassone, V. (2021). MOTENS: a pedagogical design model for serious cyber games. [Available on ResearchGate](https://www.researchgate.net/publication/365568874_MOTENS_a_pedagogical_design_model_for_serious_cyber_games).
+- Henderson, N., Pallett, H., van der Linden, S., Montanarini, J., & Buckley, O. (2024). The disPHISHinformation game: creating a serious game to fight phishing using blended design approaches. [doi:10.54941/ahfe1004774](https://doi.org/10.54941/ahfe1004774)
+- Irvine, C., Thompson, M. F., & Allen, K. (2005). CyberCIEGE: gaming for information assurance. *IEEE Security & Privacy* 3(3), 61–64. [doi:10.1109/MSP.2005.64](https://doi.org/10.1109/MSP.2005.64)
+- Kassner, L., & Schönbohm, A. (2022). A serious game to improve phishing awareness. *Proceedings of ICISSP*, 109–117. [doi:10.1007/978-3-031-22124-8_11](https://doi.org/10.1007/978-3-031-22124-8_11)
+- Kusuma, G. P., Wigati, E. K., Utomo, Y., & Suryapranata, L. K. P. (2018). Analysis of gamification models in education using MDA framework. *Procedia Computer Science* 135, 385–392. [doi:10.1016/j.procs.2018.08.187](https://doi.org/10.1016/j.procs.2018.08.187)
+- Le-Nye, E., Yaacoub, C., & Possik, J. (2024). Evaluating phishing awareness strategies. *Procedia Computer Science* 251, 666–671. [doi:10.1016/j.procs.2024.11.166](https://doi.org/10.1016/j.procs.2024.11.166)
+- Moumouh, C., García Berná, J., Chkouri, M. Y., & Fernández-Alemán, J. (2025). Serious games to improve privacy and security knowledge for professionals: a systematic literature review. *International Journal of Serious Games* 12, 3–24. [doi:10.17083/ijsg.v12i1.825](https://doi.org/10.17083/ijsg.v12i1.825)
+- Ng, C. Y., & Hasan, M. K. B. (2025). Cybersecurity serious games development: a systematic review. *Computers & Security* 150, 104307. [doi:10.1016/j.cose.2024.104307](https://doi.org/10.1016/j.cose.2024.104307)
+- Salameh, R., & Loh, C. (2022). Engagement and players' intended behaviors in a cybersecurity serious game. *International Journal of Gaming and Computer-Mediated Simulations* 14(1), 1–21. [doi:10.4018/IJGCMS.313185](https://doi.org/10.4018/IJGCMS.313185)
+- Spatafora, A., Wagemann, M., Sandoval, C., Leisenberg, M., & Carvalho, C. (2024). An educational escape room game to develop cybersecurity skills. *Computers* 13(8), 205. [doi:10.3390/computers13080205](https://doi.org/10.3390/computers13080205)
+- Steen, T., & Deeleman, J. (2021). Successful gamification of cybersecurity training. *Cyberpsychology, Behavior, and Social Networking* 24. [doi:10.1089/cyber.2020.0526](https://doi.org/10.1089/cyber.2020.0526)
+- Wa Nkongolo, M. (2024). Infusing Morabaraba game design to develop a cybersecurity awareness game (CyberMoraba). *ICCWS* 19, 240–250. [doi:10.34190/iccws.19.1.1957](https://doi.org/10.34190/iccws.19.1.1957)
 
 ## Licence
 
