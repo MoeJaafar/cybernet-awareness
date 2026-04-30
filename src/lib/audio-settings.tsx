@@ -16,7 +16,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
  */
 
 // Module-level mirrors. Read by audio-playing code via getters.
-let _musicVol = 0.10;
+let _musicVol = 0.40;
 let _narratorVol = 1.0;
 
 // Currently-playing narrator audio elements. When narrator volume
@@ -130,14 +130,14 @@ type Settings = {
 };
 
 const Ctx = createContext<Settings>({
-    musicVolume: 0.10,
+    musicVolume: 0.40,
     narratorVolume: 1.0,
     setMusicVolume: () => {},
     setNarratorVolume: () => {},
 });
 
 export function AudioSettingsProvider({ children }: { children: ReactNode }) {
-    const [musicVolume, _setMusic] = useState(0.10);
+    const [musicVolume, _setMusic] = useState(0.40);
     const [narratorVolume, _setNarrator] = useState(1.0);
 
     const setMusicVolume = useCallback((v: number) => {
