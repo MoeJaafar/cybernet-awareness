@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { createNarratorAudio } from "@/lib/audio-settings";
+import { useMessages } from "@/lib/i18n/use-locale";
 
 /**
  * Centered-screen typed narrative. Used for outcome / debrief / quiz
@@ -35,6 +36,7 @@ export function TypedNarrative({
     /** If true, the last line is rendered in italic amber for punch. */
     finalEmphasis?: boolean;
 }) {
+    const m = useMessages();
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
     /**
@@ -71,9 +73,9 @@ export function TypedNarrative({
         }
         const prev = line[charIndex - 1] ?? "";
         const delay =
-            prev === "."
+            prev === "." || prev === "؟" || prev === "!"
                 ? 320
-                : prev === ","
+                : prev === "," || prev === "،" || prev === "؛"
                   ? 180
                   : 28;
         const t = window.setTimeout(() => setCharIndex((c) => c + 1), delay);
@@ -152,7 +154,7 @@ export function TypedNarrative({
 
     return (
         <div
-            className={`min-h-[100dvh] sm:min-h-screen w-full ${toneBg} flex flex-col px-4 sm:px-6 relative ${
+            className={`min-h-[100dvh] sm:min-h-screen w-full ${toneBg} flex flex-col items-center justify-center px-4 sm:px-6 py-10 sm:py-16 relative ${
                 phase === "done" ? "" : "cursor-pointer select-none"
             }`}
             onClick={phase === "done" ? undefined : advance}
@@ -182,8 +184,12 @@ export function TypedNarrative({
                 style={{ background: toneWash }}
             />
 
-            {/* Top section: speaker label. Fixed position at top. */}
-            <div className="relative pt-4 sm:pt-12 pb-1 sm:pb-4 max-w-3xl w-full mx-auto">
+            {/* Centred content stack: speaker → narration → dock.
+             *  The whole block is vertically centred in the viewport so
+             *  short narration doesn't leave a yawning gap between the
+             *  text and the CTA. Spacing within the block is fixed by
+             *  the gap utility, not by absolute positioning. */}
+            <div className="relative w-full max-w-3xl flex flex-col gap-8 sm:gap-12">
                 {speaker && (
                     <motion.div
                         className="flex items-center gap-3"
@@ -202,13 +208,6 @@ export function TypedNarrative({
                         ></span>
                     </motion.div>
                 )}
-            </div>
-
-            {/* Middle section: typed text. Takes remaining vertical
-             *  space on every screen size and centers the text inside
-             *  it so the narration reads as cinematic rather than
-             *  stacked at the top. */}
-            <div className="relative flex-1 flex items-center max-w-3xl w-full mx-auto">
 
                 <AnimatePresence mode="wait">
                     {lineIndex < lines.length && (
@@ -229,7 +228,7 @@ export function TypedNarrative({
                              */}
                             <p
                                 aria-hidden
-                                className={`invisible text-left ${
+                                className={`invisible text-start ${
                                     useEmphasis
                                         ? "type-display-italic text-[24px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
                                         : "type-narrator text-[28px] sm:text-[60px] lg:text-[72px] leading-[1.05]"
@@ -237,11 +236,9 @@ export function TypedNarrative({
                             >
                                 {current}
                             </p>
-                            {/* Visible typed text, overlaid. Left-aligned
-                             *  so characters grow left-to-right rather
-                             *  than the middle sliding outward. */}
+                            {/* Visible typed text, overlaid. */}
                             <p
-                                className={`absolute inset-0 text-left ${
+                                className={`absolute inset-0 text-start ${
                                     useEmphasis
                                         ? "type-display-italic text-[color:var(--color-amber)] text-[28px] sm:text-[65px] lg:text-[80px] leading-[1.15]"
                                         : "type-narrator text-[color:var(--color-bone)] text-[28px] sm:text-[60px] lg:text-[72px] leading-[1.05]"
@@ -251,7 +248,7 @@ export function TypedNarrative({
                                 {isTyping && (
                                     <span
                                         aria-hidden
-                                        className={`inline-block ml-1 w-[0.08em] h-[0.75em] align-[-0.08em] ${
+                                        className={`inline-block ms-1 w-[0.08em] h-[0.75em] align-[-0.08em] ${
                                             useEmphasis
                                                 ? "bg-[color:var(--color-amber)]"
                                                 : "bg-[color:var(--color-bone)]"
@@ -266,53 +263,54 @@ export function TypedNarrative({
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
 
-            {/* Bottom dock: continue hint / CTA / quiz options.
-             *  Anchored to the bottom of the viewport so the centered
-             *  narration in the middle section has room to breathe. */}
-            <div
-                className="relative max-w-3xl w-full mx-auto pb-6 sm:pb-12 pt-3 sm:pt-6 min-h-[100px] sm:min-h-[175px] flex flex-col justify-end"
-                onClick={(e) => e.stopPropagation()}
-            >
-                {phase === "wait" && (
-                    <motion.div
-                        className="flex items-center gap-3"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                    >
-                        <span
-                            className="type-mono text-[color:var(--color-amber)]"
-                            style={{
-                                animation: "soft-pulse 1.8s ease-in-out infinite",
-                            }}
+                {/* Dock: continue hint while waiting, CTA/options when
+                 *  done. Always rendered (even during "type") so the
+                 *  block height stays stable and the narration doesn't
+                 *  jump up when the hint appears. We do NOT stop click
+                 *  propagation here, the parent's onClick is gated on
+                 *  phase, and "click to continue" must bubble up to it. */}
+                <div className="min-h-[60px] sm:min-h-[80px] flex flex-col items-start">
+                    {phase === "wait" && (
+                        <motion.div
+                            className="flex items-center gap-3"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
                         >
-                            click to continue
-                        </span>
-                        <span
-                            aria-hidden
-                            className="h-px w-8 bg-[color:var(--color-amber)]/60"
-                        ></span>
-                        <span
-                            aria-hidden
-                            className="type-mono text-[color:var(--color-amber)]"
-                        >
-                            ↵
-                        </span>
-                    </motion.div>
-                )}
+                            <span
+                                className="type-mono text-[color:var(--color-amber)]"
+                                style={{
+                                    animation:
+                                        "soft-pulse 1.8s ease-in-out infinite",
+                                }}
+                            >
+                                {m.narrative.clickToContinue}
+                            </span>
+                            <span
+                                aria-hidden
+                                className="h-px w-8 bg-[color:var(--color-amber)]/60"
+                            ></span>
+                            <span
+                                aria-hidden
+                                className="type-mono text-[color:var(--color-amber)]"
+                            >
+                                ↵
+                            </span>
+                        </motion.div>
+                    )}
 
-                {phase === "done" && children && (
-                    <motion.div
-                        className="flex flex-col items-start gap-4 w-full"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                    >
-                        {children}
-                    </motion.div>
-                )}
+                    {phase === "done" && children && (
+                        <motion.div
+                            className="flex flex-col items-start gap-4 w-full"
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            {children}
+                        </motion.div>
+                    )}
+                </div>
             </div>
         </div>
     );

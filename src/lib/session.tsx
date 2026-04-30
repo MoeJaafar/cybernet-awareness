@@ -10,12 +10,13 @@ import {
     type ReactNode,
 } from "react";
 import { getSupabase } from "./supabase";
+import type { Locale } from "./i18n";
 
 const STORAGE_KEY = "cybernet_session_id";
 
 type SessionCtx = {
     sessionId: string | null;
-    startSession: () => Promise<string>;
+    startSession: (locale: Locale) => Promise<string>;
     logEvent: (type: string, payload?: Record<string, unknown>) => void;
 };
 
@@ -38,13 +39,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
-    const startSession = useCallback(async (): Promise<string> => {
+    const startSession = useCallback(async (locale: Locale): Promise<string> => {
         if (idRef.current) return idRef.current;
         const sb = getSupabase();
         if (!sb) throw new Error("Supabase not configured");
         const { data, error } = await sb
             .from("sessions")
-            .insert({})
+            .insert({ locale })
             .select("id")
             .single();
         if (error || !data)

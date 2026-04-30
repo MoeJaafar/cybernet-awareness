@@ -79,38 +79,6 @@ export const passwordFortress: Scenario = {
                 "Length plus randomness beats special characters. A few unrelated words strung together is both strong and memorable, that's the fortress.",
             lesson:
                 "Short passwords with capital/number/symbol tricks look compliant but are guessed first. A passphrase of three or four unrelated words resists brute force and stays memorable. If you need truly random passwords, use a password manager so you only remember one.",
-            nextId: "quiz",
-        },
-        "quiz": {
-            type: "quiz",
-            id: "quiz",
-            speaker: "one last check",
-            prompt:
-                "Which matters more for resisting a real-world password attack?",
-            options: [
-                {
-                    label:
-                        "Having a capital letter, a number, and a special character.",
-                    correct: false,
-                    feedback:
-                        "These policies make passwords FEEL strong, but cracking tools try capitalised words with a digit and a symbol first.",
-                },
-                {
-                    label:
-                        "Length, more characters of any kind, especially random words you can remember.",
-                    correct: true,
-                    feedback:
-                        "Right. Every extra character multiplies the search space. Long passphrases beat short passwords with tricks.",
-                },
-                {
-                    label:
-                        "Replacing letters with look-alike symbols (p@ssw0rd).",
-                    correct: false,
-                    feedback:
-                        "This is the oldest known substitution pattern. Cracking tools try it automatically.",
-                },
-            ],
-            nextId: "done",
         },
     },
 };

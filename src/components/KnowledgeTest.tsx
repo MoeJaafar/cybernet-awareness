@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import {
     shuffleQuestions,
-    CONFIDENCE_LABELS,
-    type KnowledgeQuestion,
+    type KnowledgeQuestionShape,
 } from "@/lib/instruments/knowledge";
 import { useSession } from "@/lib/session";
+import { useMessages } from "@/lib/i18n/use-locale";
+import type { KnowledgeQuestionMessage } from "@/lib/i18n/types";
 
 type Answer = { key: string; confidence: number };
 
@@ -26,8 +27,18 @@ export function KnowledgeTest({
     nextLabel: string;
 }) {
     const router = useRouter();
+    const m = useMessages();
+    const kt = m.knowledgeTest;
     const { logEvent } = useSession();
-    const [questions] = useState<KnowledgeQuestion[]>(() => shuffleQuestions(seed));
+    const [shapes] = useState<KnowledgeQuestionShape[]>(() =>
+        shuffleQuestions(seed),
+    );
+    const localisedById = useMemo(() => {
+        const map: Record<string, KnowledgeQuestionMessage> = {};
+        for (const q of m.knowledgeQuestions) map[q.id] = q;
+        return map;
+    }, [m.knowledgeQuestions]);
+
     const [idx, setIdx] = useState(0);
     const [answers, setAnswers] = useState<Record<number, Answer>>({});
     const [submitting, setSubmitting] = useState(false);
@@ -38,7 +49,6 @@ export function KnowledgeTest({
         answersRef.current = answers;
     }, [answers]);
 
-    // Close nav on Escape.
     useEffect(() => {
         if (!navOpen) return;
         const onKey = (e: KeyboardEvent) => {
@@ -48,8 +58,6 @@ export function KnowledgeTest({
         return () => window.removeEventListener("keydown", onKey);
     }, [navOpen]);
 
-    // Jumping to a specific question via the nav panel cancels any
-    // pending auto-advance so we don't override the user's intent.
     const jumpTo = (i: number) => {
         if (autoAdvanceRef.current) {
             clearTimeout(autoAdvanceRef.current);
@@ -59,8 +67,9 @@ export function KnowledgeTest({
         setNavOpen(false);
     };
 
-    const q = questions[idx];
-    const total = questions.length;
+    const shape = shapes[idx];
+    const localised = localisedById[shape.id];
+    const total = shapes.length;
     const current = answers[idx];
     const completedCount = Object.keys(answers).filter(
         (k) => answers[Number(k)]?.key !== undefined,
@@ -79,9 +88,6 @@ export function KnowledgeTest({
             ...prev,
             [idx]: { ...prev[idx], confidence: val },
         }));
-        // Auto-advance to the next unanswered question after a short
-        // delay so the user sees their selection register. The timer
-        // is stored in a ref so manual nav can cancel it.
         if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
         autoAdvanceRef.current = setTimeout(() => {
             autoAdvanceRef.current = null;
@@ -106,7 +112,7 @@ export function KnowledgeTest({
         let totalConfidentWrong = 0;
         for (let i = 0; i < total; i++) {
             const a = answers[i];
-            const s = questions[i];
+            const s = shapes[i];
             if (!a || !s) continue;
             const correctKey = s.options.find((o) => o.correct)?.key;
             const correct = a.key === correctKey;
@@ -138,22 +144,20 @@ export function KnowledgeTest({
 
     return (
         <div className="min-h-[100dvh] flex flex-col">
-            {/* Scrollable content */}
             <div className="flex-1 px-4 sm:px-6">
                 <div className="max-w-2xl w-full mx-auto flex flex-col gap-5 sm:gap-6 pt-5 sm:pt-10 pb-6">
-                    {/* Header */}
                     <div className="flex items-center justify-between gap-3">
                         <span className="type-mono text-[color:var(--color-amber)]">
                             {title}
                         </span>
                         <div className="flex items-center gap-2">
                             <span className="type-mono text-[color:var(--color-bone-muted)] tabular-nums">
-                                {completedCount} / {total}
+                                {kt.unitOf(completedCount, total)}
                             </span>
                             <button
                                 type="button"
                                 onClick={() => setNavOpen(true)}
-                                aria-label="Open question navigation"
+                                aria-label={kt.navOpenLabel}
                                 aria-expanded={navOpen}
                                 className="inline-flex items-center justify-center h-9 w-9 border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] text-[color:var(--color-bone-dim)] hover:text-[color:var(--color-amber)] transition-colors"
                             >
@@ -162,7 +166,6 @@ export function KnowledgeTest({
                         </div>
                     </div>
 
-                    {/* Question */}
                     <motion.div
                         key={idx}
                         initial={{ opacity: 0 }}
@@ -171,16 +174,18 @@ export function KnowledgeTest({
                         className="flex flex-col gap-4 sm:gap-6"
                     >
                         <p className="type-ui text-[color:var(--color-bone)] text-[17px] sm:text-[20px] leading-relaxed">
-                            {q.prompt}
+                            {localised?.prompt ?? ""}
                         </p>
 
-                        {/* 4 options */}
                         <div
                             role="radiogroup"
                             aria-label="Answer options"
                             className="flex flex-col gap-2"
                         >
-                            {q.options.map((opt) => {
+                            {shape.options.map((opt) => {
+                                const optLabel =
+                                    localised?.options.find((o) => o.key === opt.key)
+                                        ?.label ?? "";
                                 const selected = current?.key === opt.key;
                                 const borderClass = selected
                                     ? "border-[color:var(--color-amber)] bg-[color:var(--color-amber)]/10"
@@ -192,7 +197,7 @@ export function KnowledgeTest({
                                         role="radio"
                                         aria-checked={selected}
                                         onClick={() => pickOption(opt.key)}
-                                        className={`group text-left border ${borderClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-3 py-3 sm:px-5 sm:py-4 transition-all`}
+                                        className={`group text-start border ${borderClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-3 py-3 sm:px-5 sm:py-4 transition-all`}
                                     >
                                         <div className="flex items-start gap-3 sm:gap-4">
                                             <span className={`type-display text-lg sm:text-xl w-5 sm:w-6 shrink-0 transition-colors ${
@@ -203,7 +208,7 @@ export function KnowledgeTest({
                                                 {opt.key.toUpperCase()}
                                             </span>
                                             <span className="type-ui text-[14px] sm:text-[16px] text-[color:var(--color-bone)] leading-snug flex-1">
-                                                {opt.label}
+                                                {optLabel}
                                             </span>
                                         </div>
                                     </button>
@@ -211,17 +216,16 @@ export function KnowledgeTest({
                             })}
                         </div>
 
-                        {/* Optional confidence */}
                         <div className={`flex flex-col gap-2 sm:gap-3 transition-opacity ${hasAnswer ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
                             <span id="confidence-label" className="type-mono text-[color:var(--color-bone-muted)]">
-                                how confident? (optional)
+                                {kt.confidencePrompt}
                             </span>
                             <div
                                 role="radiogroup"
                                 aria-labelledby="confidence-label"
                                 className="flex gap-2 sm:gap-3"
                             >
-                                {CONFIDENCE_LABELS.map((label, i) => {
+                                {kt.confidenceLabels.map((label, i) => {
                                     const val = i + 1;
                                     const selected = current?.confidence === val;
                                     const borderClass = selected
@@ -246,12 +250,11 @@ export function KnowledgeTest({
                 </div>
             </div>
 
-            {/* Sticky bottom bar: hint when unfinished, submit button when all answered. */}
             <div className="sticky bottom-0 z-30 px-4 sm:px-6 pt-6 pb-4 bg-gradient-to-t from-[color:var(--color-ink-base)] via-[color:var(--color-ink-base)]/95 to-transparent">
                 <div className="max-w-2xl w-full mx-auto flex items-center gap-3">
                     {!allAnswered && (
                         <p className="type-mono text-[color:var(--color-bone-muted)] text-[12px] sm:text-sm">
-                            answer all {total} questions to continue
+                            {kt.unfinishedHint(total)}
                         </p>
                     )}
                     {allAnswered && (
@@ -264,14 +267,13 @@ export function KnowledgeTest({
                             transition={{ duration: 0.3 }}
                             className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)] disabled:opacity-60 disabled:cursor-wait"
                         >
-                            {submitting ? "Saving…" : nextLabel}
-                            <span aria-hidden className="text-xl">→</span>
+                            {submitting ? kt.savingLabel : nextLabel}
+                            <span aria-hidden className="text-xl rtl:rotate-180">→</span>
                         </motion.button>
                     )}
                 </div>
             </div>
 
-            {/* Burger nav overlay */}
             <AnimatePresence>
                 {navOpen && (
                     <motion.div
@@ -291,26 +293,26 @@ export function KnowledgeTest({
                             onClick={(e) => e.stopPropagation()}
                             role="dialog"
                             aria-modal="true"
-                            aria-label="Question navigation"
+                            aria-label={kt.navHeading}
                         >
                             <div className="flex items-center justify-between mb-4">
                                 <span className="type-mono text-[color:var(--color-amber)]">
-                                    questions
+                                    {kt.navHeading}
                                 </span>
                                 <button
                                     type="button"
                                     onClick={() => setNavOpen(false)}
-                                    aria-label="Close navigation"
+                                    aria-label={kt.navCloseLabel}
                                     className="type-mono text-[color:var(--color-bone-muted)] hover:text-[color:var(--color-amber)] text-xl leading-none h-8 w-8 inline-flex items-center justify-center"
                                 >
                                     ×
                                 </button>
                             </div>
                             <nav
-                                aria-label="Question navigation"
+                                aria-label={kt.navHeading}
                                 className="grid grid-cols-5 gap-2"
                             >
-                                {questions.map((_, i) => {
+                                {shapes.map((_, i) => {
                                     const done = answers[i]?.key !== undefined;
                                     const active = i === idx;
                                     const bg = done
@@ -326,7 +328,7 @@ export function KnowledgeTest({
                                             key={i}
                                             type="button"
                                             onClick={() => jumpTo(i)}
-                                            aria-label={`Question ${i + 1}${done ? ", answered" : ", unanswered"}`}
+                                            aria-label={kt.questionLabel(i, done)}
                                             aria-current={active ? "true" : undefined}
                                             className={`aspect-square border ${border} ${bg} type-mono tabular-nums transition-colors hover:border-[color:var(--color-amber)] ${
                                                 active
@@ -342,7 +344,7 @@ export function KnowledgeTest({
                                 })}
                             </nav>
                             <p className="type-mono text-[color:var(--color-bone-ghost)] mt-4 text-[11px]">
-                                tap a number to jump. press Esc or tap outside to close.
+                                {kt.navHint}
                             </p>
                         </motion.div>
                     </motion.div>

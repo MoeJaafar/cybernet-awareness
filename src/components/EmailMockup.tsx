@@ -8,6 +8,7 @@ import type {
     SceneId,
     Choice,
 } from "@/lib/types";
+import { useMessages } from "@/lib/i18n/use-locale";
 
 /**
  * Gmail-accurate email view (dark mode). Three in-world interactions:
@@ -37,6 +38,8 @@ export function EmailMockup({
     onTrap?: (target: SceneId) => void;
     onChoice?: (c: Choice) => void;
 }) {
+    const m = useMessages();
+    const tb = m.emailMockup.toolbar;
     const senderName = email.fromName ?? email.from;
     const initial = senderName.charAt(0).toUpperCase();
     const avatarHue = simpleHash(senderName) % 360;
@@ -63,35 +66,35 @@ export function EmailMockup({
         >
             {/* Top toolbar. */}
             <div className="px-3 py-2 flex items-center gap-1 border-b border-[color:var(--gmail-border)] bg-[color:var(--gmail-toolbar)]">
-                <ToolbarIcon title="Back">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg>
+                <ToolbarIcon title={tb.back}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="rtl:rotate-180"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"/></svg>
                 </ToolbarIcon>
                 <ToolbarDivider />
                 <ToolbarIcon
-                    title={archive?.label ?? "Archive"}
+                    title={archive?.label ?? tb.archiveDefault}
                     disabled={!archive}
                     onClick={archive && onChoice ? () => onChoice(archive) : undefined}
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg>
                 </ToolbarIcon>
                 <ToolbarIcon
-                    title={report?.label ?? "Report spam"}
+                    title={report?.label ?? tb.reportDefault}
                     highlight={!!report}
                     onClick={report && onChoice ? () => onChoice(report) : undefined}
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 1.99 2H20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 10h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
                 </ToolbarIcon>
                 <ToolbarIcon
-                    title={trash?.label ?? "Delete"}
+                    title={trash?.label ?? tb.deleteDefault}
                     onClick={trash && onChoice ? () => onChoice(trash) : undefined}
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                 </ToolbarIcon>
                 <ToolbarDivider />
-                <ToolbarIcon title="Mark as unread">
+                <ToolbarIcon title={tb.markUnread}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 1.99 2H20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                 </ToolbarIcon>
-                <ToolbarIcon title="More">
+                <ToolbarIcon title={tb.more}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 </ToolbarIcon>
                 <div className="flex-1"></div>
@@ -99,7 +102,7 @@ export function EmailMockup({
                     className="text-xs text-[color:var(--gmail-text-dim)] hidden sm:inline"
                     style={{ fontFamily: "var(--font-gmail)" }}
                 >
-                    1 of 127
+                    {tb.counter}
                 </span>
             </div>
 
@@ -114,7 +117,7 @@ export function EmailMockup({
                 </InspectableSubject>
                 <button
                     type="button"
-                    title="Star"
+                    title={tb.star}
                     className="shrink-0 text-[color:var(--gmail-text-dim)] hover:text-[color:var(--gmail-text)] transition-colors p-1"
                 >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
@@ -124,7 +127,7 @@ export function EmailMockup({
             {/* Body label inside subject row: "Inbox" chip. */}
             <div className="px-5 pb-3">
                 <span className="inline-block text-[14px] text-[color:var(--gmail-text-dim)] bg-[color:var(--gmail-panel)] border border-[color:var(--gmail-border)] rounded px-2 py-0.5">
-                    Inbox
+                    {m.emailMockup.inboxLabel}
                 </span>
             </div>
 
@@ -153,18 +156,17 @@ export function EmailMockup({
                                 &lt;{email.from}&gt;
                             </InspectableSender>
                         )}
-                        <span className="ml-auto text-xs text-[color:var(--gmail-text-dim)]">
-                            09:12 (0 min ago)
+                        <span className="ms-auto text-xs text-[color:var(--gmail-text-dim)]">
+                            {m.emailMockup.timestamp}
                         </span>
                     </div>
                     <div className="text-xs text-[color:var(--gmail-text-dim)] mt-0.5">
-                        to me ▾
+                        {m.emailMockup.toMe}
                     </div>
                     {/* Inspection hint, only when hotspots exist. */}
                     {(email.hotspots ?? []).length > 0 && (
                         <p className="mt-3 text-[14px] text-[color:var(--gmail-text-dim)] italic">
-                            tip: click underlined parts to inspect without
-                            clicking. the link in the body is a real link.
+                            {m.emailMockup.inspectionTip}
                         </p>
                     )}
                 </div>
@@ -180,12 +182,12 @@ export function EmailMockup({
             {/* Reply row at bottom. */}
             <div className="px-5 pb-5 flex items-center gap-2">
                 <div className="rounded-full border border-[color:var(--gmail-border)] px-4 py-2 flex items-center gap-2 text-sm text-[color:var(--gmail-text-dim)] hover:bg-[color:var(--gmail-hover)] cursor-default">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
-                    Reply
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="rtl:scale-x-[-1]"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/></svg>
+                    {m.emailMockup.replyLabel}
                 </div>
                 <div className="rounded-full border border-[color:var(--gmail-border)] px-4 py-2 flex items-center gap-2 text-sm text-[color:var(--gmail-text-dim)] hover:bg-[color:var(--gmail-hover)] cursor-default">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
-                    Forward
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="rtl:scale-x-[-1]"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+                    {m.emailMockup.forwardLabel}
                 </div>
             </div>
         </div>
@@ -219,7 +221,7 @@ function InspectableSubject({
             <button
                 type="button"
                 onClick={onToggle}
-                className={`text-left text-[28px] leading-[1.25] font-normal text-[color:var(--gmail-text)] border-b border-dotted ${
+                className={`text-start text-[28px] leading-[1.25] font-normal text-[color:var(--gmail-text)] border-b border-dotted ${
                     isOpen ? "border-[color:var(--color-amber)] text-[color:var(--color-amber)]" : "border-[color:var(--color-amber)]/60 hover:text-[color:var(--color-amber)]"
                 } pb-0.5`}
                 style={{ fontFamily: "var(--font-gmail)" }}
@@ -233,7 +235,7 @@ function InspectableSubject({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="mt-2 text-[16px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                        className="mt-2 text-[16px] leading-snug text-[color:var(--color-amber)] ps-3 border-s border-[color:var(--color-amber)] overflow-hidden"
                         style={{ fontFamily: "var(--font-gmail)" }}
                     >
                         {hotspot.caption}
@@ -282,7 +284,7 @@ function InspectableSender({
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="w-full mt-2 text-[15px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                        className="w-full mt-2 text-[15px] leading-snug text-[color:var(--color-amber)] ps-3 border-s border-[color:var(--color-amber)] overflow-hidden"
                     >
                         {hotspot.caption}
                     </motion.p>
@@ -317,7 +319,7 @@ function renderBodyWithLink(
                             onClick={() => {
                                 if (link.trapsTo && onTrap) onTrap(link.trapsTo);
                             }}
-                            className="text-[color:var(--gmail-link)] underline underline-offset-2 hover:brightness-110 hover:text-white text-left text-[18px]"
+                            className="text-[color:var(--gmail-link)] underline underline-offset-2 hover:brightness-110 hover:text-white text-start text-[18px]"
                             style={{ fontFamily: "var(--font-gmail)" }}
                         >
                             {link.url}
@@ -347,7 +349,7 @@ function renderBodyWithLink(
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.25 }}
-                                className="text-[15px] leading-snug text-[color:var(--color-amber)] pl-3 border-l border-[color:var(--color-amber)] overflow-hidden"
+                                className="text-[15px] leading-snug text-[color:var(--color-amber)] ps-3 border-s border-[color:var(--color-amber)] overflow-hidden"
                                 style={{ fontFamily: "var(--font-gmail)" }}
                             >
                                 {hotspot.caption}

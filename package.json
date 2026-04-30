@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "gen:audio": "tsx scripts/generate-audio.ts"
+    "gen:audio": "tsx scripts/generate-audio.ts",
+    "gen:audio:en": "tsx scripts/generate-audio.ts --locale en",
+    "gen:audio:ar": "tsx scripts/generate-audio.ts --locale ar"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.3",

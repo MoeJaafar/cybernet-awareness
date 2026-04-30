@@ -84,7 +84,7 @@ export function Stage({
             {portrait && (
                 <motion.div
                     key={`${sceneKey}-portrait`}
-                    className="hidden lg:block absolute bottom-0 left-6 w-[18vw] max-w-[260px] pointer-events-none"
+                    className="hidden lg:block absolute bottom-0 start-6 w-[18vw] max-w-[260px] pointer-events-none"
                     initial={{ opacity: 0, y: 32, filter: "blur(4px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}

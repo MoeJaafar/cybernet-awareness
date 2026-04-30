@@ -66,36 +66,6 @@ export const usbDrop: Scenario = {
                 "An unknown USB stick isn't lost property, it's a delivery vehicle.",
             lesson:
                 "Dropped-USB attacks are decades old and still work, because curiosity beats caution. A University of Illinois study found 48% of USB sticks dropped in a car park were plugged in. The attacker doesn't need your credentials or a software exploit, just one person plugging one drive into one machine. The rule: if it didn't come from a sealed package from a trusted source, it doesn't touch any computer you own.",
-            nextId: "quiz",
-        },
-
-        "quiz": {
-            type: "quiz",
-            id: "quiz",
-            speaker: "one last check",
-            prompt:
-                "You find a USB stick labelled Payroll – Q4 on the floor of the office car park. What's the right move?",
-            options: [
-                {
-                    label: "Plug it into a spare laptop so you can identify the owner.",
-                    correct: false,
-                    feedback:
-                        "This is exactly what the drop is designed for. A spare laptop is still on your network, one plug-in is enough for the payload to run.",
-                },
-                {
-                    label: "Drop it in the lost-and-found box at reception.",
-                    correct: false,
-                    feedback:
-                        "Better than plugging it in yourself, but lost-and-found boxes aren't air-gapped. Someone will eventually plug it in, and the attack still lands.",
-                },
-                {
-                    label: "Hand it to IT security without plugging it in anywhere.",
-                    correct: true,
-                    feedback:
-                        "Right. Keep it out of every machine until a specialist handles it. IT can analyse drives without running their payload.",
-                },
-            ],
-            nextId: "done",
         },
     },
 };

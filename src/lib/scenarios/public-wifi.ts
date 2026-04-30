@@ -62,36 +62,6 @@ export const publicWiFi: Scenario = {
                 "Open, unknown networks are untrusted infrastructure. Your own tether, or a VPN, is the cost of working on them.",
             lesson:
                 "Two threats ride on public Wi-Fi. First, the evil twin, an attacker-run access point broadcasts a familiar name, captures your traffic, then hands you the Internet so nothing feels wrong. Second, the sniff on legitimate networks, even real café Wi-Fi is a shared medium where anyone can profile your traffic. HTTPS hides content, but metadata, which services, when, how long, still leaks. Don't send work traffic over any network you wouldn't trust. Tether off your phone, or run a VPN.",
-            nextId: "quiz",
-        },
-
-        "quiz": {
-            type: "quiz",
-            id: "quiz",
-            speaker: "one last check",
-            prompt:
-                "You're in an airport and need to send a confidential document. Which option is safest?",
-            options: [
-                {
-                    label: 'Connect to "Airport_Free_WiFi", it\'s free and available everywhere.',
-                    correct: false,
-                    feedback:
-                        "An open network with a generic name is classic evil-twin bait. Anyone can broadcast that SSID, you can't verify it's actually the airport's.",
-                },
-                {
-                    label: "Connect to the airline's lounge Wi-Fi after showing your boarding pass.",
-                    correct: false,
-                    feedback:
-                        "Lounge Wi-Fi is legitimate, but still shared public infrastructure. Metadata leaks, and any non-HTTPS request is sniffable.",
-                },
-                {
-                    label: "Tether from your phone's mobile data.",
-                    correct: true,
-                    feedback:
-                        "Right. Tethering routes traffic over the carrier's encrypted cellular network, not a shared wireless medium. The simplest way to isolate yourself from every public-Wi-Fi threat.",
-                },
-            ],
-            nextId: "done",
         },
     },
 };

@@ -1,0 +1,98 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import { useRequireSession } from "@/lib/require-session";
+import { useLocale, useMessages } from "@/lib/i18n/use-locale";
+
+/**
+ * Briefing screen. Sits between consent and pretest so participants
+ * know the full arc before the quiz begins: quiz → game → same quiz
+ * → short survey. Reduces "wait, another quiz?" friction at posttest.
+ */
+export default function BriefingPage() {
+    useRequireSession();
+    const router = useRouter();
+    const locale = useLocale();
+    const m = useMessages();
+    const steps = m.briefing.steps;
+
+    return (
+        <div className="min-h-[100dvh] flex flex-col">
+            <div className="flex-1 px-4 sm:px-6 py-6 sm:py-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-2xl w-full mx-auto flex flex-col gap-5 sm:gap-8"
+                >
+                    <div className="flex items-center gap-3">
+                        <span className="h-px w-10 bg-[color:var(--color-amber)]" />
+                        <span className="type-mono text-[color:var(--color-amber)]">
+                            {m.briefing.eyebrow}
+                        </span>
+                    </div>
+
+                    <h1 className="type-display text-[color:var(--color-bone)] text-[26px] sm:text-[48px] leading-tight">
+                        {m.briefing.heading}
+                    </h1>
+
+                    <div className="flex flex-col gap-4 sm:gap-5">
+                        {steps.map((s, i) => (
+                            <motion.div
+                                key={s.n}
+                                initial={{ opacity: 0, x: -6 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+                                className="flex items-start gap-3 sm:gap-4 border-s-2 border-[color:var(--color-amber)]/40 ps-4 sm:ps-5 py-0.5"
+                            >
+                                <span className="type-mono text-[color:var(--color-bone-muted)] tabular-nums pt-0.5 shrink-0">
+                                    {s.n}
+                                </span>
+                                <div className="flex flex-col gap-1">
+                                    <p className="type-ui text-[color:var(--color-bone)] text-[16px] sm:text-[18px] font-medium">
+                                        {s.title}
+                                    </p>
+                                    <p className="type-ui text-[color:var(--color-bone-dim)] text-[13px] sm:text-[15px] leading-relaxed">
+                                        {s.note}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.6, delay: 0.55 }}
+                        className="flex items-center flex-wrap gap-x-3 gap-y-1 type-mono text-[color:var(--color-bone-muted)] text-[11px] sm:text-xs"
+                    >
+                        <span>{m.briefing.totalTime}</span>
+                        <span aria-hidden className="h-px w-6 bg-[color:var(--color-bone-ghost)]" />
+                        <span>{m.briefing.runtime}</span>
+                        <span aria-hidden>·</span>
+                        <span>{m.briefing.headphonesNote}</span>
+                    </motion.div>
+
+                    <p className="type-display text-[color:var(--color-bone)] text-[20px] sm:text-[32px] border-t border-[color:var(--color-edge-subtle)] pt-5 sm:pt-6">
+                        {m.briefing.readyHeading}
+                    </p>
+                </motion.div>
+            </div>
+
+            {/* Sticky bottom CTA */}
+            <div className="sticky bottom-0 z-30 px-4 sm:px-6 pt-6 pb-4 bg-gradient-to-t from-[color:var(--color-ink-base)] via-[color:var(--color-ink-base)]/95 to-transparent">
+                <div className="max-w-2xl w-full mx-auto">
+                    <button
+                        type="button"
+                        onClick={() => router.push(`/${locale}/pretest`)}
+                        className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
+                    >
+                        {m.briefing.cta}
+                        <span aria-hidden className="text-xl rtl:rotate-180">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -67,6 +67,35 @@
     --gmail-danger:       #f28b82;
 }
 
+/* Arabic locale: rebind the role-based variables to Arabic-capable
+ * families. The Latin Bebas Neue / Instrument Serif don't render
+ * Arabic glyphs at all, so without this swap the AR build would show
+ * tofu boxes for headlines.
+ *
+ * Narrator uses IBM Plex Sans Arabic at a light weight — modern,
+ * neutral, documentary-flavoured. Reem Kufi was too decorative for
+ * typed-out narration; it commanded the screen instead of receding
+ * the way Bebas Neue does in EN. */
+html[data-locale="ar"] {
+    --font-display:  var(--font-ibm-plex-arabic), "Tajawal", Tahoma, sans-serif;
+    --font-body:     var(--font-tajawal), "Tahoma", system-ui, sans-serif;
+    --font-narrator: var(--font-ibm-plex-arabic), "Tajawal", Tahoma, sans-serif;
+    --font-gmail:    var(--font-tajawal), Tahoma, Arial, sans-serif;
+    /* Mono stays mono — used for CLI/system labels; falls back to
+     * monospaced Latin when used with Arabic content. */
+}
+
+/* Lighten the narration weight on Arabic so the typed beats read as
+ * cinematic captions, not headlines. The EN narrator uses Bebas Neue
+ * at weight 400; Plex Sans Arabic at 300 sits at the same visual
+ * mass for Arabic readers. */
+html[data-locale="ar"] .type-narrator,
+html[data-locale="ar"] .type-display,
+html[data-locale="ar"] .type-display-italic {
+    font-weight: 300;
+    letter-spacing: 0;
+}
+
 @theme inline {
     --color-ink-deeper: var(--ink-deeper);
     --color-ink-deep: var(--ink-deep);

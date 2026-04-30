@@ -1,6 +1,8 @@
 "use client";
 
 import type { PasswordFormMock, PasswordOption, SceneId } from "@/lib/types";
+import { useMessages } from "@/lib/i18n/use-locale";
+import type { Messages } from "@/lib/i18n/types";
 
 /**
  * Password-change form. Presented like a real corporate password
@@ -15,6 +17,8 @@ export function PasswordForm({
     form: PasswordFormMock;
     onPick: (id: SceneId) => void;
 }) {
+    const m = useMessages();
+    const pf = m.passwordForm;
     return (
         <div className="border border-[color:var(--gmail-border)] bg-[color:var(--gmail-bg)] rounded-lg overflow-hidden shadow-[0_24px_64px_-16px_rgba(0,0,0,0.6)]">
             {/* System banner, mock Windows/Outlook style. */}
@@ -47,7 +51,7 @@ export function PasswordForm({
             >
                 <div>
                     <h3 className="text-[20px] text-[color:var(--gmail-text)] font-medium mb-1">
-                        Set a new password
+                        {pf.title}
                     </h3>
                     {form.caption && (
                         <p className="text-sm text-[color:var(--gmail-text-dim)]">
@@ -62,13 +66,14 @@ export function PasswordForm({
                             key={opt.value}
                             index={i}
                             option={opt}
+                            charsLabel={pf.charsLabel}
                             onPick={() => onPick(opt.nextId)}
                         />
                     ))}
                 </div>
 
                 <p className="text-[11px] text-[color:var(--gmail-text-dim)] italic">
-                    Hover an option to see the actual password.
+                    {pf.hoverHint}
                 </p>
             </div>
         </div>
@@ -84,10 +89,12 @@ export function PasswordForm({
 function OptionRow({
     index,
     option,
+    charsLabel,
     onPick,
 }: {
     index: number;
     option: PasswordOption;
+    charsLabel: Messages["passwordForm"]["charsLabel"];
     onPick: () => void;
 }) {
     const masked = "•".repeat(Math.min(option.value.length, 18));
@@ -95,7 +102,7 @@ function OptionRow({
         <button
             type="button"
             onClick={onPick}
-            className="group text-left border border-[color:var(--gmail-border)] hover:border-[color:var(--color-amber)] bg-[color:var(--gmail-panel)] hover:bg-[color:var(--gmail-hover)] transition-colors px-4 py-4 flex items-center gap-4"
+            className="group text-start border border-[color:var(--gmail-border)] hover:border-[color:var(--color-amber)] bg-[color:var(--gmail-panel)] hover:bg-[color:var(--gmail-hover)] transition-colors px-4 py-4 flex items-center gap-4"
             style={{ fontFamily: "var(--font-gmail)" }}
         >
             <span className="text-sm text-[color:var(--gmail-text-dim)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 shrink-0">
@@ -108,7 +115,7 @@ function OptionRow({
                 </span>
             </span>
             <span className="text-xs text-[color:var(--gmail-text-dim)] shrink-0">
-                {option.value.length} chars
+                {charsLabel(option.value.length)}
             </span>
         </button>
     );

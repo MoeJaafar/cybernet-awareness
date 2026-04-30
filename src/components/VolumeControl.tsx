@@ -37,7 +37,7 @@ export function VolumeControl() {
     // Mobile: collapsed to an icon button by default
     if (isMobile) {
         return (
-            <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2">
+            <div className="fixed bottom-4 end-4 z-50 flex flex-col items-end gap-2">
                 <AnimatePresence>
                     {open && (
                         <motion.div
@@ -64,7 +64,7 @@ export function VolumeControl() {
     }
 
     // Desktop: always visible
-    return <div className="fixed bottom-5 right-5 z-50">{panel}</div>;
+    return <div className="fixed bottom-5 end-5 z-50">{panel}</div>;
 }
 
 function Slider({

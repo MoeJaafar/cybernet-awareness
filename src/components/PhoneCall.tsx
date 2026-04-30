@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { createNarratorAudio } from "@/lib/audio-settings";
+import { useMessages } from "@/lib/i18n/use-locale";
 
 /**
  * Phone-call mock. The phone screen is just a visual, caller info,
@@ -10,6 +11,22 @@ import { createNarratorAudio } from "@/lib/audio-settings";
  * decision options render BELOW the phone in normal page flow so the
  * phone never resizes.
  */
+
+// Module-level singleton for the ringtone. Holds at most one looping
+// audio across all PhoneCall mounts. Without this, React StrictMode's
+// effect double-fire (or any remount race) creates two Audio elements
+// whose play() promises resolve after the cleanup pause(), leaving
+// orphaned overlapping ringtones. Same pattern as BgMusic.
+let _ringAudio: HTMLAudioElement | null = null;
+let _ringRelease: (() => void) | null = null;
+
+function stopRingtone() {
+    if (_ringRelease) {
+        _ringRelease();
+        _ringRelease = null;
+    }
+    _ringAudio = null;
+}
 
 export interface CallerLine {
     text: string;
@@ -33,6 +50,8 @@ export function PhoneCall({
     choices,
     onChoice,
 }: PhoneCallProps) {
+    const m = useMessages();
+    const pc = m.phoneCall;
     const [phase, setPhase] = useState<"ringing" | "connected" | "deciding">("ringing");
     const [lineIndex, setLineIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
@@ -51,16 +70,29 @@ export function PhoneCall({
     // accepts. If autoplay is blocked (browser may have demoted the
     // earlier gesture after minutes of quiz-taking), any next
     // click/keypress will kick it off.
+    //
+    // The Audio element lives in a module-level ref so a remount
+    // (StrictMode, parent re-render, route transition) can't spawn a
+    // second concurrent instance — we always stop the existing one
+    // first.
     useEffect(() => {
-        if (phase !== "ringing") return;
+        if (phase !== "ringing") {
+            stopRingtone();
+            return;
+        }
+        // Already ringing? leave the existing instance alone.
+        if (_ringAudio) return;
+
         const { audio, release } = createNarratorAudio(
             "/audio/iphone_ringtone_origin.mp3",
             { loop: true, multiplier: 0.7 },
         );
+        _ringAudio = audio;
+        _ringRelease = release;
 
         let retryBound = false;
         const retry = () => {
-            audio.play().catch(() => {});
+            if (_ringAudio === audio) audio.play().catch(() => {});
             document.removeEventListener("click", retry);
             document.removeEventListener("keydown", retry);
             retryBound = false;
@@ -77,7 +109,10 @@ export function PhoneCall({
                 document.removeEventListener("click", retry);
                 document.removeEventListener("keydown", retry);
             }
-            release();
+            // Only stop if the ref still points at OUR audio. If
+            // another mount took over the singleton we'd otherwise
+            // silence its ringtone here.
+            if (_ringAudio === audio) stopRingtone();
         };
     }, [phase]);
 
@@ -141,7 +176,7 @@ export function PhoneCall({
                 <div className="rounded-[40px] border-2 border-[color:var(--gmail-border)] bg-black overflow-hidden shadow-[0_24px_80px_-16px_rgba(0,0,0,0.8)]">
                     {/* Status bar. */}
                     <div className="px-6 pt-3 pb-1 flex items-center justify-between text-[14px] text-white/60">
-                        <span>3:42</span>
+                        <span>{pc.statusTime}</span>
                         <div className="flex items-center gap-1.5">
                             <span>5G</span>
                             <svg width="14" height="10" viewBox="0 0 14 10" fill="white" opacity="0.6">
@@ -163,7 +198,11 @@ export function PhoneCall({
                         <p className="text-white text-lg font-medium mb-0.5" style={{ fontFamily: "var(--font-gmail)" }}>
                             {callerName}
                         </p>
-                        <p className="text-white/50 text-xs mb-2" style={{ fontFamily: "var(--font-gmail)" }}>
+                        <p
+                            dir="ltr"
+                            className="text-white/50 text-xs mb-2"
+                            style={{ fontFamily: "var(--font-gmail)" }}
+                        >
                             {callerNumber}
                         </p>
 
@@ -173,12 +212,12 @@ export function PhoneCall({
                                 animate={{ opacity: [1, 0.4, 1] }}
                                 transition={{ duration: 1.5, repeat: Infinity }}
                             >
-                                incoming call...
+                                {pc.ringingLabel}
                             </motion.p>
                         )}
 
                         {(phase === "connected" || phase === "deciding") && (
-                            <p className="text-white/40 text-xs font-mono mb-auto">{timerStr}</p>
+                            <p dir="ltr" className="text-white/40 text-xs font-mono mb-auto">{timerStr}</p>
                         )}
 
                         {/* Call buttons. */}
@@ -188,14 +227,14 @@ export function PhoneCall({
                                     type="button"
                                     onClick={() => setPhase("connected")}
                                     className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-400 flex items-center justify-center transition-colors shadow-[0_0_24px_rgba(34,197,94,0.4)]"
-                                    aria-label="Accept"
+                                    aria-label={pc.answerLabel}
                                 >
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                                         <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                                     </svg>
                                 </button>
                                 <span className="text-white/40 text-[14px]" style={{ fontFamily: "var(--font-gmail)" }}>
-                                    tap to answer
+                                    {pc.tapToAnswer}
                                 </span>
                             </div>
                         )}
@@ -217,7 +256,7 @@ export function PhoneCall({
                                     type="button"
                                     onClick={() => onChoice(choices[choices.length - 1]?.nextId ?? choices[0]?.nextId)}
                                     className="h-11 w-11 rounded-full bg-red-500 hover:bg-red-400 flex items-center justify-center transition-colors"
-                                    aria-label="End call"
+                                    aria-label={pc.endCallLabel}
                                 >
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="white" transform="rotate(135)">
                                         <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
@@ -247,10 +286,10 @@ export function PhoneCall({
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-left invisible">
+                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-start invisible">
                                 {currentLine.text}
                             </p>
-                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-left absolute inset-0 text-[color:var(--color-bone)]">
+                            <p className="type-body text-xl sm:text-2xl leading-relaxed text-start absolute inset-0 text-[color:var(--color-bone)]">
                                 {subtitle}
                             </p>
                         </motion.div>
@@ -268,7 +307,7 @@ export function PhoneCall({
                         <div className="flex items-center gap-3 mb-2">
                             <span className="h-px w-6 bg-[color:var(--color-amber)]"></span>
                             <span className="type-mono text-[color:var(--color-amber)]">
-                                what do you say?
+                                {pc.whatDoYouSay}
                             </span>
                         </div>
                         {choices.map((c, i) => (
@@ -276,7 +315,7 @@ export function PhoneCall({
                                 key={c.label}
                                 type="button"
                                 onClick={() => onChoice(c.nextId)}
-                                className="group text-left border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-colors"
+                                className="group text-start border border-[color:var(--color-edge-subtle)] hover:border-[color:var(--color-amber)] bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-5 py-4 transition-colors"
                             >
                                 <div className="flex items-start gap-4">
                                     <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">

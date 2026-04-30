@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { createNarratorAudio } from "@/lib/audio-settings";
 import type { Scenario, Scene, SceneId, SceneVisuals } from "@/lib/types";
 import { EmailMockup } from "./EmailMockup";
-// StatusBar removed, "this is not a website, it's an experience."
 import { Stage } from "./Stage";
 import { Portrait } from "./Portrait";
 import { DialogueBox } from "./DialogueBox";
@@ -16,24 +15,32 @@ import { buildBeatAudioPaths, feedbackAudioPath } from "@/lib/audio-paths";
 import { PasswordForm } from "./PasswordForm";
 import { PasswordBuilder, evaluatePassword } from "./PasswordBuilder";
 import { PhoneCall } from "./PhoneCall";
-import { vishingCallConfig } from "@/lib/scenarios/vishing";
+import {
+    VISHING_CALL_CONFIG,
+    USB_STICK_CONFIG,
+    PUBLIC_WIFI_PICKER_CONFIG,
+} from "@/lib/scenarios";
 import { UsbStick } from "./UsbStick";
-import { usbStickConfig } from "@/lib/scenarios/usb-drop";
 import { WiFiPicker } from "./WiFiPicker";
-import { publicWiFiPickerConfig } from "@/lib/scenarios/public-wifi";
 import { useSession } from "@/lib/session";
+import { useMessages } from "@/lib/i18n/use-locale";
+import type { Locale } from "@/lib/i18n";
+import type { Messages } from "@/lib/i18n/types";
 
 const DEFAULT_BACKGROUND = "/art/backgrounds/office-desk.svg";
 
 export function ScenarioRunner({
     scenario,
+    locale,
     nextScenarioId,
 }: {
     scenario: Scenario;
+    locale: Locale;
     nextScenarioId?: string;
 }) {
     const [sceneId, setSceneId] = useState<SceneId>(scenario.startSceneId);
     const { logEvent } = useSession();
+    const m = useMessages();
 
     const scene = scenario.scenes[sceneId];
 
@@ -52,7 +59,7 @@ export function ScenarioRunner({
     if (!scene) {
         return (
             <>
-                <div className="max-w-xl mx-auto p-8 mt-10 border-l-2 border-[color:var(--color-signal-red)] bg-[color:var(--color-ink-raised)]">
+                <div className="max-w-xl mx-auto p-8 mt-10 border-s-2 border-[color:var(--color-signal-red)] bg-[color:var(--color-ink-raised)]">
                     <p className="type-mono text-[color:var(--color-signal-red)] mb-2">error</p>
                     <p className="type-body">Scene &quot;{sceneId}&quot; not found.</p>
                 </div>
@@ -76,11 +83,6 @@ export function ScenarioRunner({
                 : "contained"
             : "default";
 
-    // Pick the right surface per scene type:
-    //   - decision / stimulus WITH mock (email / password form) -> Workspace
-    //   - outcome / debrief / quiz       -> TypedNarrative (centered prose)
-    //   - stimulus without mock          -> TypedNarrative (simple beat)
-    //   - decision without mock          -> TypedNarrative + choices
     const sceneWithMock = scene as {
         mock?: unknown;
         passwordForm?: unknown;
@@ -88,8 +90,6 @@ export function ScenarioRunner({
     const hasMock =
         sceneWithMock.mock !== undefined ||
         sceneWithMock.passwordForm !== undefined;
-    // Special interactive scenes that use Workspace even without
-    // a mock or passwordForm, the custom component IS the surface.
     const isBuilderScene = scene.type === "decision" && scene.id === "build";
     const isPhoneScene = scene.type === "decision" && scene.id === "phone-ring";
     const isUsbScene = scene.type === "decision" && scene.id === "found-usb";
@@ -119,11 +119,18 @@ export function ScenarioRunner({
                     transition={{ duration: 0.4 }}
                 >
                     {usesWorkspace ? (
-                        <WorkspaceScene scene={scene} onAdvance={goTo} />
+                        <WorkspaceScene
+                            scene={scene}
+                            locale={locale}
+                            messages={m}
+                            onAdvance={goTo}
+                        />
                     ) : usesNarrative ? (
                         <NarrativeScene
                             scenarioId={scenario.id}
                             scene={scene}
+                            locale={locale}
+                            messages={m}
                             onAdvance={goTo}
                             nextScenarioId={nextScenarioId}
                         />
@@ -134,7 +141,11 @@ export function ScenarioRunner({
                             portrait={portraitNode}
                             tone={tone}
                         >
-                            <SceneDialogue scene={scene} onAdvance={goTo} />
+                            <SceneDialogue
+                                scene={scene}
+                                messages={m}
+                                onAdvance={goTo}
+                            />
                         </Stage>
                     )}
                 </motion.div>
@@ -143,32 +154,33 @@ export function ScenarioRunner({
     );
 }
 
-/**
- * Centered typed-narrative renderer. Handles outcome / debrief /
- * quiz / portrait-less stimulus+decision scenes.
- */
 function NarrativeScene({
     scenarioId,
     scene,
+    locale,
+    messages,
     onAdvance,
     nextScenarioId,
 }: {
     scenarioId: string;
     scene: Scene;
+    locale: Locale;
+    messages: Messages;
     onAdvance: (next: SceneId) => void;
     nextScenarioId?: string;
 }) {
-    const audioPaths = buildBeatAudioPaths(scenarioId, scene);
+    const audioPaths = buildBeatAudioPaths(locale, scenarioId, scene);
+    const { narrators, buttons } = messages.runner;
 
     switch (scene.type) {
         case "stimulus":
             return (
                 <TypedNarrative
-                    speaker={scene.speaker ?? "narrator"}
+                    speaker={scene.speaker ?? narrators.narrator}
                     lines={splitBeats(scene.content)}
                 >
                     <PrimaryButton
-                        label="Continue"
+                        label={buttons.continue}
                         onClick={() => onAdvance(scene.nextId)}
                     />
                 </TypedNarrative>
@@ -177,7 +189,7 @@ function NarrativeScene({
         case "decision":
             return (
                 <TypedNarrative
-                    speaker={scene.speaker ?? "your move"}
+                    speaker={scene.speaker ?? narrators.yourMove}
                     lines={splitBeats(scene.prompt)}
                 >
                     <div className="flex flex-col gap-0 border border-[color:var(--color-edge-subtle)] bg-[color:var(--color-ink-raised)] overflow-hidden w-full max-w-2xl">
@@ -198,12 +210,15 @@ function NarrativeScene({
             return (
                 <TypedNarrative
                     tone={tone}
-                    speaker={scene.speaker ?? (scene.attackerWon ? "breach" : "contained")}
+                    speaker={
+                        scene.speaker ??
+                        (scene.attackerWon ? narrators.breach : narrators.contained)
+                    }
                     lines={splitBeats(scene.narration)}
                     audioPaths={audioPaths}
                 >
                     <PrimaryButton
-                        label="View the takeaway"
+                        label={buttons.viewTakeaway}
                         onClick={() => onAdvance(scene.nextId)}
                         variant={scene.attackerWon ? "breach" : "contained"}
                     />
@@ -213,26 +228,35 @@ function NarrativeScene({
 
         case "debrief": {
             const lessonBeats = splitBeats(scene.lesson);
+            // When the debrief has no in-scenario quiz to advance to,
+            // fall through to the next scenario in the queue, or the
+            // posttest if this was the last one.
+            const onwardHref = nextScenarioId
+                ? `/${locale}/scenario/${nextScenarioId}`
+                : `/${locale}/posttest`;
+            const onwardLabel = nextScenarioId
+                ? buttons.next
+                : buttons.continue;
             return (
                 <TypedNarrative
                     tone="takeaway"
-                    speaker={scene.speaker ?? "the takeaway"}
+                    speaker={scene.speaker ?? narrators.takeaway}
                     lines={[scene.takeaway, ...lessonBeats]}
                     audioPaths={audioPaths}
                     finalEmphasis={false}
                 >
                     {scene.nextId ? (
                         <PrimaryButton
-                            label="Continue"
+                            label={buttons.continue}
                             onClick={() => onAdvance(scene.nextId!)}
                         />
                     ) : (
                         <Link
-                            href="/"
+                            href={onwardHref}
                             className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                         >
-                            Return to queue
-                            <span aria-hidden className="text-xl">→</span>
+                            {onwardLabel}
+                            <span aria-hidden className="text-xl rtl:rotate-180">→</span>
                         </Link>
                     )}
                 </TypedNarrative>
@@ -242,13 +266,15 @@ function NarrativeScene({
         case "quiz":
             return (
                 <TypedNarrative
-                    speaker={scene.speaker ?? "one last check"}
+                    speaker={scene.speaker ?? narrators.oneLastCheck}
                     lines={[scene.prompt]}
                     audioPaths={audioPaths}
                 >
                     <QuizOptions
                         scenarioId={scenarioId}
                         scene={scene}
+                        locale={locale}
+                        messages={messages}
                         nextScenarioId={nextScenarioId}
                     />
                 </TypedNarrative>
@@ -257,31 +283,28 @@ function NarrativeScene({
     return null;
 }
 
-/**
- * Quiz options, renders beneath the typed prompt. Try-again cycle
- * on wrong answers; on correct, shows continue.
- */
 function QuizOptions({
     scenarioId,
     scene,
+    locale,
+    messages,
     nextScenarioId,
 }: {
     scenarioId: string;
     scene: import("@/lib/types").QuizScene;
+    locale: Locale;
+    messages: Messages;
     nextScenarioId?: string;
 }) {
     const [pickedIdx, setPickedIdx] = useState<number | null>(null);
     const picked = pickedIdx === null ? null : scene.options[pickedIdx];
-    // Holds the currently-playing feedback clip so retries can stop
-    // the previous one before starting a new one, and unmount stops
-    // anything still in flight.
     const currentReleaseRef = useRef<(() => void) | null>(null);
 
     const handlePick = (i: number) => {
         setPickedIdx(i);
         currentReleaseRef.current?.();
         const { audio, release } = createNarratorAudio(
-            feedbackAudioPath(scenarioId, scene.id, i),
+            feedbackAudioPath(locale, scenarioId, scene.id, i),
         );
         currentReleaseRef.current = release;
         audio.play().catch(() => {});
@@ -293,6 +316,8 @@ function QuizOptions({
             currentReleaseRef.current = null;
         };
     }, []);
+
+    const fb = messages.runner.quizFeedback;
 
     return (
         <div className="w-full max-w-2xl flex flex-col gap-3">
@@ -310,7 +335,7 @@ function QuizOptions({
                             type="button"
                             onClick={() => handlePick(i)}
                             disabled={picked?.correct}
-                            className={`group text-left border ${colourClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
+                            className={`group text-start border ${colourClass} bg-[color:var(--color-ink-raised)] hover:bg-[color:var(--color-ink-higher)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
                         >
                             <div className="flex items-start gap-4">
                                 <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
@@ -328,7 +353,7 @@ function QuizOptions({
                 <motion.div
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`border-l-2 pl-4 py-1 text-left ${
+                    className={`border-s-2 ps-4 py-1 text-start ${
                         picked.correct
                             ? "border-[color:var(--color-signal-green)]"
                             : "border-[color:var(--color-signal-red)]"
@@ -341,7 +366,7 @@ function QuizOptions({
                                 : "text-[color:var(--color-signal-red)]"
                         }`}
                     >
-                        {picked.correct ? "right" : "not quite, try again"}
+                        {picked.correct ? fb.right : fb.tryAgain}
                     </p>
                     <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
                         {picked.feedback}
@@ -351,11 +376,17 @@ function QuizOptions({
             {picked?.correct && (
                 <div className="pt-2">
                     <Link
-                        href={nextScenarioId ? `/scenario/${nextScenarioId}` : "/posttest"}
+                        href={
+                            nextScenarioId
+                                ? `/${locale}/scenario/${nextScenarioId}`
+                                : `/${locale}/posttest`
+                        }
                         className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                     >
-                        {nextScenarioId ? "Next" : "Continue"}
-                        <span aria-hidden className="text-xl">→</span>
+                        {nextScenarioId
+                            ? messages.runner.buttons.next
+                            : messages.runner.buttons.continue}
+                        <span aria-hidden className="text-xl rtl:rotate-180">→</span>
                     </Link>
                 </div>
             )}
@@ -363,25 +394,34 @@ function QuizOptions({
     );
 }
 
-/**
- * Workspace-style scene, the email mock takes centre stage, with a
- * slim narrator ribbon above it and no portrait/dialogue chrome.
- * Used for stimulus and decision scenes where the player's focus is
- * on an interactive on-screen surface.
- */
 function WorkspaceScene({
     scene,
+    locale,
+    messages,
     onAdvance,
 }: {
     scene: Scene;
+    locale: Locale;
+    messages: Messages;
     onAdvance: (next: SceneId) => void;
 }) {
+    const { narrators, buttons } = messages.runner;
+    const vishingCallConfig = VISHING_CALL_CONFIG[locale];
+    const usbStickConfig = USB_STICK_CONFIG[locale];
+    const publicWiFiPickerConfig = PUBLIC_WIFI_PICKER_CONFIG[locale];
+
     if (scene.type === "stimulus" && scene.mock) {
         return (
-            <Workspace narrator={scene.speaker ?? "incoming"} prompt={scene.content}>
+            <Workspace
+                narrator={scene.speaker ?? narrators.narrator}
+                prompt={scene.content}
+            >
                 <EmailMockup email={scene.mock} onTrap={onAdvance} />
                 <div className="pt-2">
-                    <PrimaryButton label="Continue" onClick={() => onAdvance(scene.nextId)} />
+                    <PrimaryButton
+                        label={buttons.continue}
+                        onClick={() => onAdvance(scene.nextId)}
+                    />
                 </div>
             </Workspace>
         );
@@ -396,7 +436,7 @@ function WorkspaceScene({
             );
             return (
                 <Workspace
-                    narrator={scene.speaker ?? "your move"}
+                    narrator={scene.speaker ?? narrators.yourMove}
                     prompt={scene.prompt}
                 >
                     <EmailMockup
@@ -423,14 +463,13 @@ function WorkspaceScene({
         if (scene.passwordForm) {
             return (
                 <Workspace
-                    narrator={scene.speaker ?? "your move"}
+                    narrator={scene.speaker ?? narrators.yourMove}
                     prompt={scene.prompt}
                 >
                     <PasswordForm form={scene.passwordForm} onPick={onAdvance} />
                 </Workspace>
             );
         }
-        // Phone call scene: vishing.
         if (scene.id === "phone-ring") {
             return (
                 <Workspace narrator={scene.speaker} prompt={scene.prompt}>
@@ -444,7 +483,6 @@ function WorkspaceScene({
                 </Workspace>
             );
         }
-        // USB-drop scene.
         if (scene.id === "found-usb") {
             return (
                 <Workspace narrator={scene.speaker} prompt={scene.prompt}>
@@ -457,7 +495,6 @@ function WorkspaceScene({
                 </Workspace>
             );
         }
-        // Public Wi-Fi picker scene.
         if (scene.id === "choose-wifi") {
             return (
                 <Workspace narrator={scene.speaker} prompt={scene.prompt}>
@@ -469,16 +506,15 @@ function WorkspaceScene({
                 </Workspace>
             );
         }
-        // Password-fortress builder.
         if (scene.id === "build" && !scene.mock && !scene.passwordForm) {
             return (
                 <Workspace
-                    narrator={scene.speaker ?? "your move"}
+                    narrator={scene.speaker ?? narrators.yourMove}
                     prompt={scene.prompt}
                 >
                     <PasswordBuilder
-                        header="This site requires you to set a new password before continuing."
-                        caption="Pick the one you'd actually use. The outcome will show how it fares against a real attacker."
+                        header={messages.passwordBuilder.defaultHeader}
+                        caption={messages.passwordBuilder.defaultCaption}
                         onSubmit={(result) => {
                             const outcomeId = evaluatePassword(result);
                             onAdvance(outcomeId);
@@ -493,21 +529,30 @@ function WorkspaceScene({
 
 function SceneDialogue({
     scene,
+    messages,
     onAdvance,
 }: {
     scene: Scene;
+    messages: Messages;
     onAdvance: (next: SceneId) => void;
 }) {
+    const { narrators, buttons } = messages.runner;
     switch (scene.type) {
         case "stimulus":
             return (
-                <DialogueBox speaker={scene.speaker ?? "narrator"} text={scene.content}>
+                <DialogueBox
+                    speaker={scene.speaker ?? narrators.narrator}
+                    text={scene.content}
+                >
                     {scene.mock && (
                         <div className="max-h-[40vh] overflow-hidden">
                             <EmailMockup email={scene.mock} onTrap={onAdvance} />
                         </div>
                     )}
-                    <PrimaryButton label="Continue" onClick={() => onAdvance(scene.nextId)} />
+                    <PrimaryButton
+                        label={buttons.continue}
+                        onClick={() => onAdvance(scene.nextId)}
+                    />
                 </DialogueBox>
             );
 
@@ -534,7 +579,7 @@ function SceneDialogue({
                     )}
                     {!allInToolbar && (
                         <DialogueBox
-                            speaker={scene.speaker ?? "choose"}
+                            speaker={scene.speaker ?? narrators.chooseLabel}
                             text={scene.prompt}
                             instant={true}
                         >
@@ -559,12 +604,15 @@ function SceneDialogue({
         case "outcome":
             return (
                 <DialogueBox
-                    speaker={scene.speaker ?? (scene.attackerWon ? "breach" : "contained")}
+                    speaker={
+                        scene.speaker ??
+                        (scene.attackerWon ? narrators.breach : narrators.contained)
+                    }
                     text={scene.narration}
                     tone={scene.attackerWon ? "breach" : "contained"}
                 >
                     <PrimaryButton
-                        label="View debrief"
+                        label={buttons.viewDebrief}
                         onClick={() => onAdvance(scene.nextId)}
                         variant={scene.attackerWon ? "breach" : "contained"}
                     />
@@ -574,11 +622,11 @@ function SceneDialogue({
         case "debrief":
             return (
                 <DialogueBox
-                    speaker={scene.speaker ?? "debrief · the lesson"}
+                    speaker={scene.speaker ?? narrators.debriefLessonLabel}
                     text={scene.takeaway}
                     instant={true}
                 >
-                    <p className="type-body text-[15px] text-[color:var(--color-bone-dim)] leading-relaxed border-l border-[color:var(--color-edge-subtle)] pl-4">
+                    <p className="type-body text-[15px] text-[color:var(--color-bone-dim)] leading-relaxed border-s border-[color:var(--color-edge-subtle)] ps-4">
                         {scene.lesson}
                     </p>
                     <div className="pt-3">
@@ -586,8 +634,8 @@ function SceneDialogue({
                             href="/"
                             className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                         >
-                            Return to queue
-                            <span aria-hidden className="text-xl">→</span>
+                            {buttons.returnToQueue}
+                            <span aria-hidden className="text-xl rtl:rotate-180">→</span>
                         </Link>
                     </div>
                 </DialogueBox>
@@ -595,24 +643,32 @@ function SceneDialogue({
 
         case "quiz":
             return (
-                <QuizPanel scene={scene} onAdvance={() => onAdvance(scene.nextId)} />
+                <QuizPanel
+                    scene={scene}
+                    messages={messages}
+                    onAdvance={() => onAdvance(scene.nextId)}
+                />
             );
     }
 }
 
 function QuizPanel({
     scene,
+    messages,
     onAdvance,
 }: {
     scene: import("@/lib/types").QuizScene;
+    messages: Messages;
     onAdvance: () => void;
 }) {
     const [pickedIdx, setPickedIdx] = useState<number | null>(null);
     const picked = pickedIdx === null ? null : scene.options[pickedIdx];
+    const fb = messages.runner.quizFeedback;
+    const { narrators, buttons } = messages.runner;
 
     return (
         <DialogueBox
-            speaker={scene.speaker ?? "check your instincts"}
+            speaker={scene.speaker ?? narrators.checkInstincts}
             text={scene.prompt}
             instant={true}
         >
@@ -630,7 +686,7 @@ function QuizPanel({
                             type="button"
                             onClick={() => setPickedIdx(i)}
                             disabled={picked?.correct}
-                            className={`group text-left border ${correctnessColour} bg-[color:var(--color-ink-deep)] hover:bg-[color:var(--color-ink-raised)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
+                            className={`group text-start border ${correctnessColour} bg-[color:var(--color-ink-deep)] hover:bg-[color:var(--color-ink-raised)] px-4 py-3 transition-colors disabled:opacity-70 disabled:cursor-default`}
                         >
                             <div className="flex items-start gap-4">
                                 <span className="type-display text-xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] w-6 shrink-0">
@@ -648,7 +704,7 @@ function QuizPanel({
                 <motion.div
                     initial={{ opacity: 0, y: 4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`mt-2 border-l-2 pl-4 py-1 ${
+                    className={`mt-2 border-s-2 ps-4 py-1 ${
                         picked.correct
                             ? "border-[color:var(--color-signal-green)]"
                             : "border-[color:var(--color-signal-red)]"
@@ -661,7 +717,7 @@ function QuizPanel({
                                 : "text-[color:var(--color-signal-red)]"
                         }`}
                     >
-                        {picked.correct ? "right" : "not quite, try again"}
+                        {picked.correct ? fb.right : fb.tryAgain}
                     </p>
                     <p className="type-body text-[14px] text-[color:var(--color-bone-dim)] leading-relaxed">
                         {picked.feedback}
@@ -675,8 +731,8 @@ function QuizPanel({
                         onClick={onAdvance}
                         className="inline-flex items-center gap-3 bg-[color:var(--color-amber)] text-[color:var(--color-ink-deep)] px-6 py-3.5 type-display text-lg hover:brightness-110 transition-all shadow-[0_0_32px_var(--amber-glow)]"
                     >
-                        continue
-                        <span aria-hidden className="text-xl">→</span>
+                        {buttons.continue}
+                        <span aria-hidden className="text-xl rtl:rotate-180">→</span>
                     </button>
                 </div>
             )}
@@ -684,10 +740,6 @@ function QuizPanel({
     );
 }
 
-/**
- * Decision row, letter index, label, sweeping amber underline on
- * hover, and a micro-caption hinting that a consequence follows.
- */
 function ChoiceRow({
     index,
     label,
@@ -702,7 +754,7 @@ function ChoiceRow({
         <button
             type="button"
             onClick={onClick}
-            className="group text-left border-b border-[color:var(--color-edge-subtle)] py-3.5 sm:py-5 px-2 flex items-start gap-3 sm:gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
+            className="group text-start border-b border-[color:var(--color-edge-subtle)] py-3.5 sm:py-5 px-2 flex items-start gap-3 sm:gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
         >
             <span className="type-display text-xl sm:text-2xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 sm:w-8 shrink-0 mt-0.5 tabular-nums">
                 {letter}
@@ -712,7 +764,7 @@ function ChoiceRow({
             </span>
             <span
                 aria-hidden
-                className="type-mono self-center text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors translate-x-[-4px] group-hover:translate-x-0 duration-300"
+                className="type-mono self-center text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors translate-x-[-4px] group-hover:translate-x-0 duration-300 rtl:rotate-180"
             >
                 →
             </span>
@@ -744,7 +796,7 @@ function PrimaryButton({
             {label}
             <span
                 aria-hidden
-                className="transition-transform group-hover:translate-x-1"
+                className="transition-transform group-hover:translate-x-1 rtl:rotate-180"
             >
                 →
             </span>

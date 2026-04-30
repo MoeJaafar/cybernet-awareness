@@ -120,7 +120,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                         key={c.label}
                         type="button"
                         onClick={() => onChoice(c.nextId)}
-                        className="group text-left border-b last:border-b-0 border-[color:var(--color-edge-subtle)] py-5 px-5 flex items-start gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
+                        className="group text-start border-b last:border-b-0 border-[color:var(--color-edge-subtle)] py-5 px-5 flex items-start gap-5 hover:bg-[color:var(--color-amber-wash,rgba(255,153,51,0.05))] transition-colors"
                     >
                         <span className="type-display text-2xl text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors w-6 shrink-0 tabular-nums">
                             {String.fromCharCode(65 + i)}
@@ -130,7 +130,7 @@ export function UsbStick({ label, context, choices, onChoice }: UsbStickProps) {
                         </span>
                         <span
                             aria-hidden
-                            className="type-mono self-center text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors translate-x-[-4px] group-hover:translate-x-0 duration-300"
+                            className="type-mono self-center text-[color:var(--color-bone-ghost)] group-hover:text-[color:var(--color-amber)] transition-colors translate-x-[-4px] group-hover:translate-x-0 duration-300 rtl:rotate-180"
                         >
                             →
                         </span>

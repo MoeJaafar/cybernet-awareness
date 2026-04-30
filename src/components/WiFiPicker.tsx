@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useMessages } from "@/lib/i18n/use-locale";
 
 /**
  * iOS-style Wi-Fi settings screen rendered inside a phone frame. The
@@ -31,6 +32,8 @@ export interface WiFiPickerProps {
 }
 
 export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
+    const m = useMessages();
+    const wp = m.wifiPicker;
     // "Café Brew · 3:12 PM" → status-bar time is the part after the bullet.
     const statusTime = location.includes("·")
         ? location.split("·").pop()?.trim() ?? "3:12"
@@ -70,23 +73,23 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                          *  stays symmetrical regardless of "Settings" width. */}
                         <div className="relative px-4 pb-3 flex items-center">
                             <span className="text-[#0a84ff] text-[16px] flex items-center gap-0.5 relative z-10" style={{ fontFamily: "var(--font-gmail)" }}>
-                                <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                                <svg width="12" height="14" viewBox="0 0 12 14" fill="none" className="rtl:scale-x-[-1]">
                                     <path d="M8 2 3 7l5 5" stroke="#0a84ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
-                                Settings
+                                {wp.settingsBack}
                             </span>
                             <span
                                 className="absolute inset-x-0 text-center text-white text-[19px] font-semibold pointer-events-none"
                                 style={{ fontFamily: "var(--font-gmail)" }}
                             >
-                                Wi-Fi
+                                {wp.wifiTitle}
                             </span>
                         </div>
 
                         {/* Wi-Fi toggle row. */}
                         <div className="mx-4 mt-2 rounded-xl bg-[#1c1c1e] px-4 py-3 flex items-center justify-between">
                             <span className="text-white text-[18px]" style={{ fontFamily: "var(--font-gmail)" }}>
-                                Wi-Fi
+                                {wp.wifiToggle}
                             </span>
                             <span className="relative inline-block w-[42px] h-[25px] rounded-full bg-[#30d158]">
                                 <span className="absolute right-[3px] top-[3px] w-[20px] h-[20px] rounded-full bg-white shadow-sm"></span>
@@ -95,7 +98,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
 
                         {/* Section header. */}
                         <p className="px-5 pt-5 pb-1.5 text-white/40 text-[14px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
-                            NETWORKS
+                            {wp.networksHeading}
                         </p>
 
                         {/* Network rows (the two Wi-Fi options). */}
@@ -105,7 +108,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                                     <button
                                         type="button"
                                         onClick={() => onPick(n.nextId)}
-                                        className="w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-white/[0.03] transition-colors"
+                                        className="w-full text-start px-4 py-3 flex items-center gap-3 hover:bg-white/[0.03] transition-colors"
                                     >
                                         <span className="flex-1 min-w-0">
                                             <span
@@ -138,12 +141,12 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                         {tether && (
                             <>
                                 <p className="px-5 pt-5 pb-1.5 text-white/40 text-[14px] tracking-[0.06em]" style={{ fontFamily: "var(--font-gmail)" }}>
-                                    OR
+                                    {wp.orHeading}
                                 </p>
                                 <button
                                     type="button"
                                     onClick={() => onPick(tether.nextId)}
-                                    className="mx-4 rounded-xl bg-[#1c1c1e] hover:bg-white/[0.03] px-4 py-3 flex items-center gap-3 text-left transition-colors"
+                                    className="mx-4 rounded-xl bg-[#1c1c1e] hover:bg-white/[0.03] px-4 py-3 flex items-center gap-3 text-start transition-colors"
                                 >
                                     <span className="shrink-0 text-white/80">
                                         <CellularGlyph />
@@ -153,16 +156,16 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                                             className="block text-white text-[18px] leading-tight truncate"
                                             style={{ fontFamily: "var(--font-gmail)" }}
                                         >
-                                            Use Mobile Data
+                                            {wp.useMobileData}
                                         </span>
                                         <span
                                             className="block text-white/45 text-[13px] mt-0.5 truncate"
                                             style={{ fontFamily: "var(--font-gmail)" }}
                                         >
-                                            turn off Wi-Fi, use 5G
+                                            {wp.mobileDataNote}
                                         </span>
                                     </span>
-                                    <span aria-hidden className="shrink-0 text-white/40">›</span>
+                                    <span aria-hidden className="shrink-0 text-white/40 rtl:rotate-180">›</span>
                                 </button>
                             </>
                         )}
@@ -182,7 +185,7 @@ export function WiFiPicker({ location, networks, onPick }: WiFiPickerProps) {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
             >
-                tap a network to send the report
+                {wp.helperText}
             </motion.p>
         </div>
     );

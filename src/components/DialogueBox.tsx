@@ -26,10 +26,10 @@ export function DialogueBox({
 
     const accentClass =
         tone === "breach"
-            ? "border-l-[color:var(--color-signal-red)] before:bg-[color:var(--color-signal-red)]"
+            ? "border-s-[color:var(--color-signal-red)] before:bg-[color:var(--color-signal-red)]"
             : tone === "contained"
-              ? "border-l-[color:var(--color-signal-green)] before:bg-[color:var(--color-signal-green)]"
-              : "border-l-[color:var(--color-amber)] before:bg-[color:var(--color-amber)]";
+              ? "border-s-[color:var(--color-signal-green)] before:bg-[color:var(--color-signal-green)]"
+              : "border-s-[color:var(--color-amber)] before:bg-[color:var(--color-amber)]";
 
     const speakerColour =
         tone === "breach"
@@ -40,7 +40,7 @@ export function DialogueBox({
 
     return (
         <motion.section
-            className={`relative border-l-2 ${accentClass} bg-[color:var(--color-ink-deep)]/85 backdrop-blur-xl px-6 sm:px-8 py-6 sm:py-7 shadow-[0_24px_64px_-20px_rgba(0,0,0,0.85)]`}
+            className={`relative border-s-2 ${accentClass} bg-[color:var(--color-ink-deep)]/85 backdrop-blur-xl px-6 sm:px-8 py-6 sm:py-7 shadow-[0_24px_64px_-20px_rgba(0,0,0,0.85)]`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -65,7 +65,7 @@ export function DialogueBox({
             {complete && !children && (
                 <span
                     aria-hidden
-                    className="inline-block ml-1 w-[0.4em] h-[0.9em] align-middle bg-[color:var(--color-amber)]"
+                    className="inline-block ms-1 w-[0.4em] h-[0.9em] align-middle bg-[color:var(--color-amber)]"
                     style={{ animation: "pulse-dot 1.1s ease-in-out infinite" }}
                 />
             )}

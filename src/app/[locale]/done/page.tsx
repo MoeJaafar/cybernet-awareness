@@ -1,0 +1,49 @@
+"use client";
+
+import { useEffect } from "react";
+import { motion } from "motion/react";
+import { useMessages } from "@/lib/i18n/use-locale";
+
+const STORAGE_KEY = "cybernet_session_id";
+
+export default function DonePage() {
+    const m = useMessages();
+    // session_end is logged at the end of the survey. Here we just
+    // clear the localStorage so the next participant on this browser
+    // starts fresh from /.
+    useEffect(() => {
+        localStorage.removeItem(STORAGE_KEY);
+    }, []);
+
+    return (
+        <div className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-10 text-center">
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="max-w-xl flex flex-col items-center gap-8"
+            >
+                <span className="type-mono text-[color:var(--color-amber)]">
+                    {m.done.eyebrow}
+                </span>
+
+                <h1 className="type-display text-[color:var(--color-bone)] text-[32px] sm:text-[64px] leading-tight">
+                    {m.done.heading}
+                </h1>
+
+                <p className="type-body text-[color:var(--color-bone-dim)] text-[20px] leading-relaxed max-w-md">
+                    {m.done.body}
+                </p>
+
+                <span
+                    className="h-px w-24 bg-[color:var(--color-amber)]/60"
+                    aria-hidden
+                />
+
+                <p className="type-mono text-[color:var(--color-bone-muted)]">
+                    {m.done.signature}
+                </p>
+            </motion.div>
+        </div>
+    );
+}

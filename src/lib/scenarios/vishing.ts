@@ -64,37 +64,6 @@ export const vishing: Scenario = {
                 "Microsoft, Apple, Google, none of them will ever call you to ask for your password. If someone does, it's a scam.",
             lesson:
                 "Vishing works because the caller controls the narrative, they manufacture urgency, authority, and helpfulness in a single minute. Breaking the script, asking for verification, calling back on a known number, collapses the pretence. The scammer has no answer for that.",
-            nextId: "quiz",
-        },
-        "quiz": {
-            type: "quiz",
-            id: "quiz",
-            speaker: "one last check",
-            prompt:
-                "Someone calls claiming to be from Microsoft and asks for your password to fix an urgent issue. What should you do?",
-            options: [
-                {
-                    label: "Give the password, they said it's urgent.",
-                    correct: false,
-                    feedback:
-                        "Urgency is the attacker's tool, not a reason to comply. Real IT never needs your password.",
-                },
-                {
-                    label:
-                        "Hang up and check microsoft.com/support for the real contact number.",
-                    correct: true,
-                    feedback:
-                        "Right. Looking up the number yourself, outbound verification, is the one move a scammer can't survive.",
-                },
-                {
-                    label:
-                        "Ask them to email you instead so you have a record.",
-                    correct: false,
-                    feedback:
-                        "Better than giving the password, but the attacker can send a phishing email too. Calling back on a known number is safer.",
-                },
-            ],
-            nextId: "done",
         },
     },
 };

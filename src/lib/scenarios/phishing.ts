@@ -118,43 +118,6 @@ export const phishing: Scenario = {
                 "Spear phishing leans on URGENCY, AUTHORITY, and LOOK-ALIKE DOMAINS to push you past your normal caution.",
             lesson:
                 "Three signals were in plain sight, a look-alike sender domain, an artificial 24-hour deadline, and a request IT would never make. When two of those three are present, treat the email as malicious by default.",
-            nextId: "quiz",
-        },
-        "quiz": {
-            type: "quiz",
-            id: "quiz",
-            speaker: "one last check",
-            prompt:
-                "Which single signal should have made you suspicious before you even opened the email?",
-            options: [
-                {
-                    label: "The 24-hour deadline in the subject line.",
-                    correct: false,
-                    feedback:
-                        "Urgency is a red flag, but this one was inside the email. Look for a signal visible in the inbox before you open anything.",
-                },
-                {
-                    label: "The sender's domain didn't match your company's real IT domain.",
-                    correct: true,
-                    feedback:
-                        "Exactly. The domain shows in the inbox, visible before you open, before you read, before you're ever tempted to click.",
-                },
-                {
-                    label: "The request to re-verify the account.",
-                    correct: false,
-                    feedback:
-                        "An unusual request is a red flag, but only after opening. The domain mismatch is the earliest warning, visible at the inbox level.",
-                },
-            ],
-            nextId: "done",
         },
     },
 };
-
-/*
- * Note on the final `nextId: "done"`, the quiz is the last scene,
- * and "done" doesn't resolve to anything in the scenes map. The
- * runner treats that as "show the return-to-queue button," which
- * the QuizPanel handles natively via onAdvance -> router.push('/').
- * We keep the field populated so the type stays consistent.
- */
